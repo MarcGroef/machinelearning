@@ -15,7 +15,7 @@ if __name__ == "__main__":
   xorOut4 = np.array([0])
   
   
-  nn = MLP(2, 20, 1)
+  nn = MLP(2, 2, 1)
   for iter in range(2500):
     loss = 0
     loss += nn.train(xorIn1, xorOut1, 0.5)
