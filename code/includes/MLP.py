@@ -21,9 +21,24 @@ class MLP():
      sig = self.sigmoid(x)
      return sig * (1. - sig)
    
+   def relu(self, x):
+     return np.maximum(0, x)
+   
+   def d_relu(self, x):
+     #print "d_relu" + str(x)
+     #print np.where(x > 0, 1, 0)
+     return  np.where(x > 0, 1, 0)
+   
+   def tanh(self, x):
+     return np.tanh(x)
+   
+   def d_tanh(self, x):
+     return np.tanh(x) * np.tanh(x)
+   
    def process(self, inputArray):
      self.hiddenSum = inputArray.dot(self.hiddenWeights) + self.hiddenBias
      self.hiddenNodes = self.sigmoid(self.hiddenSum)
+     
      self.outputSum = self.hiddenNodes.dot(self.outputWeights) + self.outputBias
      self.outputNodes = self.sigmoid(self.outputSum)
      return self.outputNodes
@@ -38,6 +53,7 @@ class MLP():
      
      updateWeightsOut = np.transpose(np.outer(delta , self.hiddenNodes))
      delta = delta.dot(np.transpose(self.outputWeights)) * (self.d_sigmoid(self.hiddenSum))
+     
      
      updateBiasHidden = delta
      updateWeightsHidden = np.transpose(np.outer(delta, inputArray))
