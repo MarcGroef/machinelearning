@@ -15,12 +15,13 @@ if __name__ == "__main__":
   xorOut4 = np.array([0])
   
   
-  nn = MLP(2, 30, 1)
-  for iter in range(200000):
+  nn = MLP(2, 2, 1)
+  for iter in range(2500):
     loss = 0
-    loss += nn.train(xorIn1, xorOut1, 0.051)
-    loss += nn.train(xorIn2, xorOut2, 0.051)
-    loss += nn.train(xorIn3, xorOut3, 0.051)
-    loss += nn.train(xorIn4, xorOut4, 0.051)
+    loss += nn.train(xorIn1, xorOut1, 0.5)
+    loss += nn.train(xorIn4, xorOut4, 0.5)
+    loss += nn.train(xorIn2, xorOut2, 0.5)
+    loss += nn.train(xorIn3, xorOut3, 0.5)
+    
     print loss
   

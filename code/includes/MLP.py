@@ -8,10 +8,10 @@ class MLP():
    
    
    def __init__(self, nInputNodes, hiddenSize, outputSize):
-     self.hiddenWeights = np.random.rand(nInputNodes, hiddenSize)
-     self.outputWeights = np.random.rand(hiddenSize, outputSize)
-     self.hiddenBias = np.zeros(hiddenSize)
-     self.outputBias = np.zeros(outputSize)
+     self.hiddenWeights = np.random.rand(nInputNodes, hiddenSize) 
+     self.outputWeights = np.random.rand(hiddenSize, outputSize) 
+     self.hiddenBias = np.ones(hiddenSize) * -1
+     self.outputBias = np.ones(outputSize) * -1
      pass
    
    def sigmoid(self,x):
@@ -22,8 +22,10 @@ class MLP():
      return sig * (1. - sig)
    
    def process(self, inputArray):
-     self.hiddenNodes = self.sigmoid(inputArray.dot(self.hiddenWeights) + self.hiddenBias)
-     self.outputNodes = self.sigmoid(self.hiddenNodes.dot(self.outputWeights) + self.outputBias)
+     self.hiddenSum = inputArray.dot(self.hiddenWeights) + self.hiddenBias
+     self.hiddenNodes = self.sigmoid(self.hiddenSum)
+     self.outputSum = self.hiddenNodes.dot(self.outputWeights) + self.outputBias
+     self.outputNodes = self.sigmoid(self.outputSum)
      return self.outputNodes
    
    def train(self, inputArray, targetOut, learningRate):
@@ -31,11 +33,11 @@ class MLP():
      loss = 0.5 * error * error
      
 
-     delta = (error) * self.d_sigmoid(self.outputNodes) 
+     delta = (error) * self.d_sigmoid(self.outputSum) 
      updateBiasOut = delta
      
      updateWeightsOut = np.transpose(np.outer(delta , self.hiddenNodes))
-     delta = delta.dot(np.transpose(self.outputWeights)) * (self.d_sigmoid(self.hiddenNodes))
+     delta = delta.dot(np.transpose(self.outputWeights)) * (self.d_sigmoid(self.hiddenSum))
      
      updateBiasHidden = delta
      updateWeightsHidden = np.transpose(np.outer(delta, inputArray))
