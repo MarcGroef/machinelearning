@@ -44,8 +44,10 @@ class Sarsa():
        for _ in range(self.max_iter):
          
          a = a - (self.mlp.d_network() / self.mlp.dd_network())
+         a = np.maximum(a, a_max) #keep in range
+         a = np.minimum(a, a_min)
          Q = self.getQ(s, a)
-##TODO: keep a within range
+e
          if (Q > Q_best):
            a_best = a
            Q_best = Q
@@ -54,8 +56,8 @@ class Sarsa():
          a_prev = a
     return a_best
 
-  def update(self, old_state, new_state, action_performed, reward):
-    old_Q = self.getQ(old_state, action_performed)
+  def update(self, old_state, old_action, new_state, action_performed, reward):
+    old_Q = self.getQ(old_state, old_action)
     diff = self.learningRate * (reward + self.discount * self.getQ(new_state, action_performed) - old_Q)
     target = self.old_Q + diff
     self.updateQ(action_performed, old_state, target)
