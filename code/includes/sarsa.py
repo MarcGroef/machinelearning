@@ -19,8 +19,8 @@ class Sarsa():
     self.learningRate = 0.01
     self.discount = 0.1
 
-  def action_dist(self, a1, a2):
-    pass
+  def action_dist(self, a1, a2):  
+    return np.linalg.norm(a1, a2)
  
   def getQ(self, state, action):
     return self.mlp.process(np.concatenate(state, action))
