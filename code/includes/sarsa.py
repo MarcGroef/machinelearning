@@ -41,11 +41,11 @@ class Sarsa():
 
        a_prev = inf ##a_max + 10????
        
-       for( _ in range(self.max_iter)):
+       for _ in range(self.max_iter):
          Q = self.getQ(s, a)
-         a = a - (self.mlp.d_network() / self.mlp.dd_network()
-         ##TODO: keep a within range
-         if(Q > Q_best)):
+         a = a - (self.mlp.d_network() / self.mlp.dd_network())
+##TODO: keep a within range
+         if (Q > Q_best):
            a_best = a
            Q_best = Q
          if(self.action_dist(a - a_prev) < 0.001):
