@@ -30,9 +30,15 @@ class Sarsa():
  
   def chooseAction(self, s):
     a_best = self.a_min
+
     Q_best = self.getQ(s, a_best)
-    ## for all discretized actions: a0
-       a = a0
+
+    action_range = self.action_dist(self.a_max, self.a_min)
+    action_space = np.arange(action_range, step=self.a_delta).reshape(self.action_size, action_range/self.action_size)
+    #This assumes a_delta to be constant between action dimensions
+    for d_a0 in np.nditer(action_space, flags=['external loop'], order='F'):
+       a = self.a_min + d_a0
+
        a_prev = inf ##a_max + 10????
        
        for( _ in range(self.max_iter)):
