@@ -26,7 +26,7 @@ class Sarsa():
     return self.mlp.process(np.concatenate(state, action))
 
   def updateQ(self, action, state, currentOut, targetOut):
-    self.mlp.train(np.concatenate(state, action), targetOut, 0.001)
+    self.mlp.train(np.concatenate(state, action), targetOut, 0.01)
  
   def chooseAction(self, s):
     a_best = self.a_min
@@ -42,8 +42,9 @@ class Sarsa():
        a_prev = inf ##a_max + 10????
        
        for _ in range(self.max_iter):
-         Q = self.getQ(s, a)
-         a = a - (self.mlp.d_network() / self.mlp.dd_network()
+         
+         a = a - (self.mlp.d_network() / self.mlp.dd_network())
+	 Q = self.getQ(s, a)
 ##TODO: keep a within range
          if (Q > Q_best):
            a_best = a
