@@ -29,7 +29,7 @@ class MLP():
      
 
    def dd_network(self):
-     return self.d_sigmoid(self.d_network()) * self.outputWeights * self.d_sigmoid(self.d_hidden_layer()) * self.hiddenWeights
+     return self.d_sigmoid(self.d_network()) * self.outputWeights * self.d_sigmoid(self.d_hidden_layer()) * self.hiddenWeights ##//TO CHECK
 
    
    
@@ -40,7 +40,7 @@ class MLP():
 
      return self.outputNodes
    
-   def train(self, inputArray, targetOut, learningRate):
+   def update(self, inputArray, targetOut, learningRate):
      error = targetOut - self.process(inputArray)
      loss = 0.5 * error * error
      

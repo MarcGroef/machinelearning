@@ -16,20 +16,27 @@ class Sarsa():
     self.state_size = state_size
     self.mlp = MLP(self.action_size + self.state_size, 100, 1)
     self.max_iter = 1000
-
+    self.learningRate = 0.01
+    self.discount = 0.1
 
   def action_dist(self, a1, a2):
     pass
  
+  def getQ(self, state, action):
+    return self.mlp.process(np.concatenate(state, action))
+
+  def updateQ(self, action, state, currentOut, targetOut):
+    self.mlp.train(np.concatenate(state, action), targetOut, 0.001)
+ 
   def chooseAction(self, s):
     a_best = self.a_min
-    Q_best = self.mlp.process(np.concatenate(s, a_best))
+    Q_best = self.getQ(s, a_best)
     ## for all discretized actions: a0
        a = a0
        a_prev = inf ##a_max + 10????
        
        for( _ in range(self.max_iter)):
-         Q = self.mlp.process(np.concatenate(s, a))
+         Q = self.getQ(s, a)
          a = a - (self.mlp.d_network() / self.mlp.dd_network()
          if(Q > Q_best)):
            a_best = a
@@ -37,4 +44,12 @@ class Sarsa():
          if(self.action_dist(a - a_prev) < 0.001):
            break
          a_prev = a
-     return a_best
+    return a_best
+
+  def update(self, old_state, new_state, action_performed, reward):
+    old_Q = self.getQ(old_state, action_performed)
+    diff = self.learningRate * (self.discount * self.getQ(new_state, action_performed) - old_Q)
+    target = self.old_Q + diff
+    self.updateQ(action_performed, old_state, target)
+    
+   
