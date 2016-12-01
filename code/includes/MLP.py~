@@ -29,7 +29,7 @@ class MLP():
      
 
    def dd_network(self):
-     return self.d_sigmoid(self.d_network()) * self.outputWeights * self.d_sigmoid(self.d_hidden_layer()) * self.hiddenWeights ##//TO CHECK
+     return self.d_sigmoid(self.d_network()) * self.outputWeights * self.d_sigmoid(self.d_hidden_layer()) * self.hiddenWeights
 
    
    
