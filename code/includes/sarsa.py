@@ -16,6 +16,10 @@ class Sarsa():
     self.state_size = state_size
     self.mlp = MLP(self.action_size + self.state_size, 100, 1)
     self.max_iter = 1000
+
+
+  def action_dist(self, a1, a2):
+    pass
  
   def chooseAction(self, s):
     a_best = self.a_min
@@ -29,7 +33,8 @@ class Sarsa():
          a = a - (self.mlp.d_network() / self.mlp.dd_network()
          if(Q > Q_best)):
            a_best = a
-         if(abs(a - a_prev) < 0.001):
+           Q_best = Q
+         if(self.action_dist(a - a_prev) < 0.001):
            break
          a_prev = a
      return a_best
