@@ -19,14 +19,14 @@ class Sarsa():
     self.learningRate = 0.01
     self.discount = 0.1
 
-  def action_dist(self, a1, a2):
-    pass
+  def action_dist(self, a1, a2):  
+    return np.linalg.norm(a1, a2)
  
   def getQ(self, state, action):
     return self.mlp.process(np.concatenate(state, action))
 
   def updateQ(self, action, state, currentOut, targetOut):
-    self.mlp.train(np.concatenate(state, action), targetOut, 0.001)
+    self.mlp.train(np.concatenate(state, action), targetOut, 0.01)
  
   def chooseAction(self, s):
     a_best = self.a_min
@@ -41,10 +41,14 @@ class Sarsa():
 
        a_prev = inf ##a_max + 10????
        
-       for( _ in range(self.max_iter)):
+       for _ in range(self.max_iter):
+         
+         a = a - (self.mlp.d_network() / self.mlp.dd_network())
+         a = np.maximum(a, a_max) #keep in range
+         a = np.minimum(a, a_min)
          Q = self.getQ(s, a)
-         a = a - (self.mlp.d_network() / self.mlp.dd_network()
-         if(Q > Q_best)):
+e
+         if (Q > Q_best):
            a_best = a
            Q_best = Q
          if(self.action_dist(a - a_prev) < 0.001):
@@ -52,9 +56,9 @@ class Sarsa():
          a_prev = a
     return a_best
 
-  def update(self, old_state, new_state, action_performed, reward):
-    old_Q = self.getQ(old_state, action_performed)
-    diff = self.learningRate * (self.discount * self.getQ(new_state, action_performed) - old_Q)
+  def update(self, old_state, old_action, new_state, action_performed, reward):
+    old_Q = self.getQ(old_state, old_action)
+    diff = self.learningRate * (reward + self.discount * self.getQ(new_state, action_performed) - old_Q)
     target = self.old_Q + diff
     self.updateQ(action_performed, old_state, target)
     
