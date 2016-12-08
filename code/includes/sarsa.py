@@ -34,20 +34,20 @@ class Sarsa():
     Q_best = self.getQ(s, a_best)
 
     action_range = self.action_dist(self.a_max, self.a_min)
-    action_space = np.mgrid(self.a_min:self.a_max:self.a_delta)#.reshape(self.action_size, action_range/self.action_size)
+    action_space = np.mgrid[self.a_min:self.a_max:self.a_delta,self.a_min:self.a_max:self.a_delta]#.reshape(self.action_size, action_range/self.action_size)
     #This assumes a_delta to be constant between action dimensions
-    for d_a0 in np.nditer(action_space, flags=['external loop'], order='F'):
-       a = self.a_min + d_a0
+    for a_x, a_y in np.nditer(action_space, flags=['external loop'], order='F'):
+       a = np.array([a_x, a_y])
 
-       a_prev = inf ##a_max + 10????
+       a_prev = np.array([inf, inf]) ##a_max + 10????
        
        for _ in range(self.max_iter):
          
          a = a - (self.mlp.d_network() / self.mlp.dd_network())
-         a = np.maximum(a, a_max) #keep in range
-         a = np.minimum(a, a_min)
+         a = np.maximum(a, np.array([self.a_max, self.a_max])) #keep in range
+         a = np.minimum(a, np.array([self.a_min, self.a_min]))
          Q = self.getQ(s, a)
-e
+
          if (Q > Q_best):
            a_best = a
            Q_best = Q
