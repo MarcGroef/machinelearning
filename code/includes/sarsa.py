@@ -34,7 +34,7 @@ class Sarsa():
     Q_best = self.getQ(s, a_best)
 
     action_range = self.action_dist(self.a_max, self.a_min)
-    action_space = np.arange(action_range, step=self.a_delta).reshape(self.action_size, action_range/self.action_size)
+    action_space = np.mgrid(self.a_min:self.a_max:self.a_delta)#.reshape(self.action_size, action_range/self.action_size)
     #This assumes a_delta to be constant between action dimensions
     for d_a0 in np.nditer(action_space, flags=['external loop'], order='F'):
        a = self.a_min + d_a0
