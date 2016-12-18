@@ -59,7 +59,7 @@ def sarsa_test():
 			state = done[0]
 			#print [action[0][0], reward, action[1][0]]
 			sarsa.update(old_state, old_action, state, action[0], reward)
-		print [tot_reward / n_iter, tot_Q / n_iter]
+		print tot_reward
 
 if __name__ == "__main__":
 	#xorTest()
