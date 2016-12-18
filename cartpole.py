@@ -5,4 +5,8 @@ env.reset()
 
 for _ in range(1000):
 	env.render()
-        env.step(env.action_space.sample())
+        done = env.step(env.action_space.sample())
+
+	if done[2]:
+		env.reset()
+

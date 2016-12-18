@@ -1,8 +1,9 @@
 from includes.MLP import MLP
+from includes.sarsa import Sarsa
 import numpy as np
+import gym
 
-
-if __name__ == "__main__":
+def xorTest():
   
   xorIn1 = np.array([0,1])
   xorIn2 = np.array([1,0])
@@ -25,3 +26,41 @@ if __name__ == "__main__":
     
     print loss
   
+
+
+
+def sarsa_test():
+	sarsa = Sarsa(-1, 1, 0.1, 2)
+	env = gym.make('MountainCarContinuous-v0')
+	state = env.reset()
+	for _ in range(2000):
+		env.reset();
+		tot_reward = 0
+		tot_Q = 0
+		n_iter = 0
+		for _ in range(10000):
+			n_iter += 1
+			old_state = state
+			action = env.action_space.sample()
+			env.render()
+			old_action = action
+			action = sarsa.chooseAction(state)
+			tot_Q += action[1]
+			#action = action[0]
+
+			#print action
+			done = env.step(action[0])
+			finished = done[2]
+			if finished:
+				break
+			#print done
+			reward = done[1]
+			tot_reward += reward
+			state = done[0]
+			#print [action[0][0], reward, action[1][0]]
+			sarsa.update(old_state, old_action, state, action[0], reward)
+		print [tot_reward / n_iter, tot_Q / n_iter]
+
+if __name__ == "__main__":
+	#xorTest()
+	sarsa_test()
