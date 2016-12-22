@@ -30,7 +30,7 @@ def xorTest():
 
 
 def sarsa_test():
-	sarsa = Sarsa(-1, 1, 0.1, 2)
+	sarsa = Sarsa(1,[-1], [1], [0.1], 2)
 	env = gym.make('MountainCarContinuous-v0')
 	state = env.reset()
 	for _ in range(2000):

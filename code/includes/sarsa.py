@@ -8,12 +8,12 @@ class Sarsa():
 
 
 
-  def __init__(self, a_min, a_max, a_delta, state_size, random_chance = 0.01, learningRate = 0.999, discount = 0.1):
-    self.a_max = np.asarray([a_max])
-    self.a_min = np.asarray([a_min])
-    self.a_delta = np.asarray([a_delta])
-    self.action_size = 1
-    self.action_space = None
+  def __init__(self, a_dim, a_min, a_max, a_delta, state_size, random_chance = 0.01, learningRate = 0.999, discount = 0.1):
+    self.a_max = np.asarray(a_max)
+    self.a_min = np.asarray(a_min)
+    self.a_delta = np.asarray(a_delta)
+    self.action_size = a_dim
+    self.action_space = self.define_action_space(a_dim, a_min, a_max, a_delta)
     self.state_size = state_size
     self.mlp = MLP(self.action_size + self.state_size, 100, 1)
     self.max_iter = 10
@@ -38,39 +38,51 @@ class Sarsa():
     dim_lst = []
     for i in range(0, dim):
       dim_lst.append(np.arange(min[i], max[i], delta[i]))
-    self.action_space = np.array(np.meshgrid(*dim_lst))
+    return np.array(np.meshgrid(*dim_lst))
  
   def chooseAction(self, s):
     a_best = self.a_min
 
     Q_best = -1000000
 
-    #action_space = self.define_action_space
-    #for args in np.nditer(action_space, flags=['external_loop'], order='F'):
     #    print(args)
     
     if(np.random.rand(1) > (1 - self.random_chance)):
-	rand_act = (np.random.rand(1) - 0.5) * 2
+	#rand_act = (np.random.rand(1) - 0.5) * 2
+        rand_act = []
+        for i in range(0,self.action_size):
+            rand_act.append(np.random.choice(np.arange(self.a_min[i],self.a_max[i],self.a_delta[i])))
 	#print "radom action: " +str(rand_act)
-	return [np.asarray(rand_act), self.getQ(s, rand_act)]
+	    return [np.asarray(rand_act), self.getQ(s, rand_act)]
 
-    for a in range(-10, 10, 1):
-       a /= 10.0
-       a = np.asarray([a], dtype = np.float32)
+    loop_flags = []
+    if self.action_size > 1:
+        loop_flags = ['external_loop']
+
+    for a in np.nditer(self.action_space, flags=loop_flags, order='F'):
+    # for a in range(-10, 10, 1):
+    #    a /= 10.0
+        #print(a)
+        if loop_flags == []:
+            a = [a]
+        a = np.asarray(a, dtype = np.float32)
        #print a
+
       ##Newtons method, to be added later..
        #print a
        #for _ in range(1):#range(self.max_iter):
 #a += 0.1
 #a = a - (self.mlp.d_network() / self.mlp.dd_network())
 #a += np.random.rand(1) - 0.5
-       a = np.minimum(a, self.a_max) #keep in range
-       a = np.maximum(a, self.a_min)
-       Q = self.getQ(s, a)
+
+       #
+       # a = np.minimum(a, self.a_max) #keep in range
+       # a = np.maximum(a, self.a_min)
+        Q = self.getQ(s, a)
 #print [Q_best, a_best]
-       if (Q > Q_best):
-         a_best = a
-         Q_best = Q
+        if (Q > Q_best):
+            a_best = a
+            Q_best = Q
 	   
     return [a_best, Q_best]
 
