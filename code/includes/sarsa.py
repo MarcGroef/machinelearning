@@ -13,6 +13,7 @@ class Sarsa():
     self.a_min = np.asarray([a_min])
     self.a_delta = np.asarray([a_delta])
     self.action_size = 1
+    self.action_space = None
     self.state_size = state_size
     self.mlp = MLP(self.action_size + self.state_size, 100, 1)
     self.max_iter = 10
@@ -32,20 +33,22 @@ class Sarsa():
 
   def updateQ(self, action, state, targetOut):
     self.mlp.train(np.concatenate([state, action]), targetOut, 0.02)
+
+  def define_action_space(self, dim, min, max, delta):
+    dim_lst = []
+    for i in range(0, dim):
+      dim_lst.append(np.arange(min[i], max[i], delta[i]))
+    self.action_space = np.array(np.meshgrid(*dim_lst))
  
   def chooseAction(self, s):
     a_best = self.a_min
 
     Q_best = -1000000
 
-    #action_range = self.action_dist(self.a_max, self.a_min)
-    #action_space = np.mgrid[self.a_min:self.a_max:self.a_delta,self.a_min:self.a_max:self.a_delta]#.reshape(self.action_size, action_range/self.action_size)
-    #action_space = np.mgrid[self.a_min:self.a_max:self.a_delta]
-    #print action_space
-    #This assumes a_delta to be constant between action dimensions
-    #for a_x, a_y in np.nditer(action_space, flags=['external_loop'], order='F'):
-    #for a in action_space:#np.nditer(action_space, flags=['external_loop'], order='F'):
-    #for a in [-1, 1]
+    #action_space = self.define_action_space
+    #for args in np.nditer(action_space, flags=['external_loop'], order='F'):
+    #    print(args)
+    
     if(np.random.rand(1) > (1 - self.random_chance)):
 	rand_act = (np.random.rand(1) - 0.5) * 2
 	#print "radom action: " +str(rand_act)
