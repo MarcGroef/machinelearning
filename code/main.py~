@@ -44,16 +44,21 @@ def cacla_test():
 			env.render()
 			old_action = action
 			action = cacla.chooseAction(state)
+			#tot_Q += action[1]
+			#action = action[0]
+
+			#print action
+
 			done = env.step([action])
 			finished = done[2]
 			if finished:
 				break
-
+			#print done
 			reward = done[1]
 			tot_reward += reward
 			state = done[0]
+			#print [action[0][0], reward, action[1][0]]
 			cacla.update(old_state, old_action, state, reward)
-
 		print tot_reward
 
 def sarsa_test():
