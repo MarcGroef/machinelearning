@@ -32,8 +32,7 @@ def cacla_test():
 	cacla = Cacla(1,[-1], [1], 2)
 	env = gym.make('MountainCarContinuous-v0')
 	state = env.reset()
-  	print "BOOOO: " + str(state)
-	for _ in range(2000):
+	for x in range(2000):
 		env.reset()
 		tot_reward = 0
 		tot_Q = 0
@@ -53,7 +52,6 @@ def cacla_test():
 			reward = done[1]
 			tot_reward += reward
 			state = done[0]
-			print "State retrieved: " + str(state)
 			cacla.update(old_state, old_action, state, reward)
 
 		print tot_reward
