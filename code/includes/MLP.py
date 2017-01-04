@@ -5,8 +5,6 @@ class MLP():
   
    nLayers = 2
    
-   
-   
    def __init__(self, nInputNodes, hiddenSize, outputSize):
      self.hiddenWeights = np.random.rand(nInputNodes, hiddenSize) * 0.0001
 
@@ -46,9 +44,6 @@ class MLP():
 
    def dd_network(self):
      return self.d_sigmoid(self.d_network()) * self.outputWeights * self.d_sigmoid(self.d_hidden_layer()) * self.hiddenWeights ##//TO CHECK
-
-   
-   
 
    def process(self, inputArray):
      self.hiddenNodes = self.activation(inputArray.dot(self.hiddenWeights) + self.hiddenBias)

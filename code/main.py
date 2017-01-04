@@ -44,7 +44,7 @@ def cacla_test():
 			env.render()
 			old_action = action
 			action = cacla.chooseAction(state)
-			done = env.step([action])
+			done = env.step(action)
 			finished = done[2]
 			if finished:
 				break
@@ -93,8 +93,5 @@ def sarsa_test():
 if __name__ == "__main__":
 	#xorTest()
 	cacla_test()
-
-
-
 
 

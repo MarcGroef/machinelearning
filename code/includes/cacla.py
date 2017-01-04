@@ -1,12 +1,13 @@
 import numpy as np
 from MLP import MLP
+import random
 
 class Cacla():
   a_max = None
   a_min = None
   a_delta = None
 
-  def __init__(self, a_dim, a_min, a_max, state_size, random_chance = 0.01, learningRate = 0.999, discount = 0.1):
+  def __init__(self, a_dim, a_min, a_max, state_size, random_chance = 0.01, learningRate = 0.001, discount = 0.1):
     self.a_max = np.asarray(a_max)
     self.a_min = np.asarray(a_min)
     self.action_size = a_dim
@@ -39,9 +40,17 @@ class Cacla():
   def chooseAction(self, s):
     print "getAction: " + str(self.getAction(s))
     print "------------------------"
-    action = self.getAction(s) + np.random.normal(loc=0.0, scale=self.sigma, size=1)
-    # clamp action value between -1 and 1
-    action = max(min(1, action), -1)
+    if (random.random() < self.random_chance):
+	action = random.uniform(-1, 1)
+  	print "ACTION1: " + str(action)
+	action = [action]
+    else:
+        action = self.getAction(s) + np.random.normal(loc=0.0, scale=self.sigma, size=1)
+        # clamp action value between -1 and 1
+        action = max(min(1, action[0]), -1)
+	print "ACTION1: " + str(action)
+	action = [action]
+
     return action
 
   def update(self, old_state, old_action, new_state, reward):
