@@ -43,7 +43,7 @@ class Sarsa():
   def chooseAction(self, s):
     a_best = self.a_min
 
-    Q_best = -1000000
+    Q_best = self.getQ(a_best, s)
 
     #    print(args)
     
@@ -60,6 +60,7 @@ class Sarsa():
         loop_flags = ['external_loop']
 
     for a in np.nditer(self.action_space, flags=loop_flags, order='F'):
+        a_previous = self.a_max * 1000;
     # for a in range(-10, 10, 1):
     #    a /= 10.0
         #print(a)
@@ -70,19 +71,21 @@ class Sarsa():
 
       ##Newtons method, to be added later..
        #print a
-       #for _ in range(1):#range(self.max_iter):
+        Q = self.getQ(s, a)
+        for _ in range(self.max_iter):#range(self.max_iter):
 #a += 0.1
-#a = a - (self.mlp.d_network() / self.mlp.dd_network())
+            a = a - (self.mlp.d_network() / self.mlp.dd_network())
 #a += np.random.rand(1) - 0.5
 
-       #
-       # a = np.minimum(a, self.a_max) #keep in range
-       # a = np.maximum(a, self.a_min)
-        Q = self.getQ(s, a)
+            a = np.minimum(a, self.a_max) #keep in range
+            a = np.maximum(a, self.a_min)
+            Q = self.getQ(s, a)
 #print [Q_best, a_best]
-        if (Q > Q_best):
-            a_best = a
-            Q_best = Q
+            if (Q > Q_best):
+                a_best = a
+                Q_best = Q
+            if np.linalg.norm(a - a_previous) < 0.0001:
+                break
 	   
     return [a_best, Q_best]
 
