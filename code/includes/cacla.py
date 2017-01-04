@@ -40,6 +40,8 @@ class Cacla():
     print "getAction: " + str(self.getAction(s))
     print "------------------------"
     action = self.getAction(s) + np.random.normal(loc=0.0, scale=self.sigma, size=1)
+    # clamp action value between -1 and 1
+    action = max(min(1, action), -1)
     return action
 
   def update(self, old_state, old_action, new_state, reward):
