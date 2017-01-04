@@ -21,14 +21,16 @@ class Cacla():
     self.sigma = 1
 
   def getAction(self, state):
-    print "getAction: " + str(state)
+    action = self.action_mlp.process(state)
+    print "getAction: " + str(action)
     print "------------------------"
-    return self.action_mlp.process(state)
+    return action
  
   def getQ(self, state):
-    print "getQ: " + str(state)
+    q = self.value_mlp.process(state)
+    print "getQ: " + str(q)
     print "------------------------"
-    return self.value_mlp.process(state)
+    return q
 
   def updateQ(self, inp, des):
     self.value_mlp.train(inp, des, 0.02)

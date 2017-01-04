@@ -42,13 +42,13 @@ class Cacla():
     print "------------------------"
     if (random.random() < self.random_chance):
 	action = random.uniform(-1, 1)
-  	print "ACTION1: " + action
+  	print "ACTION1: " + str(action)
 	action = [action]
     else:
         action = self.getAction(s) + np.random.normal(loc=0.0, scale=self.sigma, size=1)
         # clamp action value between -1 and 1
         action = max(min(1, action[0]), -1)
-	print "ACTION1: " + action
+	print "ACTION1: " + str(action)
 	action = [action]
 
     return action
