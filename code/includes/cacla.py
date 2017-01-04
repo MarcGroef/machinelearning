@@ -20,9 +20,13 @@ class Cacla():
     self.sigma = 1
 
   def getAction(self, state):
+    print "getAction: " + str(state)
+    print "------------------------"
     return self.action_mlp.process(state)
  
   def getQ(self, state):
+    print "getQ: " + str(state)
+    print "------------------------"
     return self.value_mlp.process(state)
 
   def updateQ(self, inp, des):
@@ -33,7 +37,8 @@ class Cacla():
  
   #Draw a value from a univariate normal dist
   def chooseAction(self, s):
-    print self.getAction(s)
+    print "getAction: " + str(self.getAction(s))
+    print "------------------------"
     action = self.getAction(s) + np.random.normal(loc=0.0, scale=self.sigma, size=1)
     return action
 
