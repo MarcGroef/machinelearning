@@ -29,10 +29,11 @@ def xorTest():
   
 
 def cacla_test():
-	cacla = Cacla(1,[-1], [1], [0.1], 2)
+	cacla = Cacla(1,[-1], [1], 2)
 	env = gym.make('MountainCarContinuous-v0')
 	state = env.reset()
 	for _ in range(2000):
+                print state
 		env.reset();
 		tot_reward = 0
 		tot_Q = 0
@@ -61,6 +62,7 @@ def sarsa_test():
 	env = gym.make('MountainCarContinuous-v0')
 	state = env.reset()
 	for _ in range(2000):
+                print state
 		env.reset();
 		tot_reward = 0
 		tot_Q = 0
@@ -91,3 +93,8 @@ def sarsa_test():
 if __name__ == "__main__":
 	#xorTest()
 	cacla_test()
+
+
+
+
+
