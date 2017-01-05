@@ -17,8 +17,8 @@ def xorTest():
   xorOut4 = np.array([0])
   
   
-  nn = MLP(2, 2, 1)
-  for iter in range(2500):
+  nn = MLP(2, 5, 1)
+  for iter in range(100):
     loss = 0
     loss += nn.train(xorIn1, xorOut1, 0.5)
     loss += nn.train(xorIn4, xorOut4, 0.5)
@@ -37,7 +37,7 @@ def cacla_test():
 		tot_reward = 0
 		tot_Q = 0
 		n_iter = 0
-		for _ in range(10000):
+		for _ in range(1000):
 			n_iter += 1
 			old_state = state
 			action = env.action_space.sample()
@@ -52,7 +52,7 @@ def cacla_test():
 			reward = done[1]
 			tot_reward += reward
 			state = done[0]
-			print "State retrieved: " + str(state[0])
+			#print "State retrieved: " + str(state[0])
 			cacla.update(old_state, old_action, state, reward)
 
 		print tot_reward
@@ -92,9 +92,7 @@ def sarsa_test():
 
 if __name__ == "__main__":
 	#xorTest()
-	cacla_test()
-
-
-
+	#cacla_test()
+	sarsa_test()
 
 
