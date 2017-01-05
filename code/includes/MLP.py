@@ -101,10 +101,10 @@ class MLP():
      #print self.outputNodes
      return self.outputNodes
    
-   def train(self, inputArray, targetOut, learningRate, momentum):
+   def train(self, inputArray, targetOut, learningRate, momentum = 0):
      error = targetOut - self.process(inputArray)
      loss = 0.5 * error * error
-     print loss
+     #print loss
 
      #delta = (error) * self.d_activation(self.outputNodes) #non lin outlayer
      delta = (error) #* (self.outputNodes) #lin outlayer

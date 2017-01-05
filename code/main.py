@@ -1,6 +1,7 @@
 from includes.MLP import MLP
 from includes.sarsa import Sarsa
 from includes.cacla import Cacla
+import matplotlib.pyplot as plt
 import numpy as np
 import gym
 
@@ -27,34 +28,45 @@ def xorTest():
     
     print loss
   
-
 def cacla_test():
 	cacla = Cacla(1,[-1], [1], 2)
 	env = gym.make('MountainCarContinuous-v0')
 	state = env.reset()
+
+        plt.ion() ## Note this correction
+	fig=plt.figure()
+	plt.axis([0,0,0,0])
+
+	i=0
+	x1=list()
+	y1=list()
 	for x in range(2000):
 		env.reset()
 		tot_reward = 0
 		tot_Q = 0
 		n_iter = 0
-		for _ in range(4000):
+		for _ in range(5000):
 			n_iter += 1
 			old_state = state
 			action = env.action_space.sample()
-			env.render()
+			#env.render()
 			old_action = action
 			action = cacla.chooseAction(state)
 			done = env.step(action)
 			finished = done[2]
-			if finished:
-				break
-
 			reward = done[1]
 			tot_reward += reward
 			state = done[0]
-
 			cacla.update(old_state, old_action, state, reward)
+			if finished:
+				break
 
+		x1.append(i);
+		y1.append(tot_reward);
+		plt.scatter(i,tot_reward);
+		i+=1;
+		plt.show()
+		plt.pause(0.0001) #Note this correction
 		print tot_reward
 
 def sarsa_test():
@@ -92,7 +104,7 @@ def sarsa_test():
 
 if __name__ == "__main__":
 	#xorTest()
-	#cacla_test()
-	sarsa_test()
+	cacla_test()
+	#sarsa_test()
 
 
