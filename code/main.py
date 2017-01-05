@@ -44,9 +44,8 @@ def cacla_test():
 		env.reset()
 		tot_reward = 0
 		tot_Q = 0
-		n_iter = 0
-		for _ in range(5000):
-			n_iter += 1
+		finished = False
+		while not finished:
 			old_state = state
 			action = env.action_space.sample()
 			#env.render()
@@ -57,9 +56,7 @@ def cacla_test():
 			reward = done[1]
 			tot_reward += reward
 			state = done[0]
-			cacla.update(old_state, old_action, state, reward)
-			if finished:
-				break
+			cacla.update(old_state, old_action, state, reward, finished)
 
 		x1.append(i);
 		y1.append(tot_reward);

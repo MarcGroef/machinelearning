@@ -16,7 +16,7 @@ class Sarsa():
     self.action_size = a_dim
     self.action_space = self.define_action_space(a_dim, a_min, a_max, a_delta)
     self.state_size = state_size
-    self.mlp = MLP(self.action_size + self.state_size, 12, 1)
+    self.mlp = MLP(self.action_size + self.state_size, 50, 1)
     self.max_iter = 10
     self.learningRate = learningRate
     self.discount = discount
@@ -100,7 +100,7 @@ class Sarsa():
                 #print a_best
             if np.linalg.norm(a - a_previous) < 0.0001:
                 break
-    print  [a_best, Q_best]  
+    #print  [a_best, Q_best]  
     return [a_best, Q_best]
 
   def update(self, old_state, old_action, new_state, action_performed, reward):

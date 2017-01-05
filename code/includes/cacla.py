@@ -29,10 +29,10 @@ class Cacla():
     return q
 
   def updateQ(self, inp, des):
-    self.value_mlp.train(inp, des, 0.001)
+    self.value_mlp.train(inp, des, 0.01)
 
   def updateActor(self, state, action):
-    self.action_mlp.train(state, action, 0.001)
+    self.action_mlp.train(state, action, 0.01)
  
   #Draw a value from a univariate normal dist
   def chooseAction(self, s):
@@ -46,16 +46,14 @@ class Cacla():
 	action = [action]
     return action
 
-  def update(self, old_state, old_action, new_state, reward):
-    #old_Q = self.getQ(old_state)
-    #value = reward + self.discount * self.getQ(new_state)
-    #self.updateQ(old_state, value)
-    #td = value - old_Q
-    #if td > 0:
-    #    self.updateActor(old_state, old_action)
-
+  def update(self, old_state, old_action, new_state, reward, goal):
     old_Q = self.getQ(old_state) 
-    value = reward + self.discount * self.getQ(new_state) 
+
+    if goal:
+	value = reward
+    else:
+        value = reward + self.discount * self.getQ(new_state)
+
     self.updateQ(old_state, value)
     td = value - old_Q
     if value > old_Q:

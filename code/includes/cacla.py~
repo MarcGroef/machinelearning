@@ -12,8 +12,8 @@ class Cacla():
     self.a_min = np.asarray(a_min)
     self.action_size = a_dim
     self.state_size = state_size
-    self.action_mlp = MLP(self.state_size, 100, 1)
-    self.value_mlp = MLP(self.state_size, 100, 1)
+    self.action_mlp = MLP(self.state_size, 20, 1)
+    self.value_mlp = MLP(self.state_size, 20, 1)
     self.max_iter = 10
     self.learningRate = learningRate
     self.discount = discount
@@ -21,7 +21,6 @@ class Cacla():
     self.sigma = 1
 
   def getAction(self, state):
-
     action = self.action_mlp.process(state)
     return action
  
@@ -30,14 +29,13 @@ class Cacla():
     return q
 
   def updateQ(self, inp, des):
-    self.value_mlp.train(inp, des, 0.02)
+    self.value_mlp.train(inp, des, 0.01)
 
   def updateActor(self, state, action):
-    self.action_mlp.train(state, action, 0.02)
+    self.action_mlp.train(state, action, 0.01)
  
   #Draw a value from a univariate normal dist
   def chooseAction(self, s):
-
     if (random.random() < self.random_chance):
 	action = random.uniform(-1, 1)
 	action = [action]
@@ -45,14 +43,18 @@ class Cacla():
         action = self.getAction(s) + np.random.normal(loc=0.0, scale=self.sigma, size=1)
         # clamp action value between -1 and 1
         action = max(min(1, action[0]), -1)
-
 	action = [action]
     return action
 
-  def update(self, old_state, old_action, new_state, reward):
-    old_Q = self.getQ(old_state)
-    value = reward + self.discount * self.getQ(new_state)
+  def update(self, old_state, old_action, new_state, reward, goal):
+    old_Q = self.getQ(old_state) 
+
+    if goal:
+	value = 10000
+    else:
+        value = reward + self.discount * self.getQ(new_state)
+
     self.updateQ(old_state, value)
     td = value - old_Q
-    if td > 0:
+    if value > old_Q:
         self.updateActor(old_state, old_action)
