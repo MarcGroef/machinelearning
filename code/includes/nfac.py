@@ -49,8 +49,8 @@ class NFAC():
     return action
 
   def update(self, old_state, old_action, new_state, reward, goal):
-    # Store tuples of the form (s, u, a, s', r) as described in section 3. 
-    self.D.append([old_state, self.getAction(old_state), old_action, new_state, reward])
+    # Store tuples of the form (s, u, a, r, s') as described in section 3. 
+    self.D.append([old_state, self.getAction(old_state), old_action, reward, new_state])
 
     old_Q = self.getQ(old_state) 
 
