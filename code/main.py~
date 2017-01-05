@@ -37,12 +37,7 @@ def cacla_test():
 		tot_reward = 0
 		tot_Q = 0
 		n_iter = 0
-<<<<<<< HEAD
-		for _ in range(1000):
-=======
-		print x
-		for _ in range(10000):
->>>>>>> 3f0bee629fd275a61cac068e9391d8e0fda573ed
+		for _ in range(4000):
 			n_iter += 1
 			old_state = state
 			action = env.action_space.sample()
@@ -100,11 +95,7 @@ def sarsa_test():
 
 if __name__ == "__main__":
 	#xorTest()
-<<<<<<< HEAD
 	#cacla_test()
 	sarsa_test()
-=======
-	cacla_test()
->>>>>>> 3f0bee629fd275a61cac068e9391d8e0fda573ed
 
 

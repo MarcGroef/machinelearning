@@ -23,7 +23,7 @@ class Cacla():
   def getAction(self, state):
 <<<<<<< HEAD
     #print "getAction: " + str(state)
-    print "------------------------"
+    #print "------------------------"
     return self.action_mlp.process(state)
  
   def getQ(self, state):
@@ -70,7 +70,6 @@ class Cacla():
     return action
 
   def update(self, old_state, old_action, new_state, reward):
-    
     old_Q = self.getQ(old_state)
     value = reward + self.discount * self.getQ(new_state)
     self.updateQ(old_state, value)

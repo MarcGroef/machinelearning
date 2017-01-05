@@ -52,10 +52,7 @@ def cacla_test():
 			reward = done[1]
 			tot_reward += reward
 			state = done[0]
-<<<<<<< HEAD
-			#print "State retrieved: " + str(state[0])
-=======
->>>>>>> 3f0bee629fd275a61cac068e9391d8e0fda573ed
+
 			cacla.update(old_state, old_action, state, reward)
 
 		print tot_reward
