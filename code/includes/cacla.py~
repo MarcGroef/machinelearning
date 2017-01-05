@@ -21,6 +21,7 @@ class Cacla():
     self.sigma = 1
 
   def getAction(self, state):
+<<<<<<< HEAD
     #print "getAction: " + str(state)
     print "------------------------"
     return self.action_mlp.process(state)
@@ -29,6 +30,14 @@ class Cacla():
     #print "getQ: " + str(state)
     #print "------------------------"
     return self.value_mlp.process(state)
+=======
+    action = self.action_mlp.process(state)
+    return action
+ 
+  def getQ(self, state):
+    q = self.value_mlp.process(state)
+    return q
+>>>>>>> 3f0bee629fd275a61cac068e9391d8e0fda573ed
 
   def updateQ(self, inp, des):
     self.value_mlp.train(inp, des, 0.02)
@@ -38,19 +47,26 @@ class Cacla():
  
   #Draw a value from a univariate normal dist
   def chooseAction(self, s):
+<<<<<<< HEAD
     #print "getAction: " + str(self.getAction(s))
     #print "------------------------"
     if (random.random() < self.random_chance):
 	action = random.uniform(-1, 1)
   	#print "ACTION1: " + str(action)
+=======
+    if (random.random() < self.random_chance):
+	action = random.uniform(-1, 1)
+>>>>>>> 3f0bee629fd275a61cac068e9391d8e0fda573ed
 	action = [action]
     else:
         action = self.getAction(s) + np.random.normal(loc=0.0, scale=self.sigma, size=1)
         # clamp action value between -1 and 1
         action = max(min(1, action[0]), -1)
+<<<<<<< HEAD
 	#print "ACTION1: " + str(action)
+=======
+>>>>>>> 3f0bee629fd275a61cac068e9391d8e0fda573ed
 	action = [action]
-
     return action
 
   def update(self, old_state, old_action, new_state, reward):
