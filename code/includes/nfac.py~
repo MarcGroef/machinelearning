@@ -41,23 +41,23 @@ class NFAC():
  
   #Draw a value from a univariate normal dist or use epsilon greedy
   def chooseAction(self, s):
-    action = self.getExplorationAction(s, 0.4)
+    action = self.getExplorationAction(s, 5)
     # clamp action value between -1 and 1
     action = max(min(1, action[0]), -1)
     action = [action]
     return action
 
-  def clearCollection():
-    D = []
+  def clearCollection(self):
+    self.D = []
 
-  def update():
-    for o, b, e, r, n, g in D:
+  def update(self):
+    for o, b, e, r, n, g in self.D:
       old_Q = self.getQ(o) 
 
       if g:
-	value = reward
+	value = r
       else:
-        value = reward + self.discount * self.getQ(n)
+        value = r + self.discount * self.getQ(n)
 
       self.updateQ(o, value)
 
@@ -66,10 +66,13 @@ class NFAC():
       else:
 	# update according to s (old_state) and u (best_action) instead of s and a (old_action)
         self.updateActor(o, b)
+
+    self.clearCollection()
       
 
   def collect(self, old_state, old_action, reward, new_state, goal):
     # Store tuples of the form (s, u, a, r, s') as described in section 3. 
+    # Note we also store a flag if new state is goal at the end
 
     best_action = self.getAction(old_state)
     self.D.append([old_state, best_action, old_action, reward, new_state, goal])
