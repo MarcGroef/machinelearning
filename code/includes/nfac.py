@@ -16,7 +16,6 @@ class NFAC():
     self.state_size = state_size
     self.action_mlp = MLP(self.state_size, 20, 1)
     self.value_mlp = MLP(self.state_size, 20, 1)
-    self.max_iter = 10
     self.learningRate = learningRate
     self.discount = discount
     self.random_chance = random_chance
@@ -26,8 +25,8 @@ class NFAC():
     action = self.action_mlp.process(state)
     return action
 
-  def getExplorationAction(self, state):
-    action = self.getAction(state) + np.random.normal(loc=0.0, scale=self.sigma, size=1)
+  def getExplorationAction(self, state, sigma):
+    action = self.getAction(state) + sigma * np.random.normal(loc=0.0, scale=self.sigma, size=1)
     return action
  
   def getQ(self, state):
@@ -42,38 +41,41 @@ class NFAC():
  
   #Draw a value from a univariate normal dist or use epsilon greedy
   def chooseAction(self, s):
-    if (random.random() < self.random_chance):
-	action = self.getExplorationAction(s)
-        # clamp action value between -1 and 1
-        action = max(min(1, action[0]), -1)
-	action = [action]
-    else:
-        action = self.getAction(s)
-        # clamp action value between -1 and 1
-        action = max(min(1, action[0]), -1)
-	action = [action]
+    action = self.getExplorationAction(s, 0.4)
+    # clamp action value between -1 and 1
+    action = max(min(1, action[0]), -1)
+    action = [action]
     return action
 
-  def update(self, old_state, old_action, new_state, reward, goal):
+  def clearCollection(self):
+    D = []
+
+  def update(self):
+    for o, b, e, r, n, g in D:
+      old_Q = self.getQ(o) 
+
+      if g:
+	value = reward
+      else:
+        value = reward + self.discount * self.getQ(n)
+
+      self.updateQ(o, value)
+
+      if value > old_Q:
+        self.updateActor(o, e)
+      else:
+	# update according to s (old_state) and u (best_action) instead of s and a (old_action)
+        self.updateActor(o, b)
+      
+
+  def collect(self, old_state, old_action, reward, new_state, goal):
     # Store tuples of the form (s, u, a, r, s') as described in section 3. 
 
-    #best_action = self.getAction(old_state)
-    #self.D.append([old_state, best_action, old_action, reward, new_state])
+    best_action = self.getAction(old_state)
+    self.D.append([old_state, best_action, old_action, reward, new_state, goal])
 
-    old_Q = self.getQ(old_state) 
 
-    if goal:
-	value = reward
-    else:
-        value = reward + self.discount * self.getQ(new_state)
 
-    self.updateQ(old_state, value)
-    td = value - old_Q
-    if value > old_Q:
-        self.updateActor(old_state, old_action)
-    else:
-	# update according to s (old_state) and u (best_action) instead of s and a (old_action)
-        #self.updateActor(old_state, best_action)
-	pass
+
 
 

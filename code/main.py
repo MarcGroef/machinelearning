@@ -34,37 +34,28 @@ def nfac_test():
 	env = gym.make('MountainCarContinuous-v0')
 	state = env.reset()
 
-        plt.ion() ## Note this correction
-	fig=plt.figure()
-	plt.axis([0,0,0,0])
-
-	i=0
-	x1=list()
-	y1=list()
 	for x in range(2000):
 		env.reset()
 		tot_reward = 0
 		tot_Q = 0
 		finished = False
-		while not finished:
+		for _ in range(2000):
 			old_state = state
-			action = env.action_space.sample()
 			#env.render()
-			old_action = action
 			action = nfac.chooseAction(state)
 			done = env.step(action)
 			finished = done[2]
 			reward = done[1]
 			tot_reward += reward
 			state = done[0]
-			nfac.update(old_state, old_action, state, reward, finished)
-
-		x1.append(i);
-		y1.append(tot_reward);
-		plt.scatter(i,tot_reward);
-		i+=1;
-		plt.show()
-		plt.pause(0.0001) #Note this correction
+			#collect for offline learning
+			nfac.collect(old_state, action, reward, state, finished)
+			if finished:
+				break
+		if finished:
+			nfac.update()
+		else:
+			nfac.clearCollection()
 		print tot_reward
   
 def cacla_test():
@@ -79,23 +70,21 @@ def cacla_test():
 	i=0
 	x1=list()
 	y1=list()
-	for x in range(2000):
+	for _ in range(2000):
 		env.reset()
 		tot_reward = 0
 		tot_Q = 0
 		finished = False
 		while not finished:
 			old_state = state
-			action = env.action_space.sample()
 			#env.render()
-			old_action = action
 			action = cacla.chooseAction(state)
 			done = env.step(action)
 			finished = done[2]
 			reward = done[1]
 			tot_reward += reward
 			state = done[0]
-			cacla.update(old_state, old_action, state, reward, finished)
+			cacla.update(old_state, action, state, reward, finished)
 
 		x1.append(i);
 		y1.append(tot_reward);
@@ -128,20 +117,20 @@ def sarsa_test():
 			#print action
 			done = env.step(action[0])
 			finished = done[2]
-			if finished:
-				break
 			#print done
 			reward = done[1]
 			tot_reward += reward
 			state = done[0]
 			#print [action[0][0], reward, action[1][0]]
 			sarsa.update(old_state, old_action, state, action[0], reward)
+			if finished:
+				break
 		print tot_reward
 
 if __name__ == "__main__":
 	#xorTest()
-	cacla_test()
+	#cacla_test()
 	#sarsa_test()
-	#nfac_test()
+	nfac_test()
 
 
