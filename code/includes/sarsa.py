@@ -2,7 +2,7 @@ import numpy as np
 from MLP import MLP
 import sys
 import matplotlib.pyplot as plt  ##sudo apt-get install python-matplotlib
-
+from sklearn.neural_network import MLPClassifier
 
 ##https://www.elen.ucl.ac.be/Proceedings/esann/esannpdf/es2014-175.pdf
 class Sarsa():
@@ -21,6 +21,7 @@ class Sarsa():
 
     self.state_size = state_size
     self.mlp = MLP(self.action_size + self.state_size, 1000, 1)
+    self.mlp2 = MLPClassifier(100, activation='relu')
     self.max_iter = 10
     self.learningRate = learningRate
     self.discount = discount
@@ -34,10 +35,12 @@ class Sarsa():
     #print "action = " + str(action)
     mlpvec = np.concatenate([state, action])
     #print mlpvec
+    return self.mlp.predict(mlpvec)
     return self.mlp.process(mlpvec)
 
   def updateQ(self, action, state, targetOut):
-    self.mlp.train(np.concatenate([state, action]), targetOut, 0.001, 0.1)
+    self.mlp2.fit(np.concatenate([state, action]), targetOut)
+    #self.mlp.train(np.concatenate([state, action]), targetOut, 0.001, 0.1)
 
   def define_action_space(self, dim, min, max, delta):
     dim_lst = []
@@ -130,5 +133,6 @@ class Sarsa():
     #print [old_action, old_Q, diff]
     target = old_Q + diff
     self.updateQ(action_performed, old_state, target)
+    
     
    
