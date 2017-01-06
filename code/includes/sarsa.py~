@@ -20,7 +20,11 @@ class Sarsa():
     self.action_space = self.define_action_space(a_dim, a_min, a_max, a_delta)
 
     self.state_size = state_size
+<<<<<<< HEAD
     self.mlp = MLP(self.action_size + self.state_size, 200, 1)
+=======
+    self.mlp = MLP(self.action_size + self.state_size, 20, 1)
+>>>>>>> a42a8e1945107cef624b18d6587eaf91bd42c8da
     self.max_iter = 10
     self.learningRate = learningRate
     self.discount = discount
@@ -37,7 +41,11 @@ class Sarsa():
     return self.mlp.process(mlpvec)
 
   def updateQ(self, action, state, targetOut):
+<<<<<<< HEAD
     self.mlp.train(np.concatenate([state, action]), targetOut, 0.001, 0.1)
+=======
+    self.mlp.train(np.concatenate([state, action]), targetOut, 0.05, 0.1)
+>>>>>>> a42a8e1945107cef624b18d6587eaf91bd42c8da
 
   def define_action_space(self, dim, min, max, delta):
     dim_lst = []
