@@ -1,6 +1,7 @@
 from includes.MLP import MLP
 from includes.sarsa import Sarsa
 from includes.cacla import Cacla
+from includes.nfac import NFAC
 import matplotlib.pyplot as plt
 import numpy as np
 import gym

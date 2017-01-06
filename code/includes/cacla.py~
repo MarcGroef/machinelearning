@@ -20,6 +20,12 @@ class Cacla():
     self.random_chance = random_chance
     self.sigma = 1
 
+  #Draw a value from a univariate normal dist or use epsilon greedy
+  def getExplorationAction(self, state):
+    rand_sample = np.random.normal(loc=0.0, scale=self.sigma, size=1)
+    action = self.getAction(state) + rand_sample
+    return action
+ 
   def getAction(self, state):
     action = self.action_mlp.process(state)
     return action
@@ -34,27 +40,38 @@ class Cacla():
   def updateActor(self, state, action):
     self.action_mlp.train(state, action, 0.01)
  
-  #Draw a value from a univariate normal dist
   def chooseAction(self, s):
+    # generate best action + random sample of normal distribution
     if (random.random() < self.random_chance):
-	action = random.uniform(-1, 1)
+	action = self.getExplorationAction(s)
+        # clamp action value between -1 and 1
+        action = max(min(1, action[0]), -1)
 	action = [action]
+
+	#code for epsilon greedy, not used	
+	#action = random.uniform(-1, 1)
+	#action = [action]
     else:
-        action = self.getAction(s) + np.random.normal(loc=0.0, scale=self.sigma, size=1)
+        action = self.getAction(s)
         # clamp action value between -1 and 1
         action = max(min(1, action[0]), -1)
 	action = [action]
     return action
 
+
   def update(self, old_state, old_action, new_state, reward, goal):
     old_Q = self.getQ(old_state) 
 
     if goal:
-	value = 10000
+	value = reward
     else:
         value = reward + self.discount * self.getQ(new_state)
 
     self.updateQ(old_state, value)
+
     td = value - old_Q
+
     if value > old_Q:
         self.updateActor(old_state, old_action)
+
+

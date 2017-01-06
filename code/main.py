@@ -140,8 +140,8 @@ def sarsa_test():
 
 if __name__ == "__main__":
 	#xorTest()
-	#cacla_test()
+	cacla_test()
 	#sarsa_test()
-	nfac_test()
+	#nfac_test()
 
 
