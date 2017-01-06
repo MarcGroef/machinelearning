@@ -1,4 +1,5 @@
 from includes.MLP import MLP
+from includes.tfmlp import tfMLP
 from includes.sarsa import Sarsa
 from includes.cacla import Cacla
 from includes.nfac import NFAC
@@ -19,13 +20,14 @@ def xorTest():
   xorOut4 = np.array([-1])
   
   
-  nn = MLP(2, 10, 1)
+  #nn = MLP(2, 10, 1)
+  nn = tfMLP(2, 10, 1)
   for iter in range(1000):
     loss = 0
-    loss += nn.train(xorIn1, xorOut1, 0.05, 0.04)
-    loss += nn.train(xorIn4, xorOut4, 0.05, 0.04)
-    loss += nn.train(xorIn2, xorOut2, 0.05, 0.04)
-    loss += nn.train(xorIn3, xorOut3, 0.05, 0.04)
+    loss += nn.train(xorIn1, xorOut1)#, 0.05, 0.04)
+    loss += nn.train(xorIn4, xorOut4)#, 0.05, 0.04)
+    loss += nn.train(xorIn2, xorOut2)#, 0.05, 0.04)
+    loss += nn.train(xorIn3, xorOut3)#, 0.05, 0.04)
     
     print loss
   res = 50
@@ -167,9 +169,9 @@ def sarsa_test(render = False):
                 #plt.pause(1)
 
 if __name__ == "__main__":
-	#xorTest()
+	xorTest()
 	#cacla_test()
-	sarsa_test()
+	#sarsa_test()
 	#nfac_test()
 
 	
