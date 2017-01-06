@@ -9,7 +9,7 @@ class NFAC():
  
   D = []
 
-  def __init__(self, a_dim, a_min, a_max, state_size, random_chance = 0.01, learningRate = 0.001, discount = 0.1):
+  def __init__(self, a_dim, a_min, a_max, state_size, random_chance = 0.01, learningRate = 0.001, discount = 0.99):
     self.a_max = np.asarray(a_max)
     self.a_min = np.asarray(a_min)
     self.action_size = a_dim
