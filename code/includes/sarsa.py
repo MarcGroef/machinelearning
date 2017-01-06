@@ -9,14 +9,14 @@ class Sarsa():
 
 
 
-  def __init__(self, a_dim, a_min, a_max, a_delta, state_size, random_chance = 0.001, learningRate = 0.01, discount = 0.90):
+  def __init__(self, a_dim, a_min, a_max, a_delta, state_size, random_chance = 0.001, learningRate = 0.01, discount = 0.99):
     self.a_max = np.asarray(a_max)
     self.a_min = np.asarray(a_min)
     self.a_delta = np.asarray(a_delta)
     self.action_size = a_dim
     self.action_space = self.define_action_space(a_dim, a_min, a_max, a_delta)
     self.state_size = state_size
-    self.mlp = MLP(self.action_size + self.state_size, 50, 1)
+    self.mlp = MLP(self.action_size + self.state_size, 20, 1)
     self.max_iter = 10
     self.learningRate = learningRate
     self.discount = discount
@@ -33,7 +33,7 @@ class Sarsa():
     return self.mlp.process(mlpvec)
 
   def updateQ(self, action, state, targetOut):
-    self.mlp.train(np.concatenate([state, action]), targetOut, 0.01, 0.75)
+    self.mlp.train(np.concatenate([state, action]), targetOut, 0.05, 0.1)
 
   def define_action_space(self, dim, min, max, delta):
     dim_lst = []
@@ -73,7 +73,7 @@ class Sarsa():
         a = np.asarray(a, dtype = np.float32)
         #print a
 
-      ##Newtons method, to be added later..
+      ##Newtons method
        #print a
         Q = self.getQ(s, a)
         if (Q > Q_best):
@@ -100,7 +100,7 @@ class Sarsa():
                 #print a_best
             if np.linalg.norm(a - a_previous) < 0.0001:
                 break
-    print  [a_best, Q_best]  
+    #print  [a_best, Q_best]  
     return [a_best, Q_best]
 
   def update(self, old_state, old_action, new_state, action_performed, reward):

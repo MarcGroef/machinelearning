@@ -6,9 +6,9 @@ class MLP():
    nLayers = 2
    
    def __init__(self, nInputNodes, hiddenSize, outputSize):
-     self.hiddenWeights = np.random.rand(nInputNodes, hiddenSize) * 0.001
+     self.hiddenWeights = np.random.rand(nInputNodes, hiddenSize) * 0.0001
 
-     self.outputWeights = np.random.rand(hiddenSize, outputSize) * 0.001
+     self.outputWeights = np.random.rand(hiddenSize, outputSize) * 0.0001
      self.hiddenBias = np.ones(hiddenSize) * -1
      self.outputBias = np.ones(outputSize) * -1
 

@@ -19,13 +19,13 @@ def xorTest():
   xorOut4 = np.array([0])
   
   
-  nn = MLP(2, 5, 1)
-  for iter in range(100):
+  nn = MLP(2, 10, 1)
+  for iter in range(10000):
     loss = 0
-    loss += nn.train(xorIn1, xorOut1, 0.5)
-    loss += nn.train(xorIn4, xorOut4, 0.5)
-    loss += nn.train(xorIn2, xorOut2, 0.5)
-    loss += nn.train(xorIn3, xorOut3, 0.5)
+    loss += nn.train(xorIn1, xorOut1, 0.05, 0.04)
+    loss += nn.train(xorIn4, xorOut4, 0.05, 0.04)
+    loss += nn.train(xorIn2, xorOut2, 0.05, 0.04)
+    loss += nn.train(xorIn3, xorOut3, 0.05, 0.04)
     
     print loss
 
@@ -97,18 +97,20 @@ def cacla_test():
 def sarsa_test():
 	sarsa = Sarsa(1,[-1], [1], [0.1], 2)
 	env = gym.make('MountainCarContinuous-v0')
-	state = env.reset()
+	
 	for _ in range(2000):
-                print state
-		env.reset();
+                #print state
+		state = env.reset()
 		tot_reward = 0
 		tot_Q = 0
 		n_iter = 0
-		for _ in range(10000):
+                action = sarsa.chooseAction(state)
+		for iteration in range(10000):
 			n_iter += 1
 			old_state = state
-			action = env.action_space.sample()
-			env.render()
+			#action = env.action_space.sample()
+                        if (iteration % 10 == 0):
+			   env.render()
 			old_action = action
 			action = sarsa.chooseAction(state)
 			tot_Q += action[1]
@@ -117,13 +119,16 @@ def sarsa_test():
 			#print action
 			done = env.step(action[0])
 			finished = done[2]
+
 			#print done
 			reward = done[1]
 			tot_reward += reward
 			state = done[0]
 			#print [action[0][0], reward, action[1][0]]
-			sarsa.update(old_state, old_action, state, action[0], reward)
-			if finished:
+
+			sarsa.update(old_state, old_action[0], state, action[0], reward)
+                        if finished:
+
 				break
 		print tot_reward
 
