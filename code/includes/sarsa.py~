@@ -16,7 +16,11 @@ class Sarsa():
     self.action_size = a_dim
     self.action_space = self.define_action_space(a_dim, a_min, a_max, a_delta)
     self.state_size = state_size
+<<<<<<< HEAD
     self.mlp = MLP(self.action_size + self.state_size, 20, 1)
+=======
+    self.mlp = MLP(self.action_size + self.state_size, 50, 1)
+>>>>>>> f48fd1c9deb85e270a8c96c2a18857cf7a921ad1
     self.max_iter = 10
     self.learningRate = learningRate
     self.discount = discount

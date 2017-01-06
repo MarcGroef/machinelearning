@@ -14,14 +14,18 @@ class Cacla():
     self.state_size = state_size
     self.action_mlp = MLP(self.state_size, 100, 1)
     self.value_mlp = MLP(self.state_size, 100, 1)
-    self.max_iter = 10
     self.learningRate = learningRate
     self.discount = discount
     self.random_chance = random_chance
     self.sigma = 1
 
+  #Draw a value from a univariate normal dist
+  def getExplorationAction(self, state, sigma):
+    rand_sample = np.random.normal(loc=0.0, scale=self.sigma, size=1)
+    action = self.getAction(state) + sigma * rand_sample
+    return action
+ 
   def getAction(self, state):
-
     action = self.action_mlp.process(state)
     return action
  
@@ -29,30 +33,33 @@ class Cacla():
     q = self.value_mlp.process(state)
     return q
 
-  def updateQ(self, inp, des):
-    self.value_mlp.train(inp, des, 0.02)
+  def updateQ(self, inp, target):
+    self.value_mlp.train(inp, target, 0.01)
 
-  def updateActor(self, state, action):
-    self.action_mlp.train(state, action, 0.02)
+  def updateActor(self, inp, target):
+    self.action_mlp.train(inp, target, 0.01)
  
-  #Draw a value from a univariate normal dist
   def chooseAction(self, s):
-
-    if (random.random() < self.random_chance):
-	action = random.uniform(-1, 1)
-	action = [action]
-    else:
-        action = self.getAction(s) + np.random.normal(loc=0.0, scale=self.sigma, size=1)
-        # clamp action value between -1 and 1
-        action = max(min(1, action[0]), -1)
-
-	action = [action]
+    # generate action = best action + random sample of normal distribution
+    action = self.getExplorationAction(s, 0.4)
+    # clamp action value between -1 and 1
+    action = max(min(1, action[0]), -1)
+    action = [action]
     return action
 
-  def update(self, old_state, old_action, new_state, reward):
-    old_Q = self.getQ(old_state)
-    value = reward + self.discount * self.getQ(new_state)
+
+  def update(self, old_state, old_action, new_state, reward, goal):
+
+    old_Q = self.getQ(old_state) 
+
+    if goal:
+	value = reward
+    else:
+        value = reward + self.discount * self.getQ(new_state)
+
     self.updateQ(old_state, value)
-    td = value - old_Q
-    if td > 0:
+
+    if value > old_Q:
         self.updateActor(old_state, old_action)
+
+

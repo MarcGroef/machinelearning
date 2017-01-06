@@ -101,7 +101,7 @@ class MLP():
      #print self.outputNodes
      return self.outputNodes
    
-   def train(self, inputArray, targetOut, learningRate, momentum):
+   def train(self, inputArray, targetOut, learningRate, momentum = 0):
      error = targetOut - self.process(inputArray)
      loss = 0.5 * error * error
      print loss
