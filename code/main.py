@@ -133,8 +133,8 @@ def sarsa_test():
 		print tot_reward
 
 if __name__ == "__main__":
-	xorTest()
-	#cacla_test()
+	#xorTest()
+	cacla_test()
 	#sarsa_test()
 	#nfac_test()
 

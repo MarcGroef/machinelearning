@@ -12,8 +12,8 @@ class Cacla():
     self.a_min = np.asarray(a_min)
     self.action_size = a_dim
     self.state_size = state_size
-    self.action_mlp = MLP(self.state_size, 100, 1)
-    self.value_mlp = MLP(self.state_size, 100, 1)
+    self.action_mlp = MLP(self.state_size, 300, 1)
+    self.value_mlp = MLP(self.state_size, 300, 1)
     self.learningRate = learningRate
     self.discount = discount
     self.random_chance = random_chance
@@ -41,10 +41,15 @@ class Cacla():
  
   def chooseAction(self, s):
     # generate action = best action + random sample of normal distribution
-    action = self.getExplorationAction(s, 0.4)
-    # clamp action value between -1 and 1
-    action = max(min(1, action[0]), -1)
-    action = [action]
+    if (random.random() < self.random_chance):
+      action = self.getAction(s)
+      action = max(min(1, action[0]), -1)
+      action = [action]
+    else:
+      action = self.getExplorationAction(s, 0.2)
+      # clamp action value between -1 and 1
+      action = max(min(1, action[0]), -1)
+      action = [action]
     return action
 
   def update(self, old_state, old_action, new_state, reward, goal):
