@@ -8,19 +8,19 @@ import gym
 
 def xorTest():
   
-  xorIn1 = np.array([0,1])
-  xorIn2 = np.array([1,0])
+  xorIn1 = np.array([-1,1])
+  xorIn2 = np.array([1,-1])
   xorIn3 = np.array([1,1])
-  xorIn4 = np.array([0,0])
+  xorIn4 = np.array([-1,-1])
   
   xorOut1 = np.array([1])
   xorOut2 = np.array([1])
-  xorOut3 = np.array([0])
-  xorOut4 = np.array([0])
+  xorOut3 = np.array([-1])
+  xorOut4 = np.array([-1])
   
   
   nn = MLP(2, 10, 1)
-  for iter in range(10000):
+  for iter in range(1000):
     loss = 0
     loss += nn.train(xorIn1, xorOut1, 0.05, 0.04)
     loss += nn.train(xorIn4, xorOut4, 0.05, 0.04)
@@ -28,6 +28,21 @@ def xorTest():
     loss += nn.train(xorIn3, xorOut3, 0.05, 0.04)
     
     print loss
+  res = 50
+  valMap = np.random.random((res, res))
+  for x1 in range(res):
+    for x2 in range(res):
+      position = float(2 * x1) / res - 1
+      velocity = float(2 * x2) / res - 1
+      print [position, velocity]
+      v = nn.process(np.asarray([x1, x2]))
+      valMap[x1][x2] = v
+
+
+  plt.imshow(valMap, cmap = 'hot')#, interpolation='nearest')
+  plt.colorbar()
+  plt.show()
+  plt.pause(0.001)
 
 def nfac_test():
 	nfac = NFAC(1,[-1], [1], 2)
@@ -94,48 +109,67 @@ def cacla_test():
 		plt.pause(0.0001) #Note this correction
 		print tot_reward
 
-def sarsa_test():
-	sarsa = Sarsa(1,[-1], [1], [0.1], 2)
+def sarsa_test(render = False):
+	#sarsa = Sarsa(1,[-1], [1], [0.1], 2)
+        sarsa = Sarsa(1,[-1], [1], [2], 2)  ##discrete actions 1, -1 for sanity check
 	env = gym.make('MountainCarContinuous-v0')
-	
-	for _ in range(2000):
+        
+        plt.ion() ## Note this correction
+	fig=plt.figure()
+	#plt.axis([0,0,0,0])
+	epochs = list()
+        rewards = list()
+
+	for epoch in range(2000):
                 #print state
+                sarsa.printValueMap(1)
 		state = env.reset()
 		tot_reward = 0
 		tot_Q = 0
-		n_iter = 0
                 action = sarsa.chooseAction(state)
+
+                done = env.step(action[0])
+		reward = done[1]
+                finished = done[2]
 		for iteration in range(10000):
-			n_iter += 1
-			old_state = state
-			#action = env.action_space.sample()
-                        if (iteration % 10 == 0):
-			   env.render()
-			old_action = action
-			action = sarsa.chooseAction(state)
-			tot_Q += action[1]
-			#action = action[0]
+                        if(render):
+                            env.render()
+                        old_state = state
+  		        old_action = action
+                        if( not finished):
+			   
+			   action = sarsa.chooseAction(state)
+			   tot_Q += action[1]			
+			
+			
+                           state = done[0]
 
-			#print action
-			done = env.step(action[0])
-			finished = done[2]
+			
 
-			#print done
-			reward = done[1]
-			tot_reward += reward
-			state = done[0]
+			
 			#print [action[0][0], reward, action[1][0]]
-
-			sarsa.update(old_state, old_action[0], state, action[0], reward)
                         if finished:
+			   sarsa.update(old_state, old_action[0], state, action[0], reward, True)
+                           break
+                        else:
+		           sarsa.update(old_state, old_action[0], state, action[0], reward)
 
-				break
+                        done = env.step(action[0])
+                        reward = done[1]
+                        tot_reward += reward
+                        finished = done[2]
+
 		print tot_reward
+                epochs.append(epoch)
+                rewards.append(tot_reward)
+                #plt.scatter(epochs, rewards)
+                #plt.show()
+                #plt.pause(1)
 
 if __name__ == "__main__":
 	#xorTest()
-	cacla_test()
-	#sarsa_test()
+	#cacla_test()
+	sarsa_test()
 	#nfac_test()
 
-
+	
