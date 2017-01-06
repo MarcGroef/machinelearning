@@ -119,22 +119,16 @@ def sarsa_test():
 			#print action
 			done = env.step(action[0])
 			finished = done[2]
-<<<<<<< HEAD
-			
-=======
->>>>>>> f48fd1c9deb85e270a8c96c2a18857cf7a921ad1
+
 			#print done
 			reward = done[1]
 			tot_reward += reward
 			state = done[0]
 			#print [action[0][0], reward, action[1][0]]
-<<<<<<< HEAD
+
 			sarsa.update(old_state, old_action[0], state, action[0], reward)
                         if finished:
-=======
-			sarsa.update(old_state, old_action, state, action[0], reward)
-			if finished:
->>>>>>> f48fd1c9deb85e270a8c96c2a18857cf7a921ad1
+
 				break
 		print tot_reward
 
