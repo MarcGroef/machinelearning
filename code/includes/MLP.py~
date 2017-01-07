@@ -6,9 +6,9 @@ class MLP():
    nLayers = 2
    
    def __init__(self, nInputNodes, hiddenSize, outputSize):
-     self.hiddenWeights = np.random.rand(nInputNodes, hiddenSize) * 0.01
+     self.hiddenWeights = np.random.rand(nInputNodes, hiddenSize) * 0.0001
 
-     self.outputWeights = np.random.rand(hiddenSize, outputSize) * 0.01
+     self.outputWeights = np.random.rand(hiddenSize, outputSize) * 0.0001
      self.hiddenBias = np.ones(hiddenSize) * -1
      self.outputBias = np.ones(outputSize) * -1
 
@@ -23,14 +23,28 @@ class MLP():
    def activation(self, x):
      #return self.sigmoid(x)
      return self.tanh(x)
+     #return self.relu(x)
 
    def d_activation(self, act_x):
      #return self.d_sigmoid(act_x)
      return self.d_tanh(act_x)
+     #return self.d_relu(act_x)
 
    def dd_activation(self, inp):
      #return self.dd_sigmoid(inp);
      return self.dd_tanh(inp)
+     #return self.dd_relu(inp)
+
+   def relu(self, x):
+     return np.maximum(np.zeros(x.shape), x)
+  
+   def d_relu(self, relu_x):
+     relu = relu_x
+     relu[np.where(relu > 0)] = 1
+     return relu
+
+   def dd_relu(self, x):
+     return np.zeros(x.shape)
 
    def sigmoid(self,x):
      return 1.0 / (1.0 + np.exp(-1. * x))
@@ -126,6 +140,7 @@ class MLP():
      self.outputBias += learningRate * self.updateBiasOut + momentum * prevDeltaBiasOut
      self.hiddenBias += learningRate * self.updateBiasHidden + momentum * prevDeltaBiasHidden
      self.hiddenWeights += learningRate * self.updateWeightsHidden + momentum * prevDeltaWeightsHidden
+     self.hiddenWeights[2, :] = 0.1
      return loss
      
      

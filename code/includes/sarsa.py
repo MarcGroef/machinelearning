@@ -12,7 +12,7 @@ class Sarsa():
 
 
 
-  def __init__(self, a_dim, a_min, a_max, a_delta, state_size, random_chance = 0.01, learningRate = 0.01, discount = 0.9):
+  def __init__(self, a_dim, a_min, a_max, a_delta, state_size, random_chance = 0.01, learningRate = 0.00001, discount = 0.9999):
     self.a_max = np.asarray(a_max)
     self.a_min = np.asarray(a_min)
     self.a_delta = np.asarray(a_delta)
@@ -20,8 +20,8 @@ class Sarsa():
     self.action_space = self.define_action_space(a_dim, a_min, a_max, a_delta)
 
     self.state_size = state_size
-    self.mlp = MLP(self.action_size + self.state_size, 1000, 1)
-    self.mlp2 = MLPClassifier(100, activation='relu')
+    self.mlp = MLP(self.action_size + self.state_size, 200, 1)
+    #self.mlp2 = MLPClassifier(100, activation='relu')
     self.max_iter = 10
     self.learningRate = learningRate
     self.discount = discount
@@ -35,12 +35,12 @@ class Sarsa():
     #print "action = " + str(action)
     mlpvec = np.concatenate([state, action])
     #print mlpvec
-    return self.mlp.predict(mlpvec)
+    #return self.mlp.predict(mlpvec)
     return self.mlp.process(mlpvec)
 
   def updateQ(self, action, state, targetOut):
-    self.mlp2.fit(np.concatenate([state, action]), targetOut)
-    #self.mlp.train(np.concatenate([state, action]), targetOut, 0.001, 0.1)
+    #self.mlp2.fit(np.concatenate([state, action]), targetOut)
+    self.mlp.train(np.concatenate([state, action]), targetOut, 0.002, 0.1)
 
   def define_action_space(self, dim, min, max, delta):
     dim_lst = []
@@ -51,18 +51,16 @@ class Sarsa():
     return np.array(np.meshgrid(*dim_lst))
 
   def printValueMap(self, action):
-
-
-
-    posres = 200
+    posres = 100
     valMap = np.random.random((posres, posres))
     for pos in range(posres):
        for vel in range(posres):
           position = float(2 * pos) / posres - 1
           velocity = float(2 * vel) / posres - 1
-          Q =  self.getQ(np.asarray([position, velocity]), np.asarray([action]))
-
-          valMap[pos][vel] = Q
+          #Q =  self.getQ(np.asarray([position, velocity]), np.asarray([action]))  #x, y = pos, vel
+          #Q =  self.getQ(np.asarray([0.2, velocity]), np.asarray([position])) ##x, y = action, vel @ pos = -0.2
+          Q =  self.getQ(np.asarray([position, 0]), np.asarray([velocity]))  ##x, y = action, pos @ v = 0
+          valMap[vel][pos] = Q
 
     
     plt.imshow(valMap, cmap = 'hot')#, interpolation='nearest')
@@ -133,6 +131,6 @@ class Sarsa():
     #print [old_action, old_Q, diff]
     target = old_Q + diff
     self.updateQ(action_performed, old_state, target)
-    
+
     
    

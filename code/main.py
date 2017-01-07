@@ -20,24 +20,27 @@ def xorTest():
   xorOut4 = np.array([-1])
   
   
-  #nn = MLP(2, 10, 1)
-  nn = tfMLP(2, 10, 1)
-  for iter in range(1000):
+  nn = MLP(2, 10, 1)
+  #nn = tfMLP(2, 100, 1)
+  for it in range(2000):
     loss = 0
-    loss += nn.train(xorIn1, xorOut1)#, 0.05, 0.04)
-    loss += nn.train(xorIn4, xorOut4)#, 0.05, 0.04)
-    loss += nn.train(xorIn2, xorOut2)#, 0.05, 0.04)
-    loss += nn.train(xorIn3, xorOut3)#, 0.05, 0.04)
-    
-    print loss
+    nn.train(xorIn1.astype(float), xorOut1.astype(float), 0.05, 0.04)
+    nn.train(xorIn4.astype(float), xorOut4.astype(float), 0.05, 0.04)
+    nn.train(xorIn2.astype(float), xorOut2.astype(float), 0.05, 0.04)
+    nn.train(xorIn3.astype(float), xorOut3.astype(float), 0.05, 0.04)
+    print "learning.. iter" + str(it)
+  
+    #print loss
   res = 50
   valMap = np.random.random((res, res))
   for x1 in range(res):
     for x2 in range(res):
       position = float(2 * x1) / res - 1
       velocity = float(2 * x2) / res - 1
-      print [position, velocity]
-      v = nn.process(np.asarray([x1, x2]))
+      
+      v = nn.process(np.asarray([position, velocity ]).astype(float))#[0][0]
+      print v
+      #print [position, velocity, v[0]]
       valMap[x1][x2] = v
 
 
@@ -111,7 +114,7 @@ def cacla_test():
 		plt.pause(0.0001) #Note this correction
 		print tot_reward
 
-def sarsa_test(render = False):
+def sarsa_test(render = True):
 	#sarsa = Sarsa(1,[-1], [1], [0.1], 2)
         sarsa = Sarsa(1,[-1], [1], [2], 2)  ##discrete actions 1, -1 for sanity check
 	env = gym.make('MountainCarContinuous-v0')
@@ -124,7 +127,7 @@ def sarsa_test(render = False):
 
 	for epoch in range(2000):
                 #print state
-                sarsa.printValueMap(1)
+                sarsa.printValueMap(-1)
 		state = env.reset()
 		tot_reward = 0
 		tot_Q = 0
@@ -133,7 +136,11 @@ def sarsa_test(render = False):
                 done = env.step(action[0])
 		reward = done[1]
                 finished = done[2]
-		for iteration in range(10000):
+                if(epoch % 100 == 0 and epoch > 100):
+                    render = True
+                else:
+                    render = False
+		for iteration in range(1000):
                         if(render):
                             env.render()
                         old_state = state
@@ -161,7 +168,7 @@ def sarsa_test(render = False):
                         tot_reward += reward
                         finished = done[2]
 
-		print tot_reward
+		print "rewards @ epoch " + str(epoch ) + ": " + str(tot_reward)
                 epochs.append(epoch)
                 rewards.append(tot_reward)
                 #plt.scatter(epochs, rewards)
@@ -169,9 +176,9 @@ def sarsa_test(render = False):
                 #plt.pause(1)
 
 if __name__ == "__main__":
-	xorTest()
+	#xorTest()
 	#cacla_test()
-	#sarsa_test()
+	sarsa_test()
 	#nfac_test()
 
 	
