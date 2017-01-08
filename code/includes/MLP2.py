@@ -5,19 +5,38 @@ class MLP():
   
    nLayers = 2
    
-   def __init__(self, nInputNodes, hiddenSize, outputSize):
-     self.hiddenWeights = np.random.rand(nInputNodes, hiddenSize) * 0.0001
+   def __init__(self, nInputNodes, nLayers, hiddenSizes, outputSize):
+     self.nLayers = nLayers
+     self.hiddenSizes = hiddenSizes
+     self.hiddenWeights = []
+     self.hiddenBias = []
+     self.hiddenNodes = []
+     self.updateWeightsHidden = []
+     self.updateBiasHidden = []
+     self.hiddenInput = []
 
-     self.outputWeights = np.random.rand(hiddenSize, outputSize) * 0.0001
-     self.hiddenBias = np.ones(hiddenSize) * -1
-     self.outputBias = np.ones(outputSize) * -1
+     for layer in range(nLayers):
+         if layer == 0:
+           self.hiddenWeights.append(np.random.rand(nInputNodes, hiddenSizes[layer]) * 0.025)
+           np.zeros((nInputNodes, hiddenSizes[layer]))
+           self.updateWeightsHidden.append(np.zeros((nInputNodes, hiddenSizes[layer])))
+         else:
+           self.hiddenWeights.append(np.random.rand(hiddenSizes[layer - 1], hiddenSizes[layer]) * 0.025)
+           self.updateWeightsHidden.append(np.zeros((hiddenSizes[layer - 1], hiddenSizes[layer])))
 
-     self.updateBiasHidden = 0
-     self.updateWeightsHidden = 0
+         self.hiddenBias.append(np.ones(hiddenSizes[layer]) * -1)
+         self.updateBiasHidden.append(np.zeros(hiddenSizes[layer]))
+         self.hiddenInput.append(np.zeros(hiddenSizes[layer]))
+         self.hiddenNodes.append(np.zeros(hiddenSizes[layer]))
+
+
+     self.outputWeights = np.random.rand(hiddenSizes[nLayers - 1], outputSize) * 0.025    
+     self.outputBias = np.ones(outputSize)  #*-1
+ 
      self.updateWeightsOut = 0
      self.updateBiasOut = 0
 
-     self.hiddenInput = 0
+     
      pass
 
    def activation(self, x):
@@ -67,8 +86,6 @@ class MLP():
      denom = denom * denom * denom 
      return -1 * (8 * np.sinh(2 * x) * np.cosh(x) * np.cosh(x)) / (denom)
 
-   def d_hidden_layer(self):
-     return self.d_sigmoid(self.hiddenNodes) * self.hiddenWeights
 
 
    def d_network(self):
@@ -81,6 +98,7 @@ class MLP():
      #linear output layer:
      ret = (np.transpose(self.outputWeights) * self.d_activation(self.hiddenNodes)).dot(np.transpose(self.hiddenWeights))
      #print "ret = " + str(ret)
+     return [1, 1]
      return ret
      
 
@@ -104,14 +122,18 @@ class MLP():
 
      #linear output layer:
      ret = (np.transpose(self.outputWeights) * self.dd_activation(self.hiddenInput)).dot(np.transpose(self.hiddenWeights * self.hiddenWeights))
-     
+     return [1, 1] ##FIXME
      return ret
 
    def process(self, inputArray):
-     self.hiddenInput = inputArray.dot(self.hiddenWeights) + self.hiddenBias
-     self.hiddenNodes = self.activation(self.hiddenInput)
+     for layer in range(self.nLayers):
+        if layer == 0:
+           self.hiddenInput[layer] = inputArray.dot(self.hiddenWeights[layer]) + self.hiddenBias[layer]
+        else:
+           self.hiddenInput[layer] = self.hiddenNodes[layer - 1].dot(self.hiddenWeights[layer]) + self.hiddenBias[layer]
+        self.hiddenNodes[layer] = self.activation(self.hiddenInput[layer])
      #self.outputNodes = self.activation(self.hiddenNodes.dot(self.outputWeights) + self.outputBias)
-     self.outputNodes = self.hiddenNodes.dot(self.outputWeights) + self.outputBias  ##linear output layer
+     self.outputNodes = self.hiddenNodes[self.nLayers - 1].dot(self.outputWeights) + self.outputBias  ##linear output layer
      #print self.outputNodes
      return self.outputNodes
    
@@ -120,6 +142,9 @@ class MLP():
      loss = 0.5 * error * error
      #print loss
 
+     prevDeltaBiasHidden = self.updateBiasHidden
+     prevDeltaWeightsHidden = self.updateWeightsHidden
+
      #delta = (error) * self.d_activation(self.outputNodes) #non lin outlayer
      delta = (error) #* (self.outputNodes) #lin outlayer
 
@@ -127,19 +152,29 @@ class MLP():
      self.updateBiasOut = delta
      
      prevDeltaWeightsOut = self.updateWeightsOut
-     self.updateWeightsOut = np.transpose(np.outer(delta , self.hiddenNodes))
+     self.updateWeightsOut = np.transpose(np.outer(delta , self.hiddenNodes[self.nLayers - 1]))
+     delta = delta.dot(np.transpose(self.outputWeights)) * (self.d_activation(self.hiddenNodes[self.nLayers - 1]))
 
-     delta = delta.dot(np.transpose(self.outputWeights)) * (self.d_activation(self.hiddenNodes))
-     
-     prevDeltaBiasHidden = self.updateBiasHidden
-     self.updateBiasHidden = delta
-     prevDeltaWeightsHidden = self.updateWeightsHidden
-     self.updateWeightsHidden = np.transpose(np.outer(delta, inputArray))
+     for idx in range(self.nLayers):
+        layer = self.nLayers - idx - 1
+        self.updateBiasHidden[layer] = delta
+        
+        if (layer == 0) :
+           self.updateWeightsHidden[layer] = np.transpose(np.outer(delta, inputArray))
+        else :
+           self.updateWeightsHidden[layer] = np.transpose(np.outer(delta, self.hiddenNodes[layer - 1]))
+           delta = delta.dot(np.transpose(self.hiddenWeights[layer])) * self.d_activation(self.hiddenNodes[layer - 1])
 
-     self.outputWeights += learningRate *( self.updateWeightsOut + momentum * prevDeltaWeightsOut)
-     self.outputBias += learningRate * (self.updateBiasOut + momentum * prevDeltaBiasOut)
-     self.hiddenBias += learningRate * (self.updateBiasHidden + momentum * prevDeltaBiasHidden)
-     self.hiddenWeights += learningRate * (self.updateWeightsHidden + momentum * prevDeltaWeightsHidden)
+
+
+
+     self.outputWeights += learningRate * self.updateWeightsOut + momentum * prevDeltaWeightsOut
+     self.outputBias += learningRate * self.updateBiasOut + momentum * prevDeltaBiasOut
+
+     for idx in range(self.nLayers):
+         layer = self.nLayers - idx - 1
+         self.hiddenBias[layer] += learningRate * self.updateBiasHidden[layer] + momentum * prevDeltaBiasHidden[layer]
+         self.hiddenWeights[layer] += learningRate * self.updateWeightsHidden[layer] + momentum * prevDeltaWeightsHidden[layer]
 
      return loss
      

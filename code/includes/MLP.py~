@@ -136,11 +136,11 @@ class MLP():
      prevDeltaWeightsHidden = self.updateWeightsHidden
      self.updateWeightsHidden = np.transpose(np.outer(delta, inputArray))
 
-     self.outputWeights += learningRate * self.updateWeightsOut + momentum * prevDeltaWeightsOut
-     self.outputBias += learningRate * self.updateBiasOut + momentum * prevDeltaBiasOut
-     self.hiddenBias += learningRate * self.updateBiasHidden + momentum * prevDeltaBiasHidden
-     self.hiddenWeights += learningRate * self.updateWeightsHidden + momentum * prevDeltaWeightsHidden
-     self.hiddenWeights[2, :] = 0.1
+     self.outputWeights += learningRate *( self.updateWeightsOut + momentum * prevDeltaWeightsOut)
+     self.outputBias += learningRate * (self.updateBiasOut + momentum * prevDeltaBiasOut)
+     self.hiddenBias += learningRate * (self.updateBiasHidden + momentum * prevDeltaBiasHidden)
+     self.hiddenWeights += learningRate * (self.updateWeightsHidden + momentum * prevDeltaWeightsHidden)
+
      return loss
      
      

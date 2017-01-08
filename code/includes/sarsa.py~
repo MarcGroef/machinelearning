@@ -1,5 +1,5 @@
 import numpy as np
-from MLP import MLP
+from MLP2 import MLP
 import sys
 import matplotlib.pyplot as plt  ##sudo apt-get install python-matplotlib
 from sklearn.neural_network import MLPClassifier
@@ -12,7 +12,7 @@ class Sarsa():
 
 
 
-  def __init__(self, a_dim, a_min, a_max, a_delta, state_size, random_chance = 0.001, learningRate = 0.00001, discount = 0.9999):
+  def __init__(self, a_dim, a_min, a_max, a_delta, state_size, random_chance = 0.01, learningRate = 0.02, discount = 0.99):
     self.a_max = np.asarray(a_max)
     self.a_min = np.asarray(a_min)
     self.a_delta = np.asarray(a_delta)
@@ -20,7 +20,8 @@ class Sarsa():
     self.action_space = self.define_action_space(a_dim, a_min, a_max, a_delta)
 
     self.state_size = state_size
-    self.mlp = MLP(self.action_size + self.state_size, 200, 1)
+    #self.mlp = MLP(self.action_size + self.state_size, 200, 1)
+    self.mlp = MLP(self.action_size + self.state_size,3, [100, 10], 1)
     #self.mlp2 = MLPClassifier(100, activation='relu')
     self.max_iter = 10
     self.learningRate = learningRate
@@ -40,7 +41,7 @@ class Sarsa():
 
   def updateQ(self, action, state, targetOut):
     #self.mlp2.fit(np.concatenate([state, action]), targetOut)
-    self.mlp.train(np.concatenate([state, action]), targetOut, 0.002, 0.1)
+    self.mlp.train(np.concatenate([state, action]), targetOut, 0.002, 0.75)
 
   def define_action_space(self, dim, min, max, delta):
     dim_lst = []
@@ -51,15 +52,15 @@ class Sarsa():
     return np.array(np.meshgrid(*dim_lst))
 
   def printValueMap(self, action):
-    posres = 100
+    posres = 10
     valMap = np.random.random((posres, posres))
     for pos in range(posres):
        for vel in range(posres):
           position = float(2 * pos) / posres - 1
           velocity = float(2 * vel) / posres - 1
-          #Q =  self.getQ(np.asarray([position, velocity]), np.asarray([action]))  #x, y = pos, vel
+          Q =  self.getQ(np.asarray([position, velocity]), np.asarray([action]))  #x, y = pos, vel
           #Q =  self.getQ(np.asarray([0.2, velocity]), np.asarray([position])) ##x, y = action, vel @ pos = -0.2
-          Q =  self.getQ(np.asarray([position, 0]), np.asarray([velocity]))  ##x, y = action, pos @ v = 0
+          #Q =  self.getQ(np.asarray([position, 0]), np.asarray([velocity]))  ##x, y = action, pos @ v = 0
           valMap[vel][pos] = Q
 
     
@@ -100,7 +101,7 @@ class Sarsa():
         if (Q > Q_best):
            a_best = a
            Q_best = Q 
-        continue ##uncomment for sarsa-lamda
+        continue ##uncomment for sarsa-NM
         ##Newtons method
         for _ in range(self.max_iter):
             
