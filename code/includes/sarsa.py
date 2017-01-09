@@ -2,7 +2,7 @@ import numpy as np
 from MLP2 import MLP
 import sys
 import matplotlib.pyplot as plt  ##sudo apt-get install python-matplotlib
-from sklearn.neural_network import MLPClassifier
+#from sklearn.neural_network import MLPClassifier
 
 ##https://www.elen.ucl.ac.be/Proceedings/esann/esannpdf/es2014-175.pdf
 class Sarsa():

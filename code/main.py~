@@ -1,5 +1,5 @@
 from includes.MLP2 import MLP
-#from includes.tfmlp import tfMLP
+from includes.tfmlp import tfMLP
 from includes.sarsa import Sarsa
 from includes.cacla import Cacla
 from includes.nfac import NFAC
