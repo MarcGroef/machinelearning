@@ -147,7 +147,7 @@ def sarsa_test(render = False):
                 #    render = True
                 #else:
                 #    render = False
-                #render = True
+                render = True
                 #ensure sarsa doesnt learn from killed epochs
 
                 sarsa.resetBrainBuffers()
@@ -166,7 +166,7 @@ def sarsa_test(render = False):
 
                         #if(iteration % 10 != 0 and not finished):  ##only act once every 10 frames. Debugs and learns hell of a lot faster <edit: randomchance ==1 preformed qually well>
                         #    continue
-                        if(render):
+                        if(render and iteration % 10 == 0):
                           env.render()
                         old_state = state
   		        old_action = action
