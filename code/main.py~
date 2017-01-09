@@ -1,5 +1,5 @@
 from includes.MLP2 import MLP
-from includes.tfmlp import tfMLP
+#from includes.tfmlp import tfMLP
 from includes.sarsa import Sarsa
 from includes.cacla import Cacla
 from includes.nfac import NFAC
@@ -95,7 +95,10 @@ def cacla_test():
 		tot_reward = 0
 		tot_Q = 0
 		finished = False
-		while not finished:
+		#while not finished:
+                for iteration in range(400):
+                        if(finished):
+                          break
 			old_state = state
 			#env.render()
 			action = cacla.chooseAction(state)
@@ -112,7 +115,7 @@ def cacla_test():
 		i+=1;
 		plt.show()
 		plt.pause(0.0001) #Note this correction
-		print tot_reward
+		#print tot_reward
 
 def sarsa_test(render = False):
 	#sarsa = Sarsa(1,[-1], [1], [0.1], 2)

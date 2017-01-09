@@ -4,7 +4,7 @@ import numpy as np
 class MLP():
   
    nLayers = 2
-   
+   ## sarsa weight init should be * 0.025
    def __init__(self, nInputNodes, nLayers, hiddenSizes, outputSize):
      self.nLayers = nLayers
      self.hiddenSizes = hiddenSizes
@@ -19,10 +19,10 @@ class MLP():
 
      for layer in range(nLayers):
          if layer == 0:
-           self.hiddenWeights.append(np.random.rand(nInputNodes, hiddenSizes[layer]) * 0.025)
+           self.hiddenWeights.append(np.random.rand(nInputNodes, hiddenSizes[layer]) * 0.000025)
            self.updateWeightsHidden.append(np.zeros((nInputNodes, hiddenSizes[layer])))
          else:
-           self.hiddenWeights.append(np.random.rand(hiddenSizes[layer - 1], hiddenSizes[layer]) * 0.025)
+           self.hiddenWeights.append(np.random.rand(hiddenSizes[layer - 1], hiddenSizes[layer]) * 0.000025)
            self.updateWeightsHidden.append(np.zeros((hiddenSizes[layer - 1], hiddenSizes[layer])))
 
          self.hiddenBias.append(np.ones(hiddenSizes[layer]) * -1)
@@ -31,7 +31,7 @@ class MLP():
          self.hiddenNodes.append(np.zeros(hiddenSizes[layer]))
 
 
-     self.outputWeights = np.random.rand(hiddenSizes[nLayers - 1], outputSize) * 0.025    
+     self.outputWeights = np.random.rand(hiddenSizes[nLayers - 1], outputSize) * 0.000025    
      self.outputBias = np.ones(outputSize)  #*-1
  
      self.updateWeightsOut = 0
@@ -160,6 +160,8 @@ class MLP():
      return self.outputNodes
    
    def train(self, inputArray, targetOut, learningRate, momentum = 0):
+     #print "input = " + str(inputArray)
+     #print "output = " + str(self.process(inputArray))
      error = targetOut - self.process(inputArray)
      loss = 0.5 * error * error
      #print loss

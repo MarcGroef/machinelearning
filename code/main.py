@@ -95,7 +95,10 @@ def cacla_test():
 		tot_reward = 0
 		tot_Q = 0
 		finished = False
-		while not finished:
+		#while not finished:
+                for iteration in range(400):
+                        if(finished):
+                          break
 			old_state = state
 			#env.render()
 			action = cacla.chooseAction(state)
