@@ -74,7 +74,7 @@ class Sarsa():
 
     for i in range(0, dim):
       dim_lst.append(np.arange(min[i], max[i] + delta[i], delta[i]))
-
+    print dim_lst
     return np.array(np.meshgrid(*dim_lst))
 
   def printValueMap(self, action):
