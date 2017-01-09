@@ -68,10 +68,10 @@ class Cacla():
     else:
         value = reward + self.discount * self.getQ(new_state)
 
-    self.updateQ(new_state, value)
+    self.updateQ(old_state, value)
 
     if value > old_Q:
-        self.updateActor(new_state, old_action)
+        self.updateActor(old_state, old_action)
     
 
 
