@@ -114,7 +114,7 @@ def cacla_test():
 		plt.pause(0.0001) #Note this correction
 		print tot_reward
 
-def sarsa_test(render = True):
+def sarsa_test(render = False):
 	#sarsa = Sarsa(1,[-1], [1], [0.1], 2)
         sarsa = Sarsa(1,[-1], [1], [2], 2)  ##discrete actions 1, -1 for sanity check
 	env = gym.make('MountainCarContinuous-v0')
@@ -124,13 +124,18 @@ def sarsa_test(render = True):
 	#plt.axis([0,0,0,0])
 	epochs = list()
         rewards = list()
-
-        
+        nGameIterations = 5000
+        nEpochs = 10000
         epochFailed = True
-	for epoch in range(2000):
+	for epoch in range(nEpochs):
+                if(epoch == nEpochs - 100):
+                   print "random action chance set to 0"
+                   sarsa.random_chance = 0.1
+                   sarsa.learningRate = 0
                 #print state
-                sarsa.printValueMap(1)
+                #sarsa.printValueMap(1)
 		state = env.reset()
+                
 		tot_reward = 0
 		tot_Q = 0
                 action = sarsa.chooseAction(state)
@@ -138,27 +143,31 @@ def sarsa_test(render = True):
                 done = env.step(action[0])
 		reward = done[1]
                 finished = done[2]
-                if(epoch % 100 == 0 and epoch > 100):
-                    render = True
-                else:
-                    render = False
+                #if(epoch % 100 == 0 and epoch > 100):
+                #    render = True
+                #else:
+                #    render = False
                 #render = True
                 #ensure sarsa doesnt learn from killed epochs
 
                 sarsa.resetBrainBuffers()
                 epochFailed = True
-                render = True
-		for iteration in range(5000):
+                #render = True
+
+                 
+		for iteration in range(nGameIterations):
                         
-                        
-                        if(iteration % 10 != 0 and not finished):
-                            done = env.step(action[0])
-                            reward = done[1]
-                            tot_reward += reward
-                            finished = done[2]
-                            continue
+                            
+                        #done = env.step(action[0])
+                        #print done
+                        #reward = done[1]
+                        #tot_reward += reward
+                        #finished = done[2]
+
+                        #if(iteration % 10 != 0 and not finished):  ##only act once every 10 frames. Debugs and learns hell of a lot faster <edit: randomchance ==1 preformed qually well>
+                        #    continue
                         if(render):
-                            env.render()
+                          env.render()
                         old_state = state
   		        old_action = action
                         if( not finished):
