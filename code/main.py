@@ -124,7 +124,7 @@ def sarsa_test(render = True):
 	#plt.axis([0,0,0,0])
 	epochs = list()
         rewards = list()
-        brain = sarsa.getBrain()
+
         
         epochFailed = True
 	for epoch in range(2000):
@@ -144,11 +144,7 @@ def sarsa_test(render = True):
                     render = False
                 #render = True
                 #ensure sarsa doesnt learn from killed epochs
-                
-                if(epochFailed):
-                   sarsa.setBrain(brain)
-                else:
-                   brain = sarsa.getBrain()
+
                 sarsa.resetBrainBuffers()
                 epochFailed = True
                 render = True
