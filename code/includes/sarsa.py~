@@ -32,7 +32,7 @@ class Sarsa():
     self.mlp.resetBuffers()
 
   def getBrain(self):
-    self.mlp.getBrain()
+    return self.mlp.getBrain()
 
   def setBrain(self, brain):
     self.mlp.setBrain(brain)   

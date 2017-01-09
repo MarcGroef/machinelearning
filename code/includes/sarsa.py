@@ -50,7 +50,7 @@ class Sarsa():
 
   def updateQ(self, action, state, targetOut):
     #self.mlp2.fit(np.concatenate([state, action]), targetOut)
-    self.mlp.train(np.concatenate([state, action]), targetOut, 0.002, 0.75)
+    self.mlp.train(np.concatenate([state, action]), targetOut, 0.002, 0)
 
   def define_action_space(self, dim, min, max, delta):
     dim_lst = []
