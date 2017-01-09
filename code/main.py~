@@ -96,11 +96,12 @@ def cacla_test():
 		tot_Q = 0
 		finished = False
 		#while not finished:
-                for iteration in range(400):
+                for iteration in range(4000):
                         if(finished):
                           break
 			old_state = state
-			#env.render()
+			#if iteration % 100 == 0:
+			env.render()
 			action = cacla.chooseAction(state)
 			done = env.step(action)
 			finished = done[2]
@@ -115,7 +116,7 @@ def cacla_test():
 		i+=1;
 		plt.show()
 		plt.pause(0.0001) #Note this correction
-		#print tot_reward
+		print tot_reward
 
 def sarsa_test(render = False):
 	#sarsa = Sarsa(1,[-1], [1], [0.1], 2)

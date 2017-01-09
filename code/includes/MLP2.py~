@@ -63,13 +63,13 @@ class MLP():
 
    def activation(self, x):
      #return self.sigmoid(x)
-     return self.tanh(x)
-     #return self.relu(x)
+     #return self.tanh(x)
+     return self.relu(x)
 
    def d_activation(self, act_x):
      #return self.d_sigmoid(act_x)
-     return self.d_tanh(act_x)
-     #return self.d_relu(act_x)
+     #return self.d_tanh(act_x)
+     return self.d_relu(act_x)
 
    def dd_activation(self, inp):
      #return self.dd_sigmoid(inp);
@@ -160,8 +160,8 @@ class MLP():
      return self.outputNodes
    
    def train(self, inputArray, targetOut, learningRate, momentum = 0):
-     print "input = " + str(inputArray)
-     print "output = " + str(self.process(inputArray))
+     #print "input = " + str(inputArray)
+     #print "output = " + str(self.process(inputArray))
      error = targetOut - self.process(inputArray)
      loss = 0.5 * error * error
      #print loss
