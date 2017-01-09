@@ -46,7 +46,7 @@ class Cacla():
       action = max(min(1, action[0]), -1)
       action = [action]
     else:
-      action = self.getExplorationAction(s, 0.4)
+      action = self.getExplorationAction(s, 0.2)
       # clamp action value between -1 and 1
       action = max(min(1, action[0]), -1)
       action = [action]

@@ -8,6 +8,8 @@ class MLP():
    def __init__(self, nInputNodes, nLayers, hiddenSizes, outputSize):
      self.nLayers = nLayers
      self.hiddenSizes = hiddenSizes
+     self.nInputNodes = nInputNodes
+     self.hiddenSizes = hiddenSizes
      self.hiddenWeights = []
      self.hiddenBias = []
      self.hiddenNodes = []
@@ -18,7 +20,6 @@ class MLP():
      for layer in range(nLayers):
          if layer == 0:
            self.hiddenWeights.append(np.random.rand(nInputNodes, hiddenSizes[layer]) * 0.025)
-           np.zeros((nInputNodes, hiddenSizes[layer]))
            self.updateWeightsHidden.append(np.zeros((nInputNodes, hiddenSizes[layer])))
          else:
            self.hiddenWeights.append(np.random.rand(hiddenSizes[layer - 1], hiddenSizes[layer]) * 0.025)
@@ -37,7 +38,28 @@ class MLP():
      self.updateBiasOut = 0
 
      
-     pass
+
+   def resetBuffers(self):
+     self.updateWeightsHidden = []
+     self.updateBiasHidden = []
+     for layer in range(self.nLayers):
+         if layer == 0:
+            self.updateWeightsHidden.append(np.zeros((self.nInputNodes, self.hiddenSizes[layer])))
+         else:
+            self.updateWeightsHidden.append(np.zeros((self.hiddenSizes[layer - 1], self.hiddenSizes[layer])))
+         self.updateBiasHidden.append(np.zeros(self.hiddenSizes[layer]))
+     self.updateWeightsOut = 0
+     self.updateBiasOut = 0
+
+   def getBrain(self):
+     return [self.hiddenWeights, self.hiddenBias, self.outputWeights, self.outputBias]
+
+   def setBrain(self, brain):
+     self.hiddenWeights = brain[0]
+     self.hiddenBias = brain[1]
+     self.outputWeights = brain[2]
+     self.outputBias = brain[3]
+     self.resetBuffers()
 
    def activation(self, x):
      #return self.sigmoid(x)

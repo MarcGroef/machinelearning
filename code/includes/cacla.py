@@ -24,6 +24,13 @@ class Cacla():
     rand_sample = np.random.normal(loc=0.0, scale=self.sigma, size=1)
     action = self.getAction(state) + sigma * rand_sample
     return action
+
+
+  def getBrain(self):
+    return mlp.getBrain()
+
+  def setBrain(self, brain):
+    mlp.setBrain(brain)
  
   def getAction(self, state):
     action = self.action_mlp.process(state)

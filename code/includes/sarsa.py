@@ -12,7 +12,7 @@ class Sarsa():
 
 
 
-  def __init__(self, a_dim, a_min, a_max, a_delta, state_size, random_chance = 0.01, learningRate = 0.02, discount = 0.99):
+  def __init__(self, a_dim, a_min, a_max, a_delta, state_size, random_chance = 0.1, learningRate = 0.0002, discount = 0.99):
     self.a_max = np.asarray(a_max)
     self.a_min = np.asarray(a_min)
     self.a_delta = np.asarray(a_delta)
@@ -27,6 +27,15 @@ class Sarsa():
     self.learningRate = learningRate
     self.discount = discount
     self.random_chance = random_chance
+ 
+  def resetBrainBuffers(self):
+    self.mlp.resetBuffers()
+
+  def getBrain(self):
+    return self.mlp.getBrain()
+
+  def setBrain(self, brain):
+    self.mlp.setBrain(brain)   
 
   def action_dist(self, a1, a2):  
     return np.linalg.norm(a1, a2)
