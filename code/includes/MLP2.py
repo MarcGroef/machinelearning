@@ -5,6 +5,7 @@ class MLP():
   
    nLayers = 2
    ## sarsa weight init should be * 0.025
+   ## lunar sarsa works nice with 0.0000025
    def __init__(self, nInputNodes, nLayers, hiddenSizes, outputSize):
      self.nLayers = nLayers
      self.hiddenSizes = hiddenSizes

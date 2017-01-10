@@ -12,7 +12,7 @@ class Sarsa():
 
 
 
-  def __init__(self, a_dim, a_min, a_max, a_delta, state_size, random_chance = 0.1, learningRate = 1, discount = 0.99, discretize_state = False):
+  def __init__(self, a_dim, a_min, a_max, a_delta, state_size, random_chance = 0.1, learningRate = 1, discount = 0.9, discretize_state = False):
     self.a_max = np.asarray(a_max)
     self.a_min = np.asarray(a_min)
     self.a_delta = np.asarray(a_delta)
@@ -23,9 +23,9 @@ class Sarsa():
     self.discretize_state = discretize_state
     self.nPositionBins = 2
     if(discretize_state):
-      self.mlp = MLP(self.nPositionBins + self.state_size,3, [10, 10, 10], 1)
+      self.mlp = MLP(self.nPositionBins + self.state_size,5, [20, 20, 20,20,20], 1)
     else:
-      self.mlp = MLP(self.action_size + self.state_size,3, [10, 10, 10], 1)
+      self.mlp = MLP(self.action_size + self.state_size,1, [100, 10, 100,100,20], 1)
     self.max_iter = 10
     self.learningRate = learningRate
     self.discount = discount
@@ -67,7 +67,7 @@ class Sarsa():
     #self.mlp2.fit(np.concatenate([state, action]), targetOut)
     if(self.discretize_state):
        state = self.discretizeState(state)
-    self.mlp.train(np.concatenate([state, action]), targetOut, 0.02, 0.2)
+    self.mlp.train(np.concatenate([state, action]), targetOut, 0.01, 00)
 
   def define_action_space(self, dim, min, max, delta):
     dim_lst = []
@@ -145,7 +145,7 @@ class Sarsa():
 
             if np.linalg.norm(a - a_previous) < 0.0001:
                 break
-
+    #print a_best
     return [a_best, Q_best]
 
   def update(self, old_state, old_action, new_state, action_performed, reward, isFinalState = False):

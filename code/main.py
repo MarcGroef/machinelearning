@@ -123,8 +123,8 @@ def cacla_test():
 
 def sarsa_test(render = False):
 	
-	env = gym.make('MountainCarContinuous-v0')
-        #env = gym.make('LunarLanderContinuous-v2')
+	#env = gym.make('MountainCarContinuous-v0')
+        env = gym.make('LunarLanderContinuous-v2')
         stateSize = env.reset().size
         actionSize = env.action_space.sample().size
 
@@ -137,7 +137,7 @@ def sarsa_test(render = False):
 	#plt.axis([0,0,0,0])
 	epochs = list()
         rewards = list()
-        nGameIterations = 5000
+        nGameIterations = 20000
         nEpochs = 10000
         epochFailed = True
 	for epoch in range(nEpochs):
@@ -165,7 +165,7 @@ def sarsa_test(render = False):
 
                 sarsa.resetBrainBuffers()
                 epochFailed = True
-                #render = True
+                render = True
 
                  
 		for iteration in range(nGameIterations):
@@ -179,7 +179,7 @@ def sarsa_test(render = False):
 
                         #if(iteration % 10 != 0 and not finished):  ##only act once every 10 frames. Debugs and learns hell of a lot faster <edit: randomchance ==1 preformed qually well>
                         #    continue
-                        if(render and iteration % 10 == 0):
+                        if(render and iteration % 5 == 0 and epoch > 100):
                           env.render()
                         old_state = state
   		        old_action = action
@@ -193,9 +193,11 @@ def sarsa_test(render = False):
 
 			done = env.step(action[0])
                         reward = done[1]
+                        
                         tot_reward += reward
                         finished = done[2]
-
+                        if(reward > 0 and finished):
+                           print "***********************SUCCESS************************"
 			
 			#print [action[0][0], reward, action[1][0]]
                         if finished:
