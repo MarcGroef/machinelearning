@@ -20,10 +20,10 @@ class MLP():
 
      for layer in range(nLayers):
          if layer == 0:
-           self.hiddenWeights.append(np.random.rand(nInputNodes, hiddenSizes[layer]) * 0.025)
+           self.hiddenWeights.append((np.random.rand(nInputNodes, hiddenSizes[layer]) - 0.5))
            self.updateWeightsHidden.append(np.zeros((nInputNodes, hiddenSizes[layer])))
          else:
-           self.hiddenWeights.append(np.random.rand(hiddenSizes[layer - 1], hiddenSizes[layer]) * 0.025)
+           self.hiddenWeights.append((np.random.rand(hiddenSizes[layer - 1], hiddenSizes[layer]) - 0.5))
            self.updateWeightsHidden.append(np.zeros((hiddenSizes[layer - 1], hiddenSizes[layer])))
 
          self.hiddenBias.append(np.ones(hiddenSizes[layer]) * -1)
@@ -32,7 +32,7 @@ class MLP():
          self.hiddenNodes.append(np.zeros(hiddenSizes[layer]))
 
 
-     self.outputWeights = np.random.rand(hiddenSizes[nLayers - 1], outputSize) * 0.025    
+     self.outputWeights = (np.random.rand(hiddenSizes[nLayers - 1], outputSize) - 0.5)    
      self.outputBias = np.ones(outputSize)  #*-1
  
      self.updateWeightsOut = 0

@@ -79,6 +79,14 @@ def nfac_test():
 		print tot_reward
   
 def cacla_test():
+
+	#env = gym.make('LunarLanderContinuous-v2')
+        #stateSize = env.reset().size
+        #actionSize = env.action_space.sample().size
+        #cacla = Cacla(actionSize,np.ones(actionSize) * -1 , np.ones(actionSize), np.ones(actionSize), stateSize)
+	#state = env.reset()
+
+	#1 action, from -1 to 1, with 2 input states
 	cacla = Cacla(1,[-1], [1], 2)
 	env = gym.make('MountainCarContinuous-v0')
 	state = env.reset()
@@ -90,29 +98,29 @@ def cacla_test():
 	i=0
 	x1=list()
 	y1=list()
-	for _ in range(2000):
+	for epoch in range(2000):
 		env.reset()
 		tot_reward = 0
-		tot_Q = 0
 		finished = False
-		#while not finished:
+		while not finished:
 
-                for iteration in range(4000):
-                        if(finished):
-                          break
+                #for iteration in range(4000):
+                        #if(finished):
+                          #break
 			old_state = state
-			#if iteration % 100 == 0:
-				#env.render()
+			#if epoch % 10 == 0:
+			#	env.render()
 			action = cacla.chooseAction(state)
 			done = env.step(action)
-                        print done
+
 			finished = done[2]
 			reward = done[1]
                         #print reward
 			tot_reward += reward
-                        #print tot_reward
 			state = done[0]
 			cacla.update(old_state, action, state, reward, finished)
+
+		cacla.adjustSigma()
 
 		x1.append(i);
 		y1.append(tot_reward);
@@ -180,8 +188,8 @@ def sarsa_test(render = False):
 
                         #if(iteration % 10 != 0 and not finished):  ##only act once every 10 frames. Debugs and learns hell of a lot faster <edit: randomchance ==1 preformed qually well>
                         #    continue
-                        if(render and iteration % 5 == 0 and epoch > 100):
-                          env.render()
+                        #if(render and iteration % 5 == 0 and epoch > 100):
+                        #env.render()
                         old_state = state
   		        old_action = action
                         if( not finished):
@@ -222,8 +230,8 @@ def sarsa_test(render = False):
 
 if __name__ == "__main__":
 	#xorTest()
-	#cacla_test()
-	sarsa_test()
+	cacla_test()
+	#sarsa_test()
 	##nfac_test()
 
 	
