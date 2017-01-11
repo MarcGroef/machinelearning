@@ -4,6 +4,7 @@ from includes.sarsa import Sarsa
 from includes.cacla import Cacla
 from includes.nfac import NFAC
 import matplotlib.pyplot as plt
+import pickle
 import numpy as np
 import gym
 
@@ -104,11 +105,13 @@ def cacla_train():
 		tot_reward = 0
 		finished = False
 		step = 0
-		#if (epoch % n == 0 and n != 0): 
-		  #np.savetxt("actor_" + str(epoch), np.asarray(cacla.getActorBrain()),  delimiter = ",")
-  		  #np.savetxt("critic_" + str(epoch), np.asarray(cacla.getCriticBrain()),  delimiter = ",")
-		  #np.asarray(cacla.getActorBrain()).tofile("actor_" + str(epoch),sep=" ",format="%s")
-		  #np.asarray(cacla.getCriticBrain()).tofile("critic_" + str(epoch),sep=" ",format="%s")
+		if (epoch % n == 0 and n != 0): 
+		  output = open('actor_' + str(epoch) + '.pkl', 'wb')
+		  pickle.dump(np.asarray(cacla.getActorBrain()), output)
+		  output.close()
+		  output = open('critic_' + str(epoch) + '.pkl', 'wb')
+		  pickle.dump(np.asarray(cacla.getCriticBrain()), output)
+		  output.close()
 		while not finished:
 
                         if(step == 100000):
@@ -150,10 +153,15 @@ def cacla_test():
 	cacla = Cacla(1,[-1], [1], 2)
 	env = gym.make('MountainCarContinuous-v0')
 	state = env.reset()
-        brain = np.fromfile('actor_500')
-        print brain
-	#cacla.setActorBrain(brain)
-	#cacla.setCriticBrain(np.fromfile('critic_500', sep=" "))
+
+	actor_file = open('actor_100.pkl', 'rb')
+	actor = pickle.load(actor_file)
+
+ 	critic_file = open('actor_100.pkl', 'rb')
+	critic = pickle.load(critic_file)
+
+	cacla.setActorBrain(actor)
+	cacla.setCriticBrain(actor)
 
 	n = 100
 	for epoch in range(2000):
@@ -167,8 +175,8 @@ def cacla_test():
                           break
 			
 			old_state = state
-			#if epoch % 10 == 0:
-			#	env.render()
+			if epoch % 10 == 0:
+				env.render()
 			action = cacla.chooseAction(state)
 			done = env.step(action)
 
@@ -283,8 +291,8 @@ def sarsa_test(render = False):
 
 if __name__ == "__main__":
 	#xorTest()
-	cacla_train()
-	#cacla_test()
+	#cacla_train()
+	cacla_test()
 	#sarsa_test()
 	##nfac_test()
 
