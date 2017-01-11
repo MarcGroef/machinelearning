@@ -78,7 +78,7 @@ def nfac_test():
 			nfac.clearCollection()
 		print tot_reward
   
-def cacla_test():
+def cacla_train():
 
 	#env = gym.make('LunarLanderContinuous-v2')
         #stateSize = env.reset().size
@@ -98,15 +98,22 @@ def cacla_test():
 	i=0
 	x1=list()
 	y1=list()
+	n = 100
 	for epoch in range(2000):
 		env.reset()
 		tot_reward = 0
 		finished = False
+		step = 0
+		#if (epoch % n == 0 and n != 0): 
+		  #np.savetxt("actor_" + str(epoch), np.asarray(cacla.getActorBrain()),  delimiter = ",")
+  		  #np.savetxt("critic_" + str(epoch), np.asarray(cacla.getCriticBrain()),  delimiter = ",")
+		  #np.asarray(cacla.getActorBrain()).tofile("actor_" + str(epoch),sep=" ",format="%s")
+		  #np.asarray(cacla.getCriticBrain()).tofile("critic_" + str(epoch),sep=" ",format="%s")
 		while not finished:
 
-                #for iteration in range(4000):
-                        #if(finished):
-                          #break
+                        if(step == 100000):
+                          break
+			
 			old_state = state
 			#if epoch % 10 == 0:
 			#	env.render()
@@ -115,10 +122,10 @@ def cacla_test():
 
 			finished = done[2]
 			reward = done[1]
-                        #print reward
 			tot_reward += reward
 			state = done[0]
 			cacla.update(old_state, action, state, reward, finished)
+			step = step + 1
 
 		cacla.adjustSigma()
 
@@ -129,6 +136,52 @@ def cacla_test():
 		plt.show()
 		plt.pause(0.0001) #Note this correction
 		print tot_reward
+
+
+def cacla_test():
+
+	#env = gym.make('LunarLanderContinuous-v2')
+        #stateSize = env.reset().size
+        #actionSize = env.action_space.sample().size
+        #cacla = Cacla(actionSize,np.ones(actionSize) * -1 , np.ones(actionSize), np.ones(actionSize), stateSize)
+	#state = env.reset()
+
+	#1 action, from -1 to 1, with 2 input states
+	cacla = Cacla(1,[-1], [1], 2)
+	env = gym.make('MountainCarContinuous-v0')
+	state = env.reset()
+        brain = np.fromfile('actor_500')
+        print brain
+	#cacla.setActorBrain(brain)
+	#cacla.setCriticBrain(np.fromfile('critic_500', sep=" "))
+
+	n = 100
+	for epoch in range(2000):
+		env.reset()
+		tot_reward = 0
+		finished = False
+		step = 0
+		while not finished:
+
+                        if(step == 100000):
+                          break
+			
+			old_state = state
+			#if epoch % 10 == 0:
+			#	env.render()
+			action = cacla.chooseAction(state)
+			done = env.step(action)
+
+			finished = done[2]
+			reward = done[1]
+			tot_reward += reward
+			state = done[0]
+			#cacla.update(old_state, action, state, reward, finished)
+			step = step + 1
+
+		#cacla.adjustSigma()
+		print tot_reward
+
 
 def sarsa_test(render = False):
 	
@@ -230,7 +283,8 @@ def sarsa_test(render = False):
 
 if __name__ == "__main__":
 	#xorTest()
-	cacla_test()
+	cacla_train()
+	#cacla_test()
 	#sarsa_test()
 	##nfac_test()
 

@@ -12,8 +12,8 @@ class Cacla():
     self.a_min = a_min
     self.action_size = a_dim
     self.state_size = state_size
-    self.action_mlp = MLP(self.state_size, 1, [100], 1)
-    self.value_mlp = MLP(self.state_size, 1, [100], 1)
+    self.action_mlp = MLP(self.state_size, 1, [300], 1)
+    self.value_mlp = MLP(self.state_size, 1, [300], 1)
     self.discount = discount
     self.random_chance = random_chance
     self.sd = 1
@@ -25,11 +25,17 @@ class Cacla():
     action = self.getAction(state) + self.sigma * rand_sample
     return action
 
-  def getBrain(self):
-    return mlp.getBrain()
+  def getActorBrain(self):
+    return self.action_mlp.getBrain()
 
-  def setBrain(self, brain):
-    mlp.setBrain(brain)
+  def setActorBrain(self, brain):
+    self.action_mlp.setBrain(brain)
+
+  def getCriticBrain(self):
+    return self.value_mlp.getBrain()
+
+  def setCriticBrain(self, brain):
+    self.value_mlp.setBrain(brain)
  
   def getAction(self, state):
     action = self.action_mlp.process(state)
@@ -70,7 +76,7 @@ class Cacla():
     return action
 
   def adjustSigma(self):
-    self.sigma = self.sigma * 0.98
+    self.sigma = self.sigma * 0.99
 
   def epsilonStrategy(self, s):
     if (random.random() < self.random_chance):
