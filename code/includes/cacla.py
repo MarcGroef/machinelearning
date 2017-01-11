@@ -12,12 +12,12 @@ class Cacla():
     self.a_min = a_min
     self.action_size = a_dim
     self.state_size = state_size
-    self.action_mlp = MLP(self.state_size, 1, [20], 1)
-    self.value_mlp = MLP(self.state_size, 1, [20], 1)
+    self.action_mlp = MLP(self.state_size, 1, [100], 1)
+    self.value_mlp = MLP(self.state_size, 1, [100], 1)
     self.discount = discount
     self.random_chance = random_chance
     self.sd = 1
-    self.sigma = 0.4
+    self.sigma = 0.5
 
   #Draw a value from a univariate normal dist
   def getExplorationAction(self, state):
