@@ -17,7 +17,7 @@ class Cacla():
     self.discount = discount
     self.random_chance = random_chance
     self.sd = 1
-    self.sigma = 0.5
+    self.sigma = 10
 
   #Draw a value from a univariate normal dist
   def getExplorationAction(self, state):
@@ -76,7 +76,7 @@ class Cacla():
     return action
 
   def adjustSigma(self):
-    self.sigma = self.sigma * 0.99
+    self.sigma = self.sigma * 0.98
 
   def epsilonStrategy(self, s):
     if (random.random() < self.random_chance):

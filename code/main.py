@@ -60,10 +60,11 @@ def nfac_test():
 		tot_reward = 0
 		tot_Q = 0
 		finished = False
-		for _ in range(2000):
+		while not finished:
 			old_state = state
 			#env.render()
 			action = nfac.chooseAction(state)
+			
 			done = env.step(action)
 			finished = done[2]
 			reward = done[1]
@@ -71,12 +72,11 @@ def nfac_test():
 			state = done[0]
 			#collect for offline learning
 			nfac.collect(old_state, action, reward, state, finished)
-			if finished:
-				break
+		nfac.adjustSigma()
 		if finished:
 			nfac.update()
-		else:
-			nfac.clearCollection()
+		#else:
+			#nfac.clearCollection()
 		print tot_reward
   
 def cacla_train():
@@ -292,8 +292,8 @@ def sarsa_test(render = False):
 if __name__ == "__main__":
 	#xorTest()
 	#cacla_train()
-	cacla_test()
+	#cacla_test()
 	#sarsa_test()
-	##nfac_test()
+	nfac_test()
 
 	
