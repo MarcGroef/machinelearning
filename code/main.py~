@@ -293,9 +293,9 @@ def sarsa_test(render = False):
 
 if __name__ == "__main__":
 	#xorTest()
-	cacla_train()
+	#cacla_train()
 	#cacla_test()
 	#sarsa_test()
-	#nfac_test()
+	nfac_test()
 
 	
