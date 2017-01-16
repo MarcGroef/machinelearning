@@ -14,7 +14,7 @@ class Cacla():
     self.state_size = state_size
     print self.state_size
     print self.action_size
-    self.action_mlp = MLP(self.state_size, 1, [200], self.action_size)
+    self.action_mlp = MLP(self.state_size, 1, [200], 1)
     self.value_mlp = MLP(self.state_size, 1, [200], 1)
     self.discount = discount
     self.random_chance = random_chance

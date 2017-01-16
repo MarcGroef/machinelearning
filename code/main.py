@@ -53,13 +53,17 @@ def xorTest():
   plt.pause(0.001)
 
 def nfac_test():
+
 	#create logging folder
 	dir_name = 'NFAC ' + ('%s' % datetime.now())
 	dir_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), '../runs/nfac/' + dir_name)
 	os.makedirs(dir_path)
 
-	nfac = NFAC(1,[-1], [1], 2)
-	env = gym.make('MountainCarContinuous-v0')
+	#env = gym.make('MountainCarContinuous-v0'
+	env = gym.make('LunarLanderContinuous-v2')
+	stateSize = env.reset().size
+	actionSize = env.action_space.sample().size
+	nfac = NFAC(actionSize, np.ones(actionSize) * -1, np.ones(actionSize), stateSize)
 	state = env.reset()
 
 	#create logging param file
@@ -105,8 +109,7 @@ def nfac_test():
 	xl=[]
 	yl=[]
 
-
-	for x in range(2000):
+	for x in range(20000):
 		env.reset()
 		tot_reward = 0
 		tot_Q = 0
@@ -119,6 +122,8 @@ def nfac_test():
 			done = env.step(action)
 			finished = done[2]
 			reward = done[1]
+			if(reward > 0 and finished):
+				print "***********************SUCCESS************************"
 			tot_reward += reward
 			state = done[0]
 			#collect for offline learning
@@ -163,16 +168,11 @@ def nfac_test():
 	plt.close(fig)
   
 def cacla_train():
-
-	#env = gym.make('LunarLanderContinuous-v2')
-        #stateSize = env.reset().size
-        #actionSize = env.action_space.sample().size
-        #cacla = Cacla(actionSize,np.ones(actionSize) * -1 , np.ones(actionSize), np.ones(actionSize), stateSize)
-	#state = env.reset()
-
-	#1 action, from -1 to 1, with 2 input states
-	cacla = Cacla(1,[-1], [1], 2)
-	env = gym.make('MountainCarContinuous-v0')
+	#env = gym.make('MountainCarContinuous-v0')
+	env = gym.make('LunarLanderContinuous-v2')
+        stateSize = env.reset().size
+        actionSize = env.action_space.sample().size
+        cacla = Cacla(actionSize,np.ones(actionSize) * -1 , np.ones(actionSize), stateSize)
 	state = env.reset()
 
         plt.ion() ## Note this correction
@@ -197,7 +197,7 @@ def cacla_train():
 		  output.close()
 		while not finished:
 
-                        if(step == 100000):
+                        if(step == 10000):
                           break
 			
 			old_state = state
@@ -208,6 +208,8 @@ def cacla_train():
 
 			finished = done[2]
 			reward = done[1]
+                        if(reward > 0 and finished):
+                         	print "***********************SUCCESS************************"
 			tot_reward += reward
 			state = done[0]
 			cacla.update(old_state, action, state, reward, finished)
@@ -514,9 +516,9 @@ def sarsa_test(render = False):
 
 if __name__ == "__main__":
 	#xorTest()
-	#cacla_train()
+	cacla_train()
 	#cacla_test()
 	#sarsa_test()
-	nfac_test()
+	#nfac_test()
 
 	
