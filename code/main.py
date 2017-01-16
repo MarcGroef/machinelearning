@@ -7,6 +7,8 @@ import matplotlib.pyplot as plt
 import pickle
 import numpy as np
 import gym
+import os
+from datetime import datetime
 
 def xorTest():
   
@@ -51,9 +53,58 @@ def xorTest():
   plt.pause(0.001)
 
 def nfac_test():
+	#create logging folder
+	dir_name = 'NFAC ' + ('%s' % datetime.now())
+	dir_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), '../runs/nfac/' + dir_name)
+	os.makedirs(dir_path)
+
 	nfac = NFAC(1,[-1], [1], 2)
 	env = gym.make('MountainCarContinuous-v0')
 	state = env.reset()
+
+	#create logging param file
+	params_file = os.path.join(dir_path, 'parameters.txt')
+	brain_init_file = os.path.join(dir_path, 'mlps_weights_init.txt')
+	params = open(params_file, 'w')
+	params.write('NFAC parameters\n')
+	params.write('\nAction MLP:\n')
+	params.write('Number of hidden layers: ' + str(nfac.action_mlp.nLayers) + '\n')
+	params.write('Hidden layer sizes: ' + str(nfac.action_mlp.hiddenSizes) + '\n')
+	params.write('\nValue MLP:\n')
+	params.write('Number of hidden layers: ' + str(nfac.value_mlp.nLayers) + '\n')
+	params.write('Hidden layer sizes: ' + str(nfac.value_mlp.hiddenSizes) + '\n')
+	params.write('\nDiscount: ' + str(nfac.discount) + '\n')
+	params.write('Random chance: ' + str(nfac.random_chance) + '\n')
+	params.write('SD: ' + str(nfac.sd) + '\n')
+	params.write('Sigma: ' + str(nfac.sigma) + '\n')
+	params.close()
+
+	#log mlp init weights
+	brain_init = open(brain_init_file, 'w')
+	brain_init.write('Action MLP:\n')
+	action_brain = nfac.action_mlp.getBrain()
+	brain_init.write('Initial hidden weights: ' + str(action_brain[0]) + '\n')
+	brain_init.write('Initial hidden bias: ' + str(action_brain[1]) + '\n')
+	brain_init.write('Initial output weights: ' + str(action_brain[2]) + '\n')
+	brain_init.write('Initial output bias: ' + str(action_brain[3]) + '\n')
+	brain_init.write('Value MLP:\n')
+	value_brain = nfac.value_mlp.getBrain()
+	brain_init.write('Initial hidden weights: ' + str(value_brain[0]) + '\n')
+	brain_init.write('Initial hidden bias: ' + str(value_brain[1]) + '\n')
+	brain_init.write('Initial output weights: ' + str(value_brain[2]) + '\n')
+	brain_init.write('Initial output bias: ' + str(value_brain[3]) + '\n')
+	brain_init.close()
+
+    #create file for logging total reward per epoch
+	rewards_file = os.path.join(dir_path, 'rewards.txt')
+	rewards = open(rewards_file, 'w')
+	rewards.write('epoch total_reward\n')
+	rewards.close()
+
+	#create lists for plotting total reward
+	xl=[]
+	yl=[]
+
 
 	for x in range(2000):
 		env.reset()
@@ -75,9 +126,41 @@ def nfac_test():
 		nfac.adjustSigma()
 		if finished:
 			nfac.update()
+			#periodically log mlp weights to file
+			if x % 100 == 0:
+				brain_file = os.path.join(dir_path, 'weights_mlps_epoch_' + str(x) + '.txt')
+				brain = open(brain_file, 'w')
+				action_brain = nfac.action_mlp.getBrain()
+				brain.write('Action MLP:')
+				brain.write('Hidden weights: ' + str(action_brain[0]))
+				brain.write('Hidden bias: ' + str(action_brain[1]))
+				brain.write('Output weights: ' + str(action_brain[2]))
+				brain.write('Output bias: ' + str(action_brain[3]))
+				brain.write('\nValue MLP:')
+				value_brain = nfac.value_mlp.getBrain()
+				brain.write('Hidden weights: ' + str(value_brain[0]))
+				brain.write('Hidden bias: ' + str(value_brain[1]))
+				brain.write('Output weights: ' + str(value_brain[2]))
+				brain.write('Output bias: ' + str(value_brain[3]))
+				brain.close()
+
 		#else:
 			#nfac.clearCollection()
 		print tot_reward
+
+		#update rewards log
+		rewards = open(rewards_file, 'a')
+		rewards.write(str(x) + ' ' + str(tot_reward) + '\n')
+		rewards.close()
+
+		#update rewards lists
+		xl.append(x)
+		yl.append(tot_reward)
+
+	#make and store total rewards plot
+	fig = plt.plot(x, tot_reward)
+	fig.savefig(os.path.join(dir_path, 'total_reward.png'))
+	plt.close(fig)
   
 def cacla_train():
 
@@ -130,6 +213,7 @@ def cacla_train():
 			cacla.update(old_state, action, state, reward, finished)
 			step = step + 1
 
+
 		cacla.adjustSigma()
 
 		x1.append(i);
@@ -142,6 +226,11 @@ def cacla_train():
 
 
 def cacla_test():
+
+	#create logging folder
+	dir_name = 'CACLA ' + ('%s' % datetime.now())
+	dir_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), '../runs/cacla/' + dir_name)
+	os.makedirs(dir_path)
 
 	#env = gym.make('LunarLanderContinuous-v2')
         #stateSize = env.reset().size
@@ -161,7 +250,52 @@ def cacla_test():
 	critic = pickle.load(critic_file)
 
 	cacla.setActorBrain(actor)
-	cacla.setCriticBrain(actor)
+	cacla.setCriticBrain(actor) #moet dit niet critic zijn?
+
+	# create logging param file
+	params_file = os.path.join(dir_path, 'parameters.txt')
+	params = open(params_file, 'w')
+	params.write('CACLA parameters\n')
+	params.write('\nAction MLP:\n')
+	params.write('Number of hidden layers: ' + str(cacla.action_mlp.nLayers) + '\n')
+	params.write('Hidden layer sizes: ' + str(cacla.action_mlp.hiddenSizes) + '\n')
+	params.write('\nValue MLP:\n')
+	params.write('Number of hidden layers: ' + str(cacla.value_mlp.nLayers) + '\n')
+	params.write('Hidden layer sizes: ' + str(cacla.value_mlp.hiddenSizes) + '\n')
+	params.write('\nDiscount: ' + str(cacla.discount) + '\n')
+	params.write('Random chance: ' + str(cacla.random_chance) + '\n')
+	params.write('SD: ' + str(cacla.sd) + '\n')
+	params.write('Sigma: ' + str(cacla.sigma) + '\n')
+	params.close()
+
+	#log initialisation mlp
+	brain_init_file = os.path.join(dir_path, 'mlps_weights_init.txt')
+	brain_init = open(brain_init_file, 'w')
+
+	brain_init.write('Action MLP:\n')
+	action_brain = cacla.action_mlp.getBrain()
+	brain_init.write('Initial hidden weights: ' + str(action_brain[0]) + '\n')
+	brain_init.write('Initial hidden bias: ' + str(action_brain[1]) + '\n')
+	brain_init.write('Initial output weights: ' + str(action_brain[2]) + '\n')
+	brain_init.write('Initial output bias: ' + str(action_brain[3]) + '\n')
+
+	brain_init.write('Value MLP:\n')
+	value_brain = cacla.value_mlp.getBrain()
+	brain_init.write('Initial hidden weights: ' + str(value_brain[0]) + '\n')
+	brain_init.write('Initial hidden bias: ' + str(value_brain[1]) + '\n')
+	brain_init.write('Initial output weights: ' + str(value_brain[2]) + '\n')
+	brain_init.write('Initial output bias: ' + str(value_brain[3]) + '\n')
+	brain_init.close()
+
+	# create file for logging total reward per epoch
+	rewards_file = os.path.join(dir_path, 'rewards.txt')
+	rewards = open(rewards_file, 'w')
+	rewards.write('epoch total_reward\n')
+	rewards.close()
+
+	# create lists for plotting total reward
+	xl = []
+	yl = []
 
 	n = 100
 	for epoch in range(2000):
@@ -186,108 +320,197 @@ def cacla_test():
 			state = done[0]
 			#cacla.update(old_state, action, state, reward, finished)
 			step = step + 1
+		# periodically log mlp weights to file
+		if (epoch + 1) % 100 == 0:
+			brain_file = os.path.join(dir_path, 'weights_mlps_epoch_' + str(epoch) + '.txt')
+			brain = open(brain_file, 'w')
+			action_brain = cacla.action_mlp.getBrain()
+			brain.write('Action MLP:')
+			brain.write('Hidden weights: ' + str(action_brain[0]))
+			brain.write('Hidden bias: ' + str(action_brain[1]))
+			brain.write('Output weights: ' + str(action_brain[2]))
+			brain.write('Output bias: ' + str(action_brain[3]))
+			brain.write('\nValue MLP:')
+			value_brain = cacla.value_mlp.getBrain()
+			brain.write('Hidden weights: ' + str(value_brain[0]))
+			brain.write('Hidden bias: ' + str(value_brain[1]))
+			brain.write('Output weights: ' + str(value_brain[2]))
+			brain.write('Output bias: ' + str(value_brain[3]))
+			brain.close()
 
 		#cacla.adjustSigma()
 		print tot_reward
 
+		# update rewards log
+		rewards = open(rewards_file, 'a')
+		rewards.write(str(epoch) + ' ' + str(tot_reward) + '\n')
+		rewards.close()
+
+		# update rewards lists
+		xl.append(epoch)
+		yl.append(tot_reward)
+
+	# make and store total rewards plot
+	fig = plt.plot(xl, yl)
+	fig.savefig(os.path.join(dir_path, 'total_reward.png'))
+	plt.close(fig)
+
 
 def sarsa_test(render = False):
-	
-	#env = gym.make('MountainCarContinuous-v0')
-        env = gym.make('LunarLanderContinuous-v2')
-        stateSize = env.reset().size
-        actionSize = env.action_space.sample().size
 
-        #sarsa = Sarsa(1,[-1], [1], [2], 2)
-        sarsa = Sarsa(actionSize,np.ones(actionSize) * -1 , np.ones(actionSize), np.ones(actionSize), stateSize)  ##discrete actions 1, -1 for sanity check
+	# create logging folder
+	dir_name = 'SARSA ' + ('%s' % datetime.now())
+	dir_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), '../runs/sarsa/' + dir_name)
+	os.makedirs(dir_path)
+
+	#env = gym.make('MountainCarContinuous-v0')
+	env = gym.make('LunarLanderContinuous-v2')
+	stateSize = env.reset().size
+	actionSize = env.action_space.sample().size
+
+	#sarsa = Sarsa(1,[-1], [1], [2], 2)
+	sarsa = Sarsa(actionSize,np.ones(actionSize) * -1 , np.ones(actionSize), np.ones(actionSize), stateSize)  ##discrete actions 1, -1 for sanity check
+
+	# create logging param file
+	params_file = os.path.join(dir_path, 'parameters.txt')
+	params = open(params_file, 'w')
+	params.write('SARSA parameters\n')
+	params.write('\nMLP:\n')
+	params.write('Number of hidden layers: ' + str(sarsa.mlp.nLayers) + '\n')
+	params.write('Hidden layer sizes: ' + str(sarsa.mlp.hiddenSizes) + '\n')
+	params.write('\nDiscount: ' + str(sarsa.discount) + '\n')
+	params.write('Random chance: ' + str(sarsa.random_chance) + '\n')
+	params.write('Learning rate: ' + str(sarsa.learningRate) + '\n')
+	params.close()
+
+	# log initialisation mlp
+	brain_init_file = os.path.join(dir_path, 'mlps_weights_init.txt')
+	brain_init = open(brain_init_file, 'w')
+
+	brain_init.write('MLP:\n')
+	brain_state = sarsa.mlp.getBrain()
+	brain_init.write('Initial hidden weights: ' + str(brain_state[0]) + '\n')
+	brain_init.write('Initial hidden bias: ' + str(brain_state[1]) + '\n')
+	brain_init.write('Initial output weights: ' + str(brain_state[2]) + '\n')
+	brain_init.write('Initial output bias: ' + str(brain_state[3]) + '\n')
+
+	# create file for logging total reward per epoch
+	rewards_file = os.path.join(dir_path, 'rewards.txt')
+	rewardsf = open(rewards_file, 'w')
+	rewardsf.write('epoch total_reward\n')
+	rewardsf.close()
+
+	# create lists for plotting total reward
+	xl = []
+	yl = []
          
-        #env = gym.make('Pendulum-v0')
-        plt.ion() ## Note this correction
+	#env = gym.make('Pendulum-v0')
+	plt.ion() ## Note this correction
 	fig=plt.figure()
 	#plt.axis([0,0,0,0])
 	epochs = list()
-        rewards = list()
-        nGameIterations = 20000
-        nEpochs = 10000
-        epochFailed = True
+	rewards = list()
+	nGameIterations = 20000
+	nEpochs = 10000
+	epochFailed = True
 	for epoch in range(nEpochs):
-                if(epoch == nEpochs - 100):
-                   print "random action chance set to 0"
-                   sarsa.random_chance = 0.1
-                   sarsa.learningRate = 0
-                #print state
-                #sarsa.printValueMap(1)
+		if(epoch == nEpochs - 100):
+			print "random action chance set to 0"
+			sarsa.random_chance = 0.1
+			sarsa.learningRate = 0
+			#print state
+			#sarsa.printValueMap(1)
+
+		# periodically log mlp weights to file
+		if (epoch + 1) % 100 == 0:
+			brain_file = os.path.join(dir_path, 'weights_mlps_epoch_' + str(epoch) + '.txt')
+			brain = open(brain_file, 'w')
+			brain_state = sarsa.mlp.getBrain()
+			brain.write('Hidden weights: ' + str(brain_state[0]) + '\n')
+			brain.write('Initial hidden bias: ' + str(brain_state[1]) + '\n')
+			brain.write('Initial output weights: ' + str(brain_state[2]) + '\n')
+			brain.write('Initial output bias: ' + str(brain_state[3]) + '\n')
+			brain.close()
+
 		state = env.reset()
                 
 		tot_reward = 0
 		tot_Q = 0
-                action = sarsa.chooseAction(state)
+		action = sarsa.chooseAction(state)
 
-                done = env.step(action[0])
+		done = env.step(action[0])
 		reward = done[1]
-                finished = done[2]
-                #if(epoch % 100 == 0 and epoch > 100):
-                #    render = True
-                #else:
-                #    render = False
-                render = True
-                #ensure sarsa doesnt learn from killed epochs
+		finished = done[2]
+		#if(epoch % 100 == 0 and epoch > 100):
+		#    render = True
+		#else:
+		#    render = False
+		render = True
+		#ensure sarsa doesnt learn from killed epochs
 
-                sarsa.resetBrainBuffers()
-                epochFailed = True
-                render = True
+		sarsa.resetBrainBuffers()
+		epochFailed = True
+		render = True
 
                  
 		for iteration in range(nGameIterations):
-                        
-                            
-                        #done = env.step(action[0])
-                        #print done
-                        #reward = done[1]
-                        #tot_reward += reward
-                        #finished = done[2]
 
-                        #if(iteration % 10 != 0 and not finished):  ##only act once every 10 frames. Debugs and learns hell of a lot faster <edit: randomchance ==1 preformed qually well>
-                        #    continue
-                        #if(render and iteration % 5 == 0 and epoch > 100):
-                        #env.render()
-                        old_state = state
-  		        old_action = action
-                        if( not finished):
-			   
-			   action = sarsa.chooseAction(state)
-			   tot_Q += action[1]			
-			
-			
-                           state = done[0]
+			#done = env.step(action[0])
+			#print done
+			#reward = done[1]
+			#tot_reward += reward
+			#finished = done[2]
 
-			done = env.step(action[0])
-                        reward = done[1]
-                        
-                        tot_reward += reward
-                        finished = done[2]
-                        if(reward > 0 and finished):
-                           print "***********************SUCCESS************************"
-			
+			#if(iteration % 10 != 0 and not finished):  ##only act once every 10 frames. Debugs and learns hell of a lot faster <edit: randomchance ==1 preformed qually well>
+			#    continue
+			#if(render and iteration % 5 == 0 and epoch > 100):
+			#env.render()
+			old_state = state
+			old_action = action
+			if(not finished):
+				action = sarsa.chooseAction(state)
+				tot_Q += action[1]
+
+				state = done[0]
+				done = env.step(action[0])
+				reward = done[1]
+
+				tot_reward += reward
+				finished = done[2]
+			if(reward > 0 and finished):
+				print "***********************SUCCESS************************"
+
 			#print [action[0][0], reward, action[1][0]]
-                        if finished:
-			   sarsa.update(old_state, old_action[0], state, action[0], reward, True)
-                           epochFailed = False
-                           break
-                        else:
-		           sarsa.update(old_state, old_action[0], state, action[0], reward)
-
-                        #done = env.step(action[0])
-                        ##reward = done[1]
-                        #tot_reward += reward
-                        #finished = done[2]
-
+			if finished:
+				sarsa.update(old_state, old_action[0], state, action[0], reward, True)
+				epochFailed = False
+				break
+			else:
+				sarsa.update(old_state, old_action[0], state, action[0], reward)
+				#done = env.step(action[0])
+				##reward = done[1]
+				#tot_reward += reward
+				#finished = done[2]
 		print "rewards @ epoch " + str(epoch ) + ": " + str(tot_reward)
-                epochs.append(epoch)
-                rewards.append(tot_reward)
-                #plt.scatter(epochs, rewards)
-                #plt.show()
-                #plt.pause(1)
+		epochs.append(epoch)
+		rewards.append(tot_reward)
+		#plt.scatter(epochs, rewards)
+		#plt.show()
+		#plt.pause(1)
+
+		# update rewards log
+		rewardsf = open(rewards_file, 'a')
+		rewardsf.write(str(epoch) + ' ' + str(tot_reward) + '\n')
+		rewardsf.close()
+
+		# update rewards lists
+		xl.append(epoch)
+		yl.append(tot_reward)
+
+	# make and store total rewards plot
+	fig = plt.plot(xl, yl)
+	fig.savefig(os.path.join(dir_path, 'total_reward.png'))
+	plt.close(fig)
 
 if __name__ == "__main__":
 	#xorTest()
