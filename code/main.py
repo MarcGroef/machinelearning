@@ -163,9 +163,9 @@ def nfac_test():
 		yl.append(tot_reward)
 
 	#make and store total rewards plot
-	fig = plt.plot(x, tot_reward)
-	fig.savefig(os.path.join(dir_path, 'total_reward.png'))
-	plt.close(fig)
+	plt.plot(x, tot_reward)
+	plt.savefig(os.path.join(dir_path, 'total_reward.png'))
+
   
 def cacla_train():
 	#env = gym.make('MountainCarContinuous-v0')
@@ -353,9 +353,8 @@ def cacla_test():
 		yl.append(tot_reward)
 
 	# make and store total rewards plot
-	fig = plt.plot(xl, yl)
-	fig.savefig(os.path.join(dir_path, 'total_reward.png'))
-	plt.close(fig)
+	plt.plot(xl, yl)
+	plt.savefig(os.path.join(dir_path, 'total_reward.png'))
 
 
 def sarsa_test(render = False):
@@ -510,9 +509,8 @@ def sarsa_test(render = False):
 		yl.append(tot_reward)
 
 	# make and store total rewards plot
-	fig = plt.plot(xl, yl)
-	fig.savefig(os.path.join(dir_path, 'total_reward.png'))
-	plt.close(fig)
+	plt.plot(xl, yl)
+	plt.savefig(os.path.join(dir_path, 'total_reward.png'))
 
 if __name__ == "__main__":
 	#xorTest()
