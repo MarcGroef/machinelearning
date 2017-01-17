@@ -9,6 +9,7 @@ import numpy as np
 import gym
 import os
 from datetime import datetime
+import sys
 
 def xorTest():
   
@@ -166,24 +167,28 @@ def nfac_test():
 	plt.plot(x, tot_reward)
 	plt.savefig(os.path.join(dir_path, 'total_reward.png'))
 
+
+
+    #self.a_max = a_max
   
-def cacla_train():
-	#env = gym.make('MountainCarContinuous-v0')
-	env = gym.make('LunarLanderContinuous-v2')
-        stateSize = env.reset().size
-        actionSize = env.action_space.sample().size
-        cacla = Cacla(actionSize,np.ones(actionSize) * -1 , np.ones(actionSize), stateSize)
+def cacla_train(random_chance, discount, learningRate, sigma, sd, action_hidden_layers, value_hidden_layers):
+
+	dir_name = 'CACLA ' + ('%s' % datetime.now())
+	dir_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), '../runs/cacla/' + dir_name)
+	os.makedirs(dir_path)
+
+	env = gym.make('MountainCarContinuous-v0')
+	#env = gym.make('LunarLanderContinuous-v2')
+	stateSize = env.reset().size
+	actionSize = env.action_space.sample().size
+	cacla = Cacla(actionSize,np.ones(actionSize) * -1 , np.ones(actionSize), stateSize,random_chance,discount,learningRate,sigma,sd,action_hidden_layers, value_hidden_layers)
 	state = env.reset()
 
-        plt.ion() ## Note this correction
-	fig=plt.figure()
-	plt.axis([0,0,0,0])
-
 	i=0
-	x1=list()
-	y1=list()
+	xl = []
+	yl = []
 	n = 100
-	for epoch in range(2000):
+	for epoch in range(1500):
 		env.reset()
 		tot_reward = 0
 		finished = False
@@ -202,7 +207,7 @@ def cacla_train():
 			
 			old_state = state
 			#if epoch % 10 == 0:
-			#	env.render()
+				#env.render()
 			action = cacla.chooseAction(state)
 			done = env.step(action)
 
@@ -218,13 +223,18 @@ def cacla_train():
 
 		cacla.adjustSigma()
 
-		x1.append(i);
-		y1.append(tot_reward);
-		plt.scatter(i,tot_reward);
+		xl.append(i);
+		yl.append(tot_reward);
+
+
 		i+=1;
 		plt.show()
 		plt.pause(0.0001) #Note this correction
 		print tot_reward
+	plt.plot(xl, yl)
+	savestr = str(random_chance) + '_' + str(discount) + '_' + str(learningRate) + '_' + str(sigma) + '_' + str(sd) + '_' + str(action_hidden_layers) + '_' + str(value_hidden_layers) + '_total_reward.png'
+	os.path.join(dir_path, savestr)
+	plt.savefig(os.path.join(dir_path, savestr))	
 
 
 def cacla_test():
@@ -245,14 +255,14 @@ def cacla_test():
 	env = gym.make('MountainCarContinuous-v0')
 	state = env.reset()
 
-	actor_file = open('actor_100.pkl', 'rb')
+	actor_file = open('actor_1900.pkl', 'rb')
 	actor = pickle.load(actor_file)
 
- 	critic_file = open('actor_100.pkl', 'rb')
+ 	critic_file = open('critic_1900.pkl', 'rb')
 	critic = pickle.load(critic_file)
 
 	cacla.setActorBrain(actor)
-	cacla.setCriticBrain(actor) #moet dit niet critic zijn?
+	cacla.setCriticBrain(critic) #moet dit niet critic zijn?
 
 	# create logging param file
 	params_file = os.path.join(dir_path, 'parameters.txt')
@@ -311,8 +321,8 @@ def cacla_test():
                           break
 			
 			old_state = state
-			if epoch % 10 == 0:
-				env.render()
+			#if epoch % 10 == 0:
+				#env.render()
 			action = cacla.chooseAction(state)
 			done = env.step(action)
 
@@ -514,7 +524,50 @@ def sarsa_test(render = False):
 
 if __name__ == "__main__":
 	#xorTest()
-	cacla_train()
+	#random_chance, discount, learningRate, sigma, sd  action_hidden_layers, value_hidden_layers):
+	"""
+
+	random_chance_vals	= [0.5,0.1,0.05,0.01,0.001]
+	discount_vals 		= [0.999, 0.99, 0.90, 0.80,0.50]
+	learning_rate_vals	= [0.4,0.2,0,1,0.05,0.01]
+	sigma_vals			= [20,10,5,1,0.1]
+	sd_vals				= [5,2,1,0.5,0.1]
+	action_hidden_layers= [500,200,100,50,10]
+	value_hidden_layers	= [500,200,100,50,10]
+
+	"""
+	print sys.argv
+	print "test"
+	#random_chance_vals = sys.argv[2]
+
+	random_chance_vals	= float(sys.argv[1])
+	discount_vals 		= float(sys.argv[2])
+	learning_rate_vals	= float(sys.argv[3])
+	sigma_vals			= float(sys.argv[4])
+	sd_vals				= float(sys.argv[5])
+	action_hidden_layers= int(sys.argv[6])
+	value_hidden_layers	= int(sys.argv[7])
+
+	print random_chance_vals
+	print discount_vals
+	print learning_rate_vals
+	print sigma_vals
+	print sd_vals
+	print action_hidden_layers
+	print value_hidden_layers
+
+
+
+	"""for rc_val in random_chance_vals:
+		for disc_val in discount_vals:
+			for lr_val in learning_rate_vals:
+				for sig_val in sigma_vals:
+					for sd_val in sd_vals:
+						for ah_val in action_hidden_layers:
+							for vh_val in value_hidden_layers:"""
+	cacla_train(random_chance_vals, discount_vals, learning_rate_vals, sigma_vals, sd_vals, action_hidden_layers, value_hidden_layers)
+	#cacla_train(0.1, 0.99, 0.01, 10, 1, 200, 200)
+
 	#cacla_test()
 	#sarsa_test()
 	#nfac_test()

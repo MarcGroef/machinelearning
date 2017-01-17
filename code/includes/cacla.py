@@ -7,19 +7,21 @@ class Cacla():
   a_min = None
   a_delta = None
 
-  def __init__(self, a_dim, a_min, a_max, state_size, random_chance = 0.1, discount = 0.99):
+  def __init__(self, a_dim, a_min, a_max, state_size, random_chance, discount, learningRate, sigma, sd, action_hidden_layers, value_hidden_layers):
+    print random_chance, discount, learningRate, sigma, sd, action_hidden_layers, value_hidden_layers
     self.a_max = a_max
     self.a_min = a_min
     self.action_size = a_dim
     self.state_size = state_size
     print self.state_size
     print self.action_size
-    self.action_mlp = MLP(self.state_size, 1, [200], self.action_size)
-    self.value_mlp = MLP(self.state_size, 1, [200], 1)
+    self.action_mlp = MLP(self.state_size, 1, [action_hidden_layers], self.action_size)
+    self.value_mlp = MLP(self.state_size, 1, [value_hidden_layers], 1)
     self.discount = discount
     self.random_chance = random_chance
-    self.sd = 1
-    self.sigma = 10
+    self.sd = sd
+    self.sigma = sigma
+    self.learningRate = learningRate
 
   #Draw a value from a univariate normal dist
   def getExplorationAction(self, state):
@@ -48,10 +50,10 @@ class Cacla():
     return q
 
   def updateQ(self, inp, target):
-    self.value_mlp.train(inp, target, 0.01)
+    self.value_mlp.train(inp, target, self.learningRate)
 
   def updateActor(self, inp, target):
-    self.action_mlp.train(inp, target, 0.01)
+    self.action_mlp.train(inp, target, self.learningRate)
 
   def epsilonGreedy(self):
     action = []
