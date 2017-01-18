@@ -11,18 +11,18 @@ import os
 from datetime import datetime
 
 def xorTest():
-  
+
   xorIn1 = np.array([-1,1])
   xorIn2 = np.array([1,-1])
   xorIn3 = np.array([1,1])
   xorIn4 = np.array([-1,-1])
-  
+
   xorOut1 = np.array([1])
   xorOut2 = np.array([1])
   xorOut3 = np.array([-1])
   xorOut4 = np.array([-1])
-  
-  
+
+
   nn = MLP(2, 2, [10, 10, ], 1)
   #nn = tfMLP(2, 100, 1)
   for it in range(500):
@@ -32,7 +32,7 @@ def xorTest():
     loss += nn.train(xorIn2.astype(float), xorOut2.astype(float), 0.02, 0.2)
     loss += nn.train(xorIn3.astype(float), xorOut3.astype(float), 0.02, 0.2)
     #print "learning.. iter" + str(it)0
-  
+
     print loss / 4
   res = 50
   valMap = np.random.random((res, res))
@@ -40,7 +40,7 @@ def xorTest():
     for x2 in range(res):
       position = float(2 * x1) / res - 1
       velocity = float(2 * x2) / res - 1
-      
+
       v = nn.process(np.asarray([position, velocity ]).astype(float))#[0][0]
       #print v
       #print [position, velocity, v[0]]
@@ -119,7 +119,7 @@ def nfac_test():
 			old_state = state
 			#env.render()
 			action = nfac.chooseAction(state)
-			
+
 			done = env.step(action)
 			finished = done[2]
 			reward = done[1]
@@ -167,7 +167,7 @@ def nfac_test():
 	plt.plot(x, tot_reward)
 	plt.savefig(os.path.join(dir_path, 'total_reward.png'))
 
-  
+
 def cacla_test():
 	# create logging folder
 	dir_name = 'CACLA ' + ('%s' % datetime.now())
@@ -236,7 +236,7 @@ def cacla_test():
 		tot_reward = 0
 		finished = False
 		step = 0
-		if (epoch % n == 0 and n != 0): 
+		if (epoch % n == 0 and n != 0):
 			output = open('actor_' + str(epoch) + '.pkl', 'wb')
 			pickle.dump(np.asarray(cacla.getActorBrain()), output)
 			output.close()
@@ -413,7 +413,7 @@ def sarsa_test(render = False):
 	# create lists for plotting total reward
 	xl = []
 	yl = []
-         
+
 	#env = gym.make('Pendulum-v0')
 	plt.ion() ## Note this correction
 	fig=plt.figure()
@@ -443,7 +443,7 @@ def sarsa_test(render = False):
 			brain.close()
 
 		state = env.reset()
-                
+
 		tot_reward = 0
 		tot_Q = 0
 		action = sarsa.chooseAction(state)
@@ -462,7 +462,7 @@ def sarsa_test(render = False):
 		epochFailed = True
 		render = True
 
-                 
+
 		for iteration in range(nGameIterations):
 
 			#done = env.step(action[0])

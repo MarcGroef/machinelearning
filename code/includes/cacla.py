@@ -39,11 +39,11 @@ class Cacla():
 
   def setCriticBrain(self, brain):
     self.value_mlp.setBrain(brain)
- 
+
   def getAction(self, state):
     action = self.action_mlp.process(state)
     return action
- 
+
   def getQ(self, state):
     q = self.value_mlp.process(state)
     return q
