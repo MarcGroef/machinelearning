@@ -373,8 +373,8 @@ def sarsa_test(render = False):
 	dir_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), '../runs/sarsa/' + dir_name)
 	os.makedirs(dir_path)
 
-	#env = gym.make('MountainCarContinuous-v0')
-	env = gym.make('LunarLanderContinuous-v2')
+	env = gym.make('MountainCarContinuous-v0')
+	#env = gym.make('LunarLanderContinuous-v2')
 	stateSize = env.reset().size
 	actionSize = env.action_space.sample().size
 
@@ -523,8 +523,8 @@ def sarsa_test(render = False):
 
 if __name__ == "__main__":
 	#xorTest()
-	cacla_test()
-	#sarsa_test()
+	#cacla_test()
+	sarsa_test()
 	#nfac_test()
 
 	

@@ -25,12 +25,13 @@ class Sarsa():
     if(discretize_state):
       self.mlp = MLP(self.nPositionBins + self.state_size,5, [20, 20, 20,20,20], 1)
     else:
-      self.mlp = MLP(self.action_size + self.state_size,1, [100, 10, 100,100,20], 1)
+      self.mlp = MLP(self.action_size + self.state_size,1, [10, 10, 100,100,20], 1)
     self.max_iter = 10
     self.learningRate = learningRate
     self.discount = discount
     self.random_chance = random_chance
     np.random.seed()
+    self.last_100 = []
 
   def discretizeState(self, state):
     discr = np.zeros(self.nPositionBins)
@@ -127,12 +128,12 @@ class Sarsa():
         if (Q > Q_best):
            a_best = a
            Q_best = Q 
-        continue ##uncomment for sarsa-NM
+        #continue ##uncomment for sarsa-NM
         ##Newtons method
         for _ in range(self.max_iter):
             
-            deltaNewton = (self.mlp.d_network()[0][2] / self.mlp.dd_network()[0][2]) #third element is action dim of mlp
-            a = a - deltaNewton
+            delta = self.mlp.d_network()[2] #third element is action dim of mlp
+            a = a + delta
 
             a = np.minimum(a, self.a_max) #keep in range
             a = np.maximum(a, self.a_min)

@@ -17,7 +17,7 @@ class MLP():
      self.updateWeightsHidden = []
      self.updateBiasHidden = []
      self.hiddenInput = []
-
+     self.outputSize = outputSize 
      for layer in range(nLayers):
          if layer == 0:
            self.hiddenWeights.append((np.random.rand(nInputNodes, hiddenSizes[layer]) - 0.5))
@@ -112,41 +112,22 @@ class MLP():
 
 
    def d_network(self):
-     ##non linear outputlayer:
-     ## d_out / d_x = d_out / d_hidden * d_hidden / d_x
-     #ret = (self.d_activation(self.outputNodes).dot(np.transpose(self.outputWeights)) * self.d_activation(self.hiddenNodes)).dot(np.transpose(self.hiddenWeights))
-     #return ret
-
-
      #linear output layer:
-     ret = (np.transpose(self.outputWeights) * self.d_activation(self.hiddenNodes)).dot(np.transpose(self.hiddenWeights))
-     #print "ret = " + str(ret)
-     return [1, 1]
-     return ret
+     d_net = np.ones(self.outputSize).dot(np.transpose(self.outputWeights))
+     #print d_net
+     for idx in range(self.nLayers):
+        #print idx
+        layer = self.nLayers - 1 - idx
+        
+        d_net = d_net * self.d_activation(self.hiddenNodes[layer])
+        #print d_net
+        d_net = d_net.dot(np.transpose(self.hiddenWeights[layer]))
+        #print d_net
+     #print d_net
+     return d_net
      
 
-   def dd_network(self):
-     ##non linear outputlayer:
-     ##part 1 & 2 are the two parts of the product rule
-     ## dd_out / dd_x = d/dx [(d_out / d_hidden) * (d_hidden/d_x)], which is a d/dx[f(x) * g(x)], hence product rule ->
-     ## d/dx[f(x) * g(x)] = [(df(x) / dx) * g(x)] + [f(x) * (dg(x)/dx)]
-     ## hence, 
-     ## dd_out / dd_x = part1 + part2
-     ## part1 = (d/dx[d_out / d_hidden] * [d_hidden/d_out] )
-     ## part2 = [d_out/d_hidden] * d/dx[d_hidden/dx]
 
-
-     #part1 = ((self.dd_activation(self.outputNodes)).dot(np.transpose(self.outputWeights * self.outputWeights)) * (self.d_activation(self.hiddenNodes) * self.d_activation(self.hiddenNodes))).dot(np.transpose((self.hiddenWeights * self.hiddenWeights)))
-     #print "part1 " + str(part1)
-     #part2 = ((self.d_activation(self.outputNodes)).dot(np.transpose(self.outputWeights)) * self.dd_activation(self.hiddenNodes)).dot(np.transpose(self.hiddenWeights * self.hiddenWeights))
-     
-     #print "part2" + str(part2)
-     #return part1 + part2
-
-     #linear output layer:
-     ret = (np.transpose(self.outputWeights) * self.dd_activation(self.hiddenInput)).dot(np.transpose(self.hiddenWeights * self.hiddenWeights))
-     return [1, 1] ##FIXME
-     return ret
 
    def process(self, inputArray):
      for layer in range(self.nLayers):
