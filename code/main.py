@@ -59,7 +59,7 @@ def nfac_test():
 	dir_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), '../runs/nfac/' + dir_name)
 	os.makedirs(dir_path)
 
-	#env = gym.make('MountainCarContinuous-v0'
+	#env = gym.make('MountainCarContinuous-v0')
 	env = gym.make('LunarLanderContinuous-v2')
 	stateSize = env.reset().size
 	actionSize = env.action_space.sample().size
@@ -81,6 +81,7 @@ def nfac_test():
 	params.write('Random chance: ' + str(nfac.random_chance) + '\n')
 	params.write('SD: ' + str(nfac.sd) + '\n')
 	params.write('Sigma: ' + str(nfac.sigma) + '\n')
+	params.write('Learning rate: ' + str(nfac.learning_rate) + '\n')
 	params.close()
 
 	#log mlp init weights
@@ -167,7 +168,12 @@ def nfac_test():
 	plt.savefig(os.path.join(dir_path, 'total_reward.png'))
 
   
-def cacla_train():
+def cacla_test():
+	# create logging folder
+	dir_name = 'CACLA ' + ('%s' % datetime.now())
+	dir_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), '../runs/cacla/' + dir_name)
+	os.makedirs(dir_path)
+
 	#env = gym.make('MountainCarContinuous-v0')
 	env = gym.make('LunarLanderContinuous-v2')
         stateSize = env.reset().size
@@ -179,6 +185,48 @@ def cacla_train():
 	fig=plt.figure()
 	plt.axis([0,0,0,0])
 
+	# create logging param file
+	params_file = os.path.join(dir_path, 'parameters.txt')
+	params = open(params_file, 'w')
+	params.write('CACLA parameters\n')
+	params.write('\nAction MLP:\n')
+	params.write('Number of hidden layers: ' + str(cacla.action_mlp.nLayers) + '\n')
+	params.write('Hidden layer sizes: ' + str(cacla.action_mlp.hiddenSizes) + '\n')
+	params.write('\nValue MLP:\n')
+	params.write('Number of hidden layers: ' + str(cacla.value_mlp.nLayers) + '\n')
+	params.write('Hidden layer sizes: ' + str(cacla.value_mlp.hiddenSizes) + '\n')
+	params.write('\nDiscount: ' + str(cacla.discount) + '\n')
+	params.write('Random chance: ' + str(cacla.random_chance) + '\n')
+	params.write('SD: ' + str(cacla.sd) + '\n')
+	params.write('Sigma: ' + str(cacla.sigma) + '\n')
+	params.write('Learning rate: ' + str(cacla.learning_rate) + '\n')
+	params.close()
+
+	# log initialisation mlp
+	brain_init_file = os.path.join(dir_path, 'mlps_weights_init.txt')
+	brain_init = open(brain_init_file, 'w')
+
+	brain_init.write('Action MLP:\n')
+	action_brain = cacla.action_mlp.getBrain()
+	brain_init.write('Initial hidden weights: ' + str(action_brain[0]) + '\n')
+	brain_init.write('Initial hidden bias: ' + str(action_brain[1]) + '\n')
+	brain_init.write('Initial output weights: ' + str(action_brain[2]) + '\n')
+	brain_init.write('Initial output bias: ' + str(action_brain[3]) + '\n')
+
+	brain_init.write('Value MLP:\n')
+	value_brain = cacla.value_mlp.getBrain()
+	brain_init.write('Initial hidden weights: ' + str(value_brain[0]) + '\n')
+	brain_init.write('Initial hidden bias: ' + str(value_brain[1]) + '\n')
+	brain_init.write('Initial output weights: ' + str(value_brain[2]) + '\n')
+	brain_init.write('Initial output bias: ' + str(value_brain[3]) + '\n')
+	brain_init.close()
+
+	# create file for logging total reward per epoch
+	rewards_file = os.path.join(dir_path, 'rewards.txt')
+	rewards = open(rewards_file, 'w')
+	rewards.write('epoch total_reward\n')
+	rewards.close()
+
 	i=0
 	x1=list()
 	y1=list()
@@ -189,17 +237,32 @@ def cacla_train():
 		finished = False
 		step = 0
 		if (epoch % n == 0 and n != 0): 
-		  output = open('actor_' + str(epoch) + '.pkl', 'wb')
-		  pickle.dump(np.asarray(cacla.getActorBrain()), output)
-		  output.close()
-		  output = open('critic_' + str(epoch) + '.pkl', 'wb')
-		  pickle.dump(np.asarray(cacla.getCriticBrain()), output)
-		  output.close()
+			output = open('actor_' + str(epoch) + '.pkl', 'wb')
+			pickle.dump(np.asarray(cacla.getActorBrain()), output)
+			output.close()
+			output = open('critic_' + str(epoch) + '.pkl', 'wb')
+			pickle.dump(np.asarray(cacla.getCriticBrain()), output)
+			output.close()
+		# periodically log mlp weights to file
+		if (epoch + 1) % 100 == 0:
+			brain_file = os.path.join(dir_path, 'weights_mlps_epoch_' + str(epoch) + '.txt')
+			brain = open(brain_file, 'w')
+			action_brain = cacla.action_mlp.getBrain()
+			brain.write('Action MLP:')
+			brain.write('Hidden weights: ' + str(action_brain[0]))
+			brain.write('Hidden bias: ' + str(action_brain[1]))
+			brain.write('Output weights: ' + str(action_brain[2]))
+			brain.write('Output bias: ' + str(action_brain[3]))
+			brain.write('\nValue MLP:')
+			value_brain = cacla.value_mlp.getBrain()
+			brain.write('Hidden weights: ' + str(value_brain[0]))
+			brain.write('Hidden bias: ' + str(value_brain[1]))
+			brain.write('Output weights: ' + str(value_brain[2]))
+			brain.write('Output bias: ' + str(value_brain[3]))
+			brain.close()
 		while not finished:
-
-                        if(step == 10000):
-                          break
-			
+			if(step == 10000):
+				break
 			old_state = state
 			#if epoch % 10 == 0:
 			#	env.render()
@@ -226,135 +289,81 @@ def cacla_train():
 		plt.pause(0.0001) #Note this correction
 		print tot_reward
 
-
-def cacla_test():
-
-	#create logging folder
-	dir_name = 'CACLA ' + ('%s' % datetime.now())
-	dir_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), '../runs/cacla/' + dir_name)
-	os.makedirs(dir_path)
-
-	#env = gym.make('LunarLanderContinuous-v2')
-        #stateSize = env.reset().size
-        #actionSize = env.action_space.sample().size
-        #cacla = Cacla(actionSize,np.ones(actionSize) * -1 , np.ones(actionSize), np.ones(actionSize), stateSize)
-	#state = env.reset()
-
-	#1 action, from -1 to 1, with 2 input states
-	cacla = Cacla(1,[-1], [1], 2)
-	env = gym.make('MountainCarContinuous-v0')
-	state = env.reset()
-
-	actor_file = open('actor_100.pkl', 'rb')
-	actor = pickle.load(actor_file)
-
- 	critic_file = open('actor_100.pkl', 'rb')
-	critic = pickle.load(critic_file)
-
-	cacla.setActorBrain(actor)
-	cacla.setCriticBrain(actor) #moet dit niet critic zijn?
-
-	# create logging param file
-	params_file = os.path.join(dir_path, 'parameters.txt')
-	params = open(params_file, 'w')
-	params.write('CACLA parameters\n')
-	params.write('\nAction MLP:\n')
-	params.write('Number of hidden layers: ' + str(cacla.action_mlp.nLayers) + '\n')
-	params.write('Hidden layer sizes: ' + str(cacla.action_mlp.hiddenSizes) + '\n')
-	params.write('\nValue MLP:\n')
-	params.write('Number of hidden layers: ' + str(cacla.value_mlp.nLayers) + '\n')
-	params.write('Hidden layer sizes: ' + str(cacla.value_mlp.hiddenSizes) + '\n')
-	params.write('\nDiscount: ' + str(cacla.discount) + '\n')
-	params.write('Random chance: ' + str(cacla.random_chance) + '\n')
-	params.write('SD: ' + str(cacla.sd) + '\n')
-	params.write('Sigma: ' + str(cacla.sigma) + '\n')
-	params.close()
-
-	#log initialisation mlp
-	brain_init_file = os.path.join(dir_path, 'mlps_weights_init.txt')
-	brain_init = open(brain_init_file, 'w')
-
-	brain_init.write('Action MLP:\n')
-	action_brain = cacla.action_mlp.getBrain()
-	brain_init.write('Initial hidden weights: ' + str(action_brain[0]) + '\n')
-	brain_init.write('Initial hidden bias: ' + str(action_brain[1]) + '\n')
-	brain_init.write('Initial output weights: ' + str(action_brain[2]) + '\n')
-	brain_init.write('Initial output bias: ' + str(action_brain[3]) + '\n')
-
-	brain_init.write('Value MLP:\n')
-	value_brain = cacla.value_mlp.getBrain()
-	brain_init.write('Initial hidden weights: ' + str(value_brain[0]) + '\n')
-	brain_init.write('Initial hidden bias: ' + str(value_brain[1]) + '\n')
-	brain_init.write('Initial output weights: ' + str(value_brain[2]) + '\n')
-	brain_init.write('Initial output bias: ' + str(value_brain[3]) + '\n')
-	brain_init.close()
-
-	# create file for logging total reward per epoch
-	rewards_file = os.path.join(dir_path, 'rewards.txt')
-	rewards = open(rewards_file, 'w')
-	rewards.write('epoch total_reward\n')
-	rewards.close()
-
-	# create lists for plotting total reward
-	xl = []
-	yl = []
-
-	n = 100
-	for epoch in range(2000):
-		env.reset()
-		tot_reward = 0
-		finished = False
-		step = 0
-		while not finished:
-
-                        if(step == 100000):
-                          break
-			
-			old_state = state
-			if epoch % 10 == 0:
-				env.render()
-			action = cacla.chooseAction(state)
-			done = env.step(action)
-
-			finished = done[2]
-			reward = done[1]
-			tot_reward += reward
-			state = done[0]
-			#cacla.update(old_state, action, state, reward, finished)
-			step = step + 1
-		# periodically log mlp weights to file
-		if (epoch + 1) % 100 == 0:
-			brain_file = os.path.join(dir_path, 'weights_mlps_epoch_' + str(epoch) + '.txt')
-			brain = open(brain_file, 'w')
-			action_brain = cacla.action_mlp.getBrain()
-			brain.write('Action MLP:')
-			brain.write('Hidden weights: ' + str(action_brain[0]))
-			brain.write('Hidden bias: ' + str(action_brain[1]))
-			brain.write('Output weights: ' + str(action_brain[2]))
-			brain.write('Output bias: ' + str(action_brain[3]))
-			brain.write('\nValue MLP:')
-			value_brain = cacla.value_mlp.getBrain()
-			brain.write('Hidden weights: ' + str(value_brain[0]))
-			brain.write('Hidden bias: ' + str(value_brain[1]))
-			brain.write('Output weights: ' + str(value_brain[2]))
-			brain.write('Output bias: ' + str(value_brain[3]))
-			brain.close()
-
-		#cacla.adjustSigma()
-		print tot_reward
-
 		# update rewards log
 		rewards = open(rewards_file, 'a')
 		rewards.write(str(epoch) + ' ' + str(tot_reward) + '\n')
 		rewards.close()
 
 		# update rewards lists
-		xl.append(epoch)
-		yl.append(tot_reward)
+		x1.append(epoch)
+		y1.append(tot_reward)
 
-	# make and store total rewards plot
-	plt.plot(xl, yl)
+	# make and store totgal rewards plot
+	plt.plot(x1, y1)
 	plt.savefig(os.path.join(dir_path, 'total_reward.png'))
+
+
+# def cacla_test():
+#
+#
+#
+# 	#env = gym.make('LunarLanderContinuous-v2')
+#         #stateSize = env.reset().size
+#         #actionSize = env.action_space.sample().size
+#         #cacla = Cacla(actionSize,np.ones(actionSize) * -1 , np.ones(actionSize), np.ones(actionSize), stateSize)
+# 	#state = env.reset()
+#
+# 	#1 action, from -1 to 1, with 2 input states
+# 	cacla = Cacla(1,[-1], [1], 2)
+# 	env = gym.make('MountainCarContinuous-v0')
+# 	state = env.reset()
+#
+# 	actor_file = open('actor_100.pkl', 'rb')
+# 	actor = pickle.load(actor_file)
+#
+#  	critic_file = open('actor_100.pkl', 'rb')
+# 	critic = pickle.load(critic_file)
+#
+# 	cacla.setActorBrain(actor)
+# 	cacla.setCriticBrain(actor) #moet dit niet critic zijn?
+#
+#
+#
+#
+#
+# 	# create lists for plotting total reward
+# 	xl = []
+# 	yl = []
+#
+# 	n = 100
+# 	for epoch in range(2000):
+# 		env.reset()
+# 		tot_reward = 0
+# 		finished = False
+# 		step = 0
+# 		while not finished:
+#
+#                         if(step == 100000):
+#                           break
+#
+# 			old_state = state
+# 			if epoch % 10 == 0:
+# 				env.render()
+# 			action = cacla.chooseAction(state)
+# 			done = env.step(action)
+#
+# 			finished = done[2]
+# 			reward = done[1]
+# 			tot_reward += reward
+# 			state = done[0]
+# 			#cacla.update(old_state, action, state, reward, finished)
+# 			step = step + 1
+#
+#
+# 		#cacla.adjustSigma()
+# 		print tot_reward
+#
+#
 
 
 def sarsa_test(render = False):
@@ -514,8 +523,7 @@ def sarsa_test(render = False):
 
 if __name__ == "__main__":
 	#xorTest()
-	cacla_train()
-	#cacla_test()
+	cacla_test()
 	#sarsa_test()
 	#nfac_test()
 

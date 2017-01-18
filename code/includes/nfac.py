@@ -22,6 +22,7 @@ class NFAC():
     #choose a high sigma to be able to reach goal, 
     #due to mlp initialization it can be impossible otherwise
     self.sigma = 10
+    self.learning_rate = 0.01
 
   #Draw a value from a univariate normal dist
   def getExplorationAction(self, state):
@@ -53,10 +54,10 @@ class NFAC():
     return q
 
   def updateQ(self, inp, target):
-    self.value_mlp.train(inp, target, 0.01)
+    self.value_mlp.train(inp, target, self.learning_rate)
 
   def updateActor(self, inp, target):
-    self.action_mlp.train(inp, target, 0.01)
+    self.action_mlp.train(inp, target, self.learning_rate)
 
   def epsilonGreedy(self):
     action = []
