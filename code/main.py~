@@ -115,6 +115,7 @@ def nfac_test():
 		tot_reward = 0
 		tot_Q = 0
 		finished = False
+		step = 0
 		while not finished:
 			old_state = state
 			#env.render()
@@ -123,14 +124,17 @@ def nfac_test():
 			done = env.step(action)
 			finished = done[2]
 			reward = done[1]
+			if (step > 10000):
+				break
 			if(reward > 0 and finished):
 				print "***********************SUCCESS************************"
 			tot_reward += reward
 			state = done[0]
 			#collect for offline learning
 			nfac.collect(old_state, action, reward, state, finished)
-		nfac.adjustSigma()
+			step = step + 1
 		if finished:
+			nfac.adjustSigma()
 			nfac.update()
 			#periodically log mlp weights to file
 			if x % 100 == 0:
@@ -373,8 +377,8 @@ def sarsa_test(render = False):
 	dir_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), '../runs/sarsa/' + dir_name)
 	os.makedirs(dir_path)
 
-	#env = gym.make('MountainCarContinuous-v0')
-	env = gym.make('LunarLanderContinuous-v2')
+	env = gym.make('MountainCarContinuous-v0')
+	#env = gym.make('LunarLanderContinuous-v2')
 	stateSize = env.reset().size
 	actionSize = env.action_space.sample().size
 

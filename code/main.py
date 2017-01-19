@@ -115,6 +115,7 @@ def nfac_test():
 		tot_reward = 0
 		tot_Q = 0
 		finished = False
+		step = 0
 		while not finished:
 			old_state = state
 			#env.render()
@@ -123,14 +124,17 @@ def nfac_test():
 			done = env.step(action)
 			finished = done[2]
 			reward = done[1]
+			if (step > 10000):
+				break
 			if(reward > 0 and finished):
 				print "***********************SUCCESS************************"
 			tot_reward += reward
 			state = done[0]
 			#collect for offline learning
 			nfac.collect(old_state, action, reward, state, finished)
-		nfac.adjustSigma()
+			step = step + 1
 		if finished:
+			nfac.adjustSigma()
 			nfac.update()
 			#periodically log mlp weights to file
 			if x % 100 == 0:
