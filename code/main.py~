@@ -383,7 +383,7 @@ def sarsa_test(render = False):
 	actionSize = env.action_space.sample().size
 
 	#sarsa = Sarsa(1,[-1], [1], [2], 2)
-	sarsa = Sarsa(actionSize,np.ones(actionSize) * -1 , np.ones(actionSize), np.ones(actionSize), stateSize)  ##discrete actions 1, -1 for sanity check
+	sarsa = sarsa = Sarsa(actionSize,np.ones(actionSize) * -1 , np.ones(actionSize), np.ones(actionSize) * 0.5, stateSize)   ##discrete actions 1, -1 for sanity check
 
 	# create logging param file
 	params_file = os.path.join(dir_path, 'parameters.txt')
