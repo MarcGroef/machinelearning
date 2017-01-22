@@ -133,7 +133,7 @@ class Sarsa():
         for _ in range(self.max_iter):
             
             delta = self.mlp.d_network()[2] #third element is action dim of mlp
-            a = a - delta
+            a = a + delta
 
             a = np.minimum(a, self.a_max) #keep in range
             a = np.maximum(a, self.a_min)
