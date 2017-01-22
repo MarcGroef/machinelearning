@@ -12,7 +12,7 @@ class Sarsa():
 
 
 
-  def __init__(self, a_dim, a_min, a_max, a_delta, state_size, random_chance = 0.1, learningRate = 1, discount = 0.9, discretize_state = False):
+  def __init__(self, a_dim, a_min, a_max, a_delta, state_size, random_chance = 0.1, learningRate = 1, discount = 0.99, discretize_state = False):
     self.a_max = np.asarray(a_max)
     self.a_min = np.asarray(a_min)
     self.a_delta = np.asarray(a_delta)
@@ -133,7 +133,7 @@ class Sarsa():
         for _ in range(self.max_iter):
             
             delta = self.mlp.d_network()[2] #third element is action dim of mlp
-            a = a + delta
+            a = a - delta
 
             a = np.minimum(a, self.a_max) #keep in range
             a = np.maximum(a, self.a_min)
@@ -151,14 +151,15 @@ class Sarsa():
 
   def update(self, old_state, old_action, new_state, action_performed, reward, isFinalState = False):
     old_Q = self.getQ(old_state, old_action)
+    new_Q = self.getQ(new_state, action_performed)
     if isFinalState:
        diff = self.learningRate * (reward - old_Q)
     else:
-       diff = self.learningRate * (reward + self.discount * self.getQ(new_state, action_performed) - old_Q)
+       diff = self.learningRate * (reward + self.discount * new_Q - old_Q)
     
-    #print [old_action, old_Q, diff]
-    target = old_Q + diff
-    self.updateQ(action_performed, old_state, target)
+    #target = new_Q + diff
+    target = new_Q + diff
+    self.updateQ(old_action, old_state, target)
 
     
    
