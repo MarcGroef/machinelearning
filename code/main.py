@@ -425,7 +425,7 @@ def sarsa_test(render = False):
 	epochs = list()
 	rewards = list()
 	nGameIterations = 10000
-	nEpochs = 10000
+	nEpochs = 2000
 	epochFailed = True
 	for epoch in range(nEpochs):
 		#if(epoch == nEpochs - 100):
