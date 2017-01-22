@@ -68,7 +68,7 @@ class Sarsa():
     #self.mlp2.fit(np.concatenate([state, action]), targetOut)
     if(self.discretize_state):
        state = self.discretizeState(state)
-    self.mlp.train(np.concatenate([state, action]), targetOut, 0.02, 00)
+    self.mlp.train(np.concatenate([state, action]), targetOut, 0.02, 0.2)
 
   def define_action_space(self, dim, min, max, delta):
     dim_lst = []

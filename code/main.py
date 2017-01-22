@@ -424,14 +424,14 @@ def sarsa_test(render = False):
 	#plt.axis([0,0,0,0])
 	epochs = list()
 	rewards = list()
-	nGameIterations = 20000
+	nGameIterations = 10000
 	nEpochs = 10000
 	epochFailed = True
 	for epoch in range(nEpochs):
-		if(epoch == nEpochs - 100):
-			print "random action chance set to 0"
-			sarsa.random_chance = 0.1
-			sarsa.learningRate = 0
+		#if(epoch == nEpochs - 100):
+	#		print "random action chance set to 0"
+	#		sarsa.random_chance = 0.1
+	#		sarsa.learningRate = 0
 			#print state
 			#sarsa.printValueMap(1)
 
@@ -445,7 +445,7 @@ def sarsa_test(render = False):
 			brain.write('Initial output weights: ' + str(brain_state[2]) + '\n')
 			brain.write('Initial output bias: ' + str(brain_state[3]) + '\n')
 			brain.close()
-
+                sarsa.random_chance *= 0.99
 		state = env.reset()
 
 		tot_reward = 0
