@@ -14,8 +14,8 @@ class NFAC():
     self.a_min = a_min
     self.action_size = a_dim
     self.state_size = state_size
-    self.action_mlp = MLP(self.state_size, 1, [100], self.action_size)
-    self.value_mlp = MLP(self.state_size, 1, [100], 1)
+    self.action_mlp = MLP(self.state_size, 1, [50], self.action_size)
+    self.value_mlp = MLP(self.state_size, 1, [50], 1)
     self.discount = discount
     self.random_chance = random_chance
     self.sd = 1
