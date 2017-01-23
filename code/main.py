@@ -151,14 +151,15 @@ def nfac_test():
 		dif = 0
 		while not finished:
 			old_state = state
-			env.render()
+			if x > 1800:
+				env.render()
 
 			act1 = heuristic(env, old_state)
 			act2 = nfac.chooseAction(state)
 
 			dif = dif + sum((act1 - act2) * (act1 - act2))
 
-			if x < 1000:
+			if x < 2000:
 				#action = heuristic(env, old_state)
 				action = act1
 			else:
@@ -176,11 +177,13 @@ def nfac_test():
 			tot_reward += reward
 			state = done[0]
 			#collect for offline learning
-			nfac.collect(old_state, action, reward, state, finished)
+			if x < 2000: 
+				nfac.collect(old_state, action, reward, state, finished)
 			step = step + 1
 		if finished:
 			nfac.adjustSigma()
-			nfac.update()
+			if x < 2000:
+				nfac.update()
 			#periodically log mlp weights to file
 			if x % 100 == 0:
 				brain_file = os.path.join(dir_path, 'weights_mlps_epoch_' + str(x) + '.txt')
