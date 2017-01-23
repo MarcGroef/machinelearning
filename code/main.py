@@ -420,7 +420,7 @@ def sarsa_test(render = False):
 	actionSize = env.action_space.sample().size
 
 	#sarsa = Sarsa(1,[-1], [1], [2], 2)
-	sarsa = Sarsa(actionSize,np.ones(actionSize) * -1 , np.ones(actionSize), np.ones(actionSize), stateSize)  ##discrete actions 1, -1 for sanity check
+	sarsa = sarsa = Sarsa(actionSize,np.ones(actionSize) * -1 , np.ones(actionSize), np.ones(actionSize) * 0.5, stateSize)   ##discrete actions 1, -1 for sanity check
 
 	# create logging param file
 	params_file = os.path.join(dir_path, 'parameters.txt')
@@ -461,14 +461,14 @@ def sarsa_test(render = False):
 	#plt.axis([0,0,0,0])
 	epochs = list()
 	rewards = list()
-	nGameIterations = 20000
-	nEpochs = 10000
+	nGameIterations = 10000
+	nEpochs = 2000
 	epochFailed = True
 	for epoch in range(nEpochs):
-		if(epoch == nEpochs - 100):
-			print "random action chance set to 0"
-			sarsa.random_chance = 0.1
-			sarsa.learningRate = 0
+		#if(epoch == nEpochs - 100):
+	#		print "random action chance set to 0"
+	#		sarsa.random_chance = 0.1
+	#		sarsa.learningRate = 0
 			#print state
 			#sarsa.printValueMap(1)
 
@@ -482,7 +482,7 @@ def sarsa_test(render = False):
 			brain.write('Initial output weights: ' + str(brain_state[2]) + '\n')
 			brain.write('Initial output bias: ' + str(brain_state[3]) + '\n')
 			brain.close()
-
+                sarsa.random_chance *= 0.99
 		state = env.reset()
 
 		tot_reward = 0
