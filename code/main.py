@@ -148,14 +148,22 @@ def nfac_test():
 		tot_Q = 0
 		finished = False
 		step = 0
+		dif = 0
 		while not finished:
 			old_state = state
 			env.render()
 
-			if step < 1000:
-				action = heuristic(env, old_state)
+			act1 = heuristic(env, old_state)
+			act2 = nfac.chooseAction(state)
+
+			dif = dif + sum((act1 - act2) * (act1 - act2))
+
+			if x < 1000:
+				#action = heuristic(env, old_state)
+				action = act1
 			else:
-				action = nfac.chooseAction(state)
+				#action = nfac.chooseAction(state)
+				action = act2
 
 			done = env.step(action)
 			finished = done[2]
@@ -193,7 +201,8 @@ def nfac_test():
 
 		#else:
 			#nfac.clearCollection()
-		print tot_reward
+		print str(x) + " " + str(tot_reward)
+		print "Similarity measure PID vs Actor: " + str(dif / step)
 
 		#update rewards log
 		rewards = open(rewards_file, 'a')
