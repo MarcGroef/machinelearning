@@ -2,7 +2,7 @@ import numpy as np
 from MLP2 import MLP
 import random
 
-class NFAC():
+class NFAC2():
   a_max = None
   a_min = None
   a_delta = None
@@ -13,9 +13,9 @@ class NFAC():
     self.a_max = a_max
     self.a_min = a_min
     self.action_size = a_dim
-    self.state_size = state_size
-    self.action_mlp = MLP(self.state_size, 1, [20], self.action_size)
-    self.value_mlp = MLP(self.state_size, 1, [20], 1)
+    self.state_size = state_size * 20
+    self.action_mlp = MLP(self.state_size, 1, [5], self.action_size)
+    self.value_mlp = MLP(self.state_size, 1, [5], 1)
     self.discount = discount
     self.random_chance = random_chance
     self.sd = 1

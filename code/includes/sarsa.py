@@ -149,7 +149,9 @@ class Sarsa():
     #print a_best
     return [a_best, Q_best]
 
-  def update(self, old_state, old_action, new_state, action_performed, reward, isFinalState = False):
+  def update(self, old_state, old_action, new_state, action_performed, 
+	reward, isFinalState = False):
+
     old_Q = self.getQ(old_state, old_action)
     new_Q = self.getQ(new_state, action_performed)
     if isFinalState:
@@ -157,7 +159,6 @@ class Sarsa():
     else:
        diff = self.learningRate * (reward + self.discount * new_Q - old_Q)
     
-    #target = new_Q + diff
     target = new_Q + diff
     self.updateQ(old_action, old_state, target)
 

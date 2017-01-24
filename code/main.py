@@ -151,8 +151,8 @@ def nfac_test():
 		dif = 0
 		while not finished:
 			old_state = state
-			if x > 1800:
-				env.render()
+			#if x > 1800:
+			env.render()
 
 			act1 = heuristic(env, old_state)
 			act2 = nfac.chooseAction(state)
