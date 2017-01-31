@@ -6,6 +6,7 @@ import numpy as np
 import gym
 import os
 from datetime import datetime
+from scipy import signal
 
 def heuristic(env, s):
     # Heuristic for:
@@ -104,21 +105,30 @@ def nfac_test():
 
 		while not finished:
 			old_state = state
+			if x > 200:
+				env.render()
 
-			env.render()
-
-			bigstateinput1 = [0] * (20 * len(old_state))
+			bigstateinput1 = [0] * (10 * len(old_state))
 			for i in range(len(old_state)):
 				try: 
-					bigstateinput1[i * 20 + int((state[i] + 1) / 0.1)] = 1
-					bigstateinput1[(i * 20 + int((state[i] + 1) / 0.1)) - 1] = 0.5
-					bigstateinput1[(i * 20 + int((state[i] + 1) / 0.1)) + 1] = 0.5
+					bigstateinput1[i * 10 + int((state[i] + 1) / 0.2)] = 1
+					#bigstateinput1[(i * 20 + int((state[i] + 1) / 0.1)) - 1] = 0.5
+					#bigstateinput1[(i * 20 + int((state[i] + 1) / 0.1)) + 1] = 0.5
 				except IndexError:
 					pass
+
+			gauss = signal.gaussian(5, 1)
+
+			bigstateinput1 = np.convolve(bigstateinput1, gauss, 'same')
+
+
+			print bigstateinput1
 
 			act2 = nfac.chooseAction(np.array(bigstateinput1))
 
 			action = act2
+			#if (x < 2000):
+				#action = heuristic(env, state)
 
 			done = env.step(action)
 			finished = done[2]
@@ -129,15 +139,19 @@ def nfac_test():
 			tot_reward += reward
 			state = done[0]
 
-			bigstateinput2 = [0] * (20 * len(state))
+			bigstateinput2 = [0] * (10 * len(state))
 
 			for j in range(len(old_state)):
 				try: 
-					bigstateinput2[j * 20 + int((state[j] + 1) / 0.1)] = 1
-					bigstateinput2[(j * 20 + int((state[j] + 1) / 0.1)) - 1] = 0.5
-					bigstateinput2[(j * 20 + int((state[j] + 1) / 0.1)) + 1] = 0.5
+					bigstateinput2[j * 10 + int((state[j] + 1) / 0.2)] = 1
+					#bigstateinput2[(j * 20 + int((state[j] + 1) / 0.1)) - 1] = 0.5
+					#bigstateinput2[(j * 20 + int((state[j] + 1) / 0.1)) + 1] = 0.5
 				except IndexError:
 					pass
+
+			gauss = signal.gaussian(5, 1)
+
+			bigstateinput2 = np.convolve(bigstateinput2, gauss, 'same')
 			#collect for offline learning
 			#if x < 2000: 
 			nfac.collect(np.array(bigstateinput1), action, reward, np.array(bigstateinput2), finished)
@@ -165,7 +179,6 @@ def nfac_test():
 				brain.close()
 
 		print str(x) + " " + str(tot_reward)
-		print "Similarity measure PID vs Actor: " + str(dif / step)
 
 		#update rewards log
 		rewards = open(rewards_file, 'a')
