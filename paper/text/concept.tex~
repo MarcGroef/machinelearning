@@ -1,0 +1,226 @@
+%!TEX root = ../AGC_Report_Bot_Maathuis.tex
+
+\section{Concept}
+\label{sec:concept}
+
+% What are PN-triangles (long)
+PN triangles are constructed by replacing every flat triangle of the original coarse mesh with a three-sided cubic B\'ezier patch. In this process only the positions and the normals of the vertices of the flat triangles are used. This section describes how the geometry patch is constructed and evaluated. Additionally different methods to compute normals per patch are discussed.
+
+\subsection{Geometry}
+\label{sec:concept_geometry}
+% Control Points
+% Evaluation
+% Continuity (C1 on vertices, C0 on edges, C inf in a face)
+% The center CP placement
+
+\begin{figure}
+  \centering
+      \includegraphics[width=\columnwidth]{figs/image3.png}
+  \caption{An overview of the control points used in a three-sided cubic B\'ezier patch. Reprinted from~\cite{vlachos2001}.}
+\label{fig:geo_cp}
+\end{figure}
+
+The geometry of a flat triangle is replaced by a three-sided cubic B\'ezier patch, which requires ten control points. Figure~\ref{fig:geo_cp} illustrates the control patch used for the geometry. The control points $b_{300}$, $b_{030}$ and $b_{003}$ are the vertices of the orinal triangle. $b_{210}$, $b_{120}$, $b_{021}$, $b_{012}$, $b_{102}$ and $b_{201}$ are the tangent control points and $b_{111}$ is the center control point. The three vertices of the triangle and their corresponding normals are used to compute the additional seven control points. The process of constructing the cubic B\'ezier patches is divided into the following steps.
+
+\begin{enumerate}
+\item Spread the control points $b_{ijk}$ evenly over the flat triangle.
+\item Project the tangent control points of the flat triangle into the tangent plane of their corresponding corner, using the normal information of the vertex control point. (Figure~\ref{fig:tangent_projection})
+\item Move the center control point from its place in the flat triangle to the average of the tangent control points, and continue for half the distance traveled.
+\end{enumerate}
+
+The second step of computing the control points is illustrated in Figure~\ref{fig:tangent_projection}. Let $Q$ be the position of a tangent control point in the flat triangle. Let $\vec{N}$ be the direction of the normal of the corresponding vertex $P$. The position of the tangent control point $Q'$ is then found by:
+
+\begin{equation}
+\label{eq:tangent_projection}
+\begin{split}
+Q' &= Q - w \vec{N} \\
+w &= (Q - P) \cdot \vec{N} \text{\hspace{2mm} where '} \cdot \text{' is the scalar product}
+\end{split}
+\end{equation}
+
+\begin{figure}[t]
+  \centering
+      \includegraphics[width=\columnwidth]{figs/image6.png}
+  \caption{Projection in the tangent plane of a vertex, for computing tangent control points. Reprinted from~\cite{vlachos2001}.}
+\label{fig:tangent_projection}
+\end{figure}
+
+PN triangles should create smooth contours, however the curved geometry should not deviate too much from the original triangle to prevent interference with other patches. The curvature of the geometry patch is dependent on the position of the center control point. The authors of~\cite{vlachos2001} show that given the description in the third step of the algorithm the distance of $b_{111}$ to the triangle is at most $L / 4$, where $L$ is the length of the longest edge of the triangle.
+
+Furthermore they show that the position of $b_{111}$ can be computed with Equation~\eqref{eq:geo_center}, where $E$ is the average of the tangent control points and $V$ is the average of the corner control points. They argue that $\alpha = -0.5$ because then the control net reproduces quadratic polynomials as shown in~\cite{fanin1983}. Higher values of $\alpha$ deflate the geometry, lower values of $\alpha$ inflate the geometry.
+
+\begin{equation}
+\label{eq:geo_center}
+\begin{split}
+b_{111} = (1 - \alpha) E + \alpha V
+\end{split}
+\end{equation}
+
+Combining all computations results in the equations shown in Equation~\eqref{eq:gcp}, where $P_i$ is the coordinate of the $i^{th}$ vertex and $\vec{N}_i$ its corresponding normal. The subscripts of the control points correspond to those in Figure~\ref{fig:geo_cp}.
+
+\begin{equation}
+\label{eq:gcp}
+\begin{split}
+& b_{300} = P_1,\\
+& b_{030} = P_2,\\
+& b_{003} = P_3,\\
+& w_{ij} = (P_j - P_i) \cdot \vec{N}_i \in \textbf{R}\\
+& b_{210} = (2P_1 + P_2 - w_{12}\vec{N}_1) / 3,\\
+& b_{120} = (2P_2 + P_1 - w_{21}\vec{N}_2) / 3,\\
+& b_{021} = (2P_2 + P_3 - w_{23}\vec{N}_2) / 3,\\
+& b_{012} = (2P_3 + P_2 - w_{32}\vec{N}_2) / 3,\\
+& b_{102} = (2P_3 + P_1 - w_{31}\vec{N}_3) / 3,\\
+& b_{201} = (2P_1 + P_3 - w_{13}\vec{N}_1) / 3,\\
+& E = (b_{210} + b_{120} + b_{021} + b_{012} + b_{102} + b_{201}) / 6,\\
+& V = (P_1 + P_2 + P_3) / 3,\\
+& b_{111} = E + (E - V) / 2.
+\end{split}
+\end{equation}
+
+The geometry of the cubic B\'ezier patch can be computed with cubic Bernstein basis functions as shown in Equation~\eqref{eq:cubic_bernstein}. Note that $u, v, w \ge 0$ are the barycentric coordinates and that $w$ can be calculated by $w = 1 - u - v$. The $b_{ijk}$ terms are the control points illustrated in Figure~\ref{fig:geo_cp}.
+
+\begin{equation}
+\label{eq:cubic_bernstein}
+\begin{split}
+b(u,v) &= \sum_{i+j+k=3} b_{ijk} \frac{3!}{i!j!k!} u^i v^j w^k\\
+&= b_{300}w^3 + b_{030}u^3 + b_{003}v^3\\
+&+ b_{210}3w^2u + b_{120}3wu^2 + b_{201}3w^2v\\
+&+ b_{021}3u^2v + b_{102}3wv^2 + b_{012}3uv^2\\
+&+ b_{111}6wuv
+\end{split}
+\end{equation}
+
+This method ensures continuity of $C^1$ at the vertices because all faces of a vertex use the same normal and thus the same tangent plane. The continuity at the edges is $C^0$ because the center control point is not necessarily placed such that the tangents are in the same direction along all edges.
+
+\subsection{Normals}
+\label{sec:concept_normals}
+Aside from replacing the geometry, the authors of~\cite{vlachos2001} also recommend changing the normals. Three options are discussed: using the analytic normals, linearly interpolating normals and using a quadratic B\'ezier patch.
+
+% Analytic normals:
+%% How to calculate them
+%% Why not to use them
+The analytic normals of the geometry patch can be computed by calculating two directional derivatives of Equation~\eqref{eq:cubic_bernstein} and taking their cross product. The directional derivative of a three-sided cubic B\'ezier patch is shown in Equation~\eqref{eq:directional_deriv} with the convention that Bernstein basis polynomials with negative subscripts are identically zero~\cite{lai2007}.
+
+\begin{equation}
+\label{eq:directional_deriv}
+\begin{split}
+\vec{m} &= (a_1, a_2, a_3) \\
+D_{\vec{m}} b(u,v) &= \sum_{i+j+k=3} b_{ijk} \; D_{\vec{m}} \; B^3_{i,j,k}(u,v)\\
+&= \sum_{i+j+k=3} b_{ijk} \; 3 \; [a_1 B^{2}_{i-1,j,k}(u,v) \\
+&+ a_2 B^{2}_{i,j-1,k}(u,v) \\
+&+ a_3 B^{2}_{i,j,k-1}(u,v)]
+\end{split}
+\end{equation}
+
+The sum of $a_1, a_2, a_3$ equals $0$ as $\vec{m}$ is a direction, $\vec{m}$ can be found by subtracting the barycentric coordinates of two points.  The resulting normal field is quartic. However, the geometry is not necessarily normal-continuous~\cite{vlachos2001}.
+
+% Linear normals:
+%% How to calculate them
+%% Why not to use them
+\begin{figure}[t]
+  \centering
+      \includegraphics[width=\columnwidth]{figs/image8.png}
+  \caption{The top figure shows linearly interpolated normals along geometry with an inflection. The bottom figure shows quadratic normals along the same geometry. Reprinted from~\cite{vlachos2001}.}
+\label{fig:norm_inflection}
+\end{figure}
+
+The second option is using linearly interpolated normals. This variation computes the normal based on the normals of the flat triangle. The formula that describes the linear normal field is:
+
+\begin{equation}
+\label{eq:linear_normals}
+\vec{N}(u,v) = \frac{\vec{N}}{\left \| \vec{N} \right \|}, \vec{N} = (1 - u - v) \vec{N}_1 + u\vec{N}_2 + v\vec{N}_3.
+\end{equation}
+
+A disadvantage of linearly interpolated normals is that they cannot account for inflections in the geometry. Inflections occur in the geometry when the normals of vertices that share an edge are pointing in the same direction. In other words, one of the tangent control points is below the edge and the other one is above the edge. Figure~\ref{fig:norm_inflection} illustrates this effect.
+
+% Quadratic normals:
+%% How to calculate them
+%% Why not to use them
+\begin{figure}[t]
+  \centering
+      \includegraphics[width=\columnwidth]{figs/image7.png}
+  \caption{An overview of the control points used in a three-sided quadratic B\'ezier patch. Reprinted from~\cite{vlachos2001}.}
+\label{fig:norm_cp}
+\end{figure}
+
+The final option is creating a quadratic B\'ezier patch separate of the geometry. Figure~\ref{fig:norm_cp} illustrates a quadratic B\'ezier control net. The control points $n_{200}$, $n_{020}$ and $n_{002}$ are the normals of the original triangle. $n_{110}$, $n_{011}$ and $n_{101}$ are the mid-edge control points.
+
+The advantage of a quadratic normal patch is that it is able to capture inflections in the geometry, as shown in Figure~\ref{fig:norm_inflection}. However, this only happens when the control points are computed properly. The corner control points are initialized with the normals from the flat triangle.
+
+The mid-edge control points are computed under the assumption that there is an inflection in the geometry. The average normal of the edge end-points is mirrored with respect to the perpendicular plane of the edge, as illustrated in Figure~\ref{fig:norm_init}. Let $\vec{A}$ be the average of the normals of the edge end-point. Let $\vec{B}$ be the normal direction of the plane perpendicular to the edge. Then the mirror $\vec{A}'$ of $\vec{A}$ in the plane given by $\vec{B}$ is found by:
+
+\begin{equation}
+\label{eq:mirror}
+\begin{split}
+\vec{A}' = \vec{A} - 2 v \vec{B} \\
+v = (\vec{B} \cdot \vec{A}) / (\vec{B} \cdot \vec{B})
+\end{split}
+\end{equation}
+
+\begin{figure}[t]
+  \centering
+      \includegraphics[width=\columnwidth]{figs/image9.png}
+  \caption{An illustration of the mid-point calculation of the quadratic normal patch. Reprinted from~\cite{vlachos2001}.}
+\label{fig:norm_init}
+\end{figure}
+
+Combining all computations results in the equations shown in Equation~\eqref{eq:ncp}. The subscripts of the control normals correspond to those in Figure~\ref{fig:norm_cp}.
+
+\begin{equation}
+\label{eq:ncp}
+\begin{split}
+& n_{200} = \vec{N}_1,\\
+& n_{020} = \vec{N}_2,\\
+& n_{002} = \vec{N}_3,\\
+& v_{ij} = 2\frac{(P_j - P_i) \cdot (\vec{N}_i + \vec{N}_j)}{(P_j - P_i) \cdot (P_j - P_i)} \in \textbf{R},\\
+& n_{110} = h_{110} / \left \| h_{110} \right \|, \text{\hspace{2mm}} h_{110} = \vec{N}_1 + \vec{N}_2 - v_{12}(P_2 - P_1),\\
+& n_{011} = h_{011} / \left \| h_{011} \right \|, \text{\hspace{2mm}} h_{110} = \vec{N}_2 + \vec{N}_3 - v_{23}(P_3 - P_2),\\
+& n_{101} = h_{101} / \left \| h_{101} \right \|, \text{\hspace{2mm}} h_{110} = \vec{N}_3 + \vec{N}_1 - v_{31}(P_1 - P_3).\\
+\end{split}
+\end{equation}
+
+The quadratic B\'ezier patch can be evaluated with quadratic Bernstein basis functions as shown in Equation~\eqref{eq:quadratic_bernstein}. Again, $u, v, w \ge 0$ are the barycentric coordinates and $w$ can be calculated by $w = 1 - u - v$. The $n_{ijk}$ terms are the control points illustrated in Figure~\ref{fig:norm_cp}.
+
+\begin{equation}
+\label{eq:quadratic_bernstein}
+\begin{split}
+\vec{N}(u,v) &= \sum_{i+j+k=2} n_{ijk} \frac{2!}{i!j!k!} u^i v^j w^k\\
+&= n_{200}w^2 + n_{020}u^2 + n_{002}v^2\\
+&+ n_{110}2wu + n_{011}2uv + n_{101}2wv\\
+\end{split}
+\end{equation}
+
+The authors of~\cite{vlachos2001} used a different formula to evaluate the quadratic patch. Their formula is shown in Equation~\eqref{eq:quadratic_normals}. The only difference is a scaling factor of the edge normal control points. It is important to note that their formula does not partition unity. Both methods are compared in Section~\ref{sec:evaluation_normals}
+
+\begin{equation}
+\label{eq:quadratic_normals}
+\begin{split}
+\vec{N}(u,v) &= \sum_{i+j+k=2} n_{ijk} u^i v^j w^k\\
+&= n_{200}w^2 + n_{020}u^2 + n_{002}v^2\\
+&+ n_{110}wu + n_{011}uv + n_{101}wv\\
+\end{split}
+\end{equation}
+
+\subsection{Curved Sharp Edges}
+\label{sec:concept_edges}
+% What happens when vertices have two normals
+% How to extend for the special case
+PN triangles, as specified, smooth out all edges, under the assumption that every vertex has at most one normal associated with it. In order to model creases, vertices have to be associated with the normals of the faces on both sides of the crease. Using two normals for a vertex may result in gaps in the geometry, as the tangent planes do not have to be shared along the edges of the vertex.
+
+However, PN triangles can be extended to model curved sharp edges in one specific situation: when the normals at the end-points of the crease are perpendicular to the edge. In this case the tangent control points of the geometry patch are on the edge itself for both faces. An example is given in Figure~\ref{fig:sharp_edges}.
+
+Let $\vec{N^1}$ and $\vec{N^2}$ be two normals associated with vertex $P_1$ along an edge with $P_2$. Then the tangent control point of $P_1$ ($b_{210}$) has to lie on the edge. The edge can be found with the cross product between the normals $\vec{T} = \vec{N^1} \times \vec{N^2}$. Then the location of $b_{210}$ is:
+
+\begin{equation}
+\label{eq:edge}
+\begin{split}
+b_{210} = P_1 + \frac{(P_2 - P_1) \cdot \vec{T}}{3} \vec{T}
+\end{split}
+\end{equation}
+
+\begin{figure}[t]
+  \centering
+      \includegraphics[width=\columnwidth]{figs/image10.png}
+  \caption{An illustration of PN triangles with curved sharp edges. Reprinted from~\cite{vlachos2001}.}
+\label{fig:sharp_edges}
+\end{figure}

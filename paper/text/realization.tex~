@@ -1,0 +1,15 @@
+%!TEX root = ../AGC_Report_Bot_Maathuis.tex
+
+\section{Realization}
+\label{sec:realization}
+Implementing PN triangles using the current graphics pipeline is a lot simpler compared to using the graphics pipeline that was available in 2001. This section discusses how PN triangles can be implemented using hardware tessellation. OpenGL terms are used to describe the graphics pipeline.
+
+On the CPU meshes were represented with the half-edge data-structure~\cite{mantyla1988}, which allowed for easy traversal along the faces of the mesh. This attribute is convenient for implementing subdivision methods. Every time a mesh was changed, its vertex coordinates and normals were written to an indexed vertex array, which was used for the OpenGL buffer objects and draw calls.
+
+The tessellation control shader was used to compute the control points of the cubic geometry and quadratic normal patches, specified in Equations~\eqref{eq:gcp} and~\eqref{eq:ncp}. The shader was invoked once per patch because computing some of the control points depends on other control points. This cannot easily be achieved with multiple invocations because there is no guarantee that the invocations occur in order.
+
+The tessellation evaluation shader was used to compute the attributes of the generated vertices, specified in Equations~\eqref{eq:cubic_bernstein},~\eqref{eq:directional_deriv},~\eqref{eq:linear_normals},~\eqref{eq:quadratic_bernstein}, and~\eqref{eq:quadratic_normals}. All of the equations are implemented, but only one of the last four is active at any given time, as they are variants determining the normals.
+
+Hardware tessellation on triangles allows the developer to set four tessellation levels, one for the inside of the triangle and one for each edge. It is important that shared edges have the same tessellation level, otherwise gaps are introduced along the edges.
+
+In contrast, the original specification of PN triangles used a single \emph{level of detail} (lod) value. The lod value determined the number of samples on each edge that were used in a uniform subtriangulation of the patches.~\cite{vlachos2001}.

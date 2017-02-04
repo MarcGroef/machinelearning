@@ -1,0 +1,10 @@
+%!TEX root = ../AGC_Report_Bot_Maathuis.tex
+
+\begin{abstract}
+Point-Normal (PN) Triangles are implemented as a cheap method to improve the visual appeal of meshes in real-time applications. This method replaces each flat triangle in the coarse mesh with a cubic B\'ezier patch. Furthermore for shading purposes quadratic, linear and analytic normal fields are implemented. In the present paper differences in visual results and hardware performances are discussed for each normal variation. Finally a comparison of PN Triangles is given with QAS, Phong Tessellation, ACC1 and ACC2. All methods that offer means to improve the visual quality of meshes.
+
+%\begin{classification} % according to http://www.acm.org/class/1998/
+%\CCScat{Computer Graphics}{I.3.3}{Picture/Image Generation}{Line and curve generation}
+%\end{classification}
+
+\end{abstract}

@@ -1,0 +1,59 @@
+%!TEX root = ../AGC_Report_Bot_Maathuis.tex
+
+\section{Introduction}
+\label{sec:introduction}
+
+% Problem
+% Background (subdivision vs tessellation)
+% Short introduction to PN-triangles
+The primary bottleneck in graphics hardware is the memory bandwidth between the processing units and the assets on the graphics card~\cite{niessner2015}. This is a problem for real-time applications which try to use increasingly detailed geometry. \emph{Curved point-normal triangles} (PN triangles) were designed as an inexpensive way to improve the visual quality~\cite{vlachos2001}.
+
+Assets are typically created using \emph{subdivision surfaces} because of the freedom in topology that they allow. The control meshes can be refined using a subdivision scheme such as Loop subdivision for triangles~\cite{loop1987} or Catmull-Clark subdivision for quads~\cite{catmull1978}. Control meshes are usually processed using a connectivity data structure, because the coordinates of neighboring vertices are required to determine the location of a vertex in the next subdivision level.
+
+Subdividing anything other than small meshes on the CPU is impractical for real-time applications. There are too many vertices to evaluate in order to achieve real-time speeds, as the number of vertices which have to be evaluated increases with about a factor of four in each subdivision level. The GPU can be used to subdivide with a table-driven approach. However, this method is also bound by memory access~\cite{niessner2015}.
+
+As a result, techniques were developed to approximate subdivision surfaces using \emph{hardware tessellation}, which was introduced to the graphics pipeline in 2009~\cite{microsoft2009}. Hardware tessellation generates additional vertices from a coarse control mesh which are sent to the GPU streaming processors, so it is not dependent on the memory bandwidth bottleneck.
+
+Hardware tessellation consists of three stages. In the first stage the density of the vertices to be generated has to be specified and per patch attributes can be computed. The second stage creates a triangulation in barycentric coordinates, this stage can be configured but is not programmable. In the last stage the per vertex attributes have to be computed. This system allows the developer to refine the meshes that are rendered in a flexible way.
+
+PN triangles were developed in 2001~\cite{vlachos2001}, before hardware tessellation was introduced. However, the technique makes use of the same principle: generating additional vertex points from a coarse control mesh to improve the visual result. They were designed to \emph{``improve the visual quality by smoothing out silhouette edges and providing more sample points for vertex shading operations''}~\cite{vlachos2001}.
+
+The authors acknowledge that PN triangles are not able to convert triangulations into \emph{``designed quality, everywhere smooth surfaces''}~\cite{vlachos2001}. However, that was not the goal of the technique in the first place.
+
+PN triangles use a cubic B\'ezier patch to replace the geometry of a flat triangle. Normals are computed with a separate quadratic B\'ezier patch. Both patches match the information at the vertices of the flat triangle.
+
+\subsection{Restrictions}
+\label{sec:introduction_restrictions}
+% The goals and restrictions then
+% The goals and restrictions now
+PN triangles were designed to have a simple migration path, integrating the technique in already existing programs was meant to be relatively simple. As a results several restrictions related to the graphics API as well as the workflow of artists were imposed.
+
+For example, the technique was meant to be evaluated in between the \emph{Vertex and Primitive Assembly} stage and the \emph{Vertex shading} stage of the graphics pipeline. Additionally, the technique had to work with existing API data structures, such as \emph{vertex arrays}. As a result, only the three coordinates and normals of a triangle's vertices are used. And the technique was designed to be implemented on-chip without the need for software assistance~\cite{vlachos2001}.
+
+The current graphics pipeline (as defined in OpenGL 4.5 and DirectX 12) is very different from the one mentioned in~\cite{vlachos2001}. Shading is now typically computed per fragment in the \emph{Fragment Shading stage} instead of per vertex. The \emph{Vertex and Primitive Assembly} stage has been split in to the following stages:
+\begin{itemize}
+    \item \emph{Vertex Specification}
+    \item \emph{Vertex Shader}
+    \item \emph{Tessellation Shaders}
+    \item \emph{Geometry Shader}
+    \item \emph{Vertex Post-Processing}
+    \item \emph{Primitive Assembly}
+\end{itemize}
+\noindent
+Of these stages the \emph{Tessellation Shaders} and \emph{Geometry Shader} are able to work with the information of neighboring vertices, allowing for more complicated surfacing methods to be used.
+
+\subsection{Alternatives}
+\label{sec:introduction_alternatives}
+
+% What can we do with the lifted restrictions
+% Phong tesselation and QAS
+% ACC 1 and 2
+There are several alternatives to PN triangles that are compared in this paper. The alternatives mentioned are techniques that serve a similar purpose as PN triangles: they try to improve the visuals of a coarse mesh while being less computationally expensive than subdivision.
+
+The first alternative is \emph{Quadratic Approximation of Subdivision Surfaces} (QAS)~\cite{qas2008}. It uses a single subdivision step and projects the vertices to their limit positions. Quadratic B\'ezier patches are constructed and used for both the geometry and the normals. The resulting surface has a continuity of $C^0$, however due to the normal patch it appears smooth.
+
+The second alternative is \emph{Phong Tessellation}~\cite{phongtess2008}. It aims to improve the contours and silhouettes of meshes by inflating the geometry using a quadratic patch. The resulting surface has a continuity of $C^0$, however it appears smooth due to the normal patch that is used.
+
+The final alternatives are ACC-1~\cite{acc12008} and ACC-2~\cite{acc22009}. Both techniques approximate Catmull-Clark subdivision surfaces, which are designed for quad meshes. ACC1 creates a $C^0$ surface with two tangent patches which create continuous normals. ACC2 creates a $G^1$ surface using Gregory patches and uses the geometry's normals. These techniques show that it is possible to find the exact limit surface of a regular mesh using tessellation with neighborhood information.
+
+The following sections will define the specification of PN triangles (Section~\ref{sec:concept}), discuss the implementation of PN triangles (Section~\ref{sec:realization}), and evaluate PN triangles (Section~\ref{sec:evaluation}).
