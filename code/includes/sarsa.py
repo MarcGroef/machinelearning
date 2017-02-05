@@ -12,7 +12,7 @@ class Sarsa():
 
 
 
-  def __init__(self, a_dim, a_min, a_max, a_delta, state_size, random_chance = 0.1, learningRate = 1, discount = 0.99, discretize_state = False):
+  def __init__(self, a_dim, a_min, a_max, a_delta, state_size, random_chance = 0.1, learningRate = 1, discount = 0.99, discretize_state = True):
     self.a_max = np.asarray(a_max)
     self.a_min = np.asarray(a_min)
     self.a_delta = np.asarray(a_delta)
@@ -21,11 +21,11 @@ class Sarsa():
 
     self.state_size = state_size
     self.discretize_state = discretize_state
-    self.nPositionBins = 2
+    self.nPositionBins = 10
     if(discretize_state):
-      self.mlp = MLP(self.nPositionBins + self.state_size,5, [20, 20, 20,20,20], 1)
+      self.mlp = MLP(self.nPositionBins * self.state_size + self.action_size,1, [200, 20, 20,20,20], 1)
     else:
-      self.mlp = MLP(self.action_size + self.state_size,2, [50, 10, 100,100,20], 1)
+      self.mlp = MLP(self.action_size + self.state_size,1, [50, 10, 100,100,20], 1)
     self.max_iter = 10
     self.learningRate = learningRate
     self.discount = discount
@@ -34,14 +34,23 @@ class Sarsa():
     self.last_100 = []
 
   def discretizeState(self, state):
-    discr = np.zeros(self.nPositionBins)
-    idx = int(((state[0] + 1.2) / 1.8) * self.nPositionBins)
-    #print idx
-    discr[idx] = 1
-    #print "discr" + str(discr)
-    discr = np.concatenate([discr, [state[1]]])
-    return discr
 
+    discr = np.zeros(self.nPositionBins * self.state_size)
+    
+    for idx in range(self.state_size):
+      tarIdx =int( (state[idx] + 1.5) / 3 * self.nPositionBins)
+      #print [idx,tarIdx]
+      try:
+        discr[self.nPositionBins * idx + tarIdx] = 1
+        if tarIdx + 1 < self.state_size:
+          discr[self.nPositionBins * idx + tarIdx + 1] = 0.5
+        if tarIdx > 0:
+          discr[self.nPositionBins * idx + tarIdx - 1] = 0.5
+      except IndexError:
+        print "state idx out of bounds..."
+    #print discr
+    return discr
+  
   def resetBrainBuffers(self):
     self.mlp.resetBuffers()
 
@@ -60,15 +69,13 @@ class Sarsa():
     if(self.discretize_state):
        state = self.discretizeState(state)
     mlpvec = np.concatenate([state, action])
-    #print mlpvec
-    #return self.mlp.predict(mlpvec)
     return self.mlp.process(mlpvec)
 
   def updateQ(self, action, state, targetOut):
     #self.mlp2.fit(np.concatenate([state, action]), targetOut)
     if(self.discretize_state):
        state = self.discretizeState(state)
-    self.mlp.train(np.concatenate([state, action]), targetOut, 0.02, 0.2)
+    self.mlp.train(np.concatenate([state, action]), targetOut, 0.005, 0)
 
   def define_action_space(self, dim, min, max, delta):
     dim_lst = []
@@ -96,6 +103,7 @@ class Sarsa():
     plt.pause(0.001)
 
   def chooseAction(self, s):
+    
     a_best = self.a_min
     Q_best = self.getQ(s, a_best)
     #print self.discretizeState(s)
@@ -128,8 +136,6 @@ class Sarsa():
         if (Q > Q_best):
            a_best = a
            Q_best = Q 
-        #continue ##uncomment for sarsa-NM
-        ##Newtons method
         for _ in range(self.max_iter):
             
             delta = self.mlp.d_network()[2] #third element is action dim of mlp
