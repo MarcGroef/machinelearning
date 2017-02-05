@@ -118,10 +118,7 @@ def nfac_test():
 					pass
 
 			gauss = signal.gaussian(5, 1)
-
 			bigstateinput1 = np.convolve(bigstateinput1, gauss, 'same')
-
-
 			print bigstateinput1
 
 			act2 = nfac.chooseAction(np.array(bigstateinput1))

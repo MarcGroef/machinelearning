@@ -577,7 +577,7 @@ def sarsa_test(render = False):
 if __name__ == "__main__":
 	#xorTest()
 	#cacla_test()
-	#sarsa_test()
-	nfac_test()
+	sarsa_test()
+	#nfac_test()
 
 	
