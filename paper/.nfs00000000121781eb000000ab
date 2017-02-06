@@ -1,9 +1,6 @@
 \documentclass{article}
 \usepackage{bnaic}
-\usepackage{cite}
-\usepackage{amsmath}
-\usepackage{mathtools}
-\usepackage{tikz}
+
 
 %% if your are not using LaTeX2e use instead
 %% \documentstyle[bnaic]{article}
@@ -13,11 +10,11 @@
 \title{\textbf{\huge Machine Learning\\ Benchmarking neural-fitted Actor Critic with state of the art reinforcement learning algorithms}%
 \footnote{In case of an extended abstract refer to the original paper in a footnote such as ``The full paper has been published in \emph{Proceedings of the International Joint Conference on Artificial Intelligence}, pages 13--20, 2013.'' Also, please keep the title and authors exactly the same as the original.}%
 }
-\author{H. Maathuis \and
-    M. Groefsema \and
-    S. Warmelink \and
-    T. Oosterhuis}
-\date{\textit{University of Groningen, 9747AG Groningen}}
+\author{H. Maathuis \affila \and
+    M. Groefsema \affilb \and
+    S. Warmelink \affilb \and
+    T. Oosterhuis \affila}
+\date{\affila\ \textit{University of Groningen, 9747AG Groningen}}
 
 \pagestyle{empty}
 
