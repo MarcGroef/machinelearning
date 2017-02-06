@@ -1,0 +1,10 @@
+\begin{thebibliography}{1}
+
+\bibitem{van2007reinforcement}
+Hado Van~Hasselt and Marco~A. Wiering.
+\newblock Reinforcement learning in continuous action spaces.
+\newblock In {\em Approximate Dynamic Programming and Reinforcement Learning,
+  2007. ADPRL 2007. IEEE International Symposium on}, pages 272--279. IEEE,
+  2007.
+
+\end{thebibliography}
