@@ -1,9 +1,6 @@
 \documentclass{article}
 \usepackage{bnaic}
-\usepackage{cite}
-\usepackage{amsmath}
-\usepackage{t1enc, dfadobe}
-\usepackage{tikz}
+
 
 %% if your are not using LaTeX2e use instead
 %% \documentstyle[bnaic]{article}

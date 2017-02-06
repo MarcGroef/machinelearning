@@ -1,10 +1,15 @@
 \begin{thebibliography}{1}
 
 \bibitem{van2007reinforcement}
-Hado Van~Hasselt and Marco~A. Wiering.
+H.~Van Hasselt and M.A. Wiering.
 \newblock Reinforcement learning in continuous action spaces.
-\newblock In {\em Approximate Dynamic Programming and Reinforcement Learning,
-  2007. ADPRL 2007. IEEE International Symposium on}, pages 272--279. IEEE,
-  2007.
+\newblock In {\em Proceedings of the IEEE International Symposium on
+  Approximate Dynamic Programming and Reinforcement Learning, 2007}, pages
+  272--279. IEEE, 2007.
+
+\bibitem{sutton1998reinforcement}
+Richard~S Sutton and Andrew~G Barto.
+\newblock {\em Reinforcement learning: An introduction}, volume~1.
+\newblock MIT press Cambridge, 1998.
 
 \end{thebibliography}
