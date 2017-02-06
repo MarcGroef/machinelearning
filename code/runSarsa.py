@@ -12,8 +12,8 @@ dir_name = 'SARSA ' + ('%s' % datetime.now())
 dir_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), '../runs/sarsa/' + dir_name)
 os.makedirs(dir_path)
 
-env = gym.make('MountainCarContinuous-v0')
-#env = gym.make('LunarLanderContinuous-v2')
+#env = gym.make('MountainCarContinuous-v0')
+env = gym.make('LunarLanderContinuous-v2')
 stateSize = env.reset().size
 actionSize = env.action_space.sample().size
 
@@ -68,12 +68,6 @@ def sarsa_test(render = False):
   nEpochs = 2000
   epochFailed = True
   for epoch in range(nEpochs):
-    #if(epoch == nEpochs - 100):
-  #   print "random action chance set to 0"
-  #   sarsa.random_chance = 0.1
-  #   sarsa.learningRate = 0
-      #print state
-      #sarsa.printValueMap(1)
 
     # periodically log mlp weights to file
     if (epoch + 1) % 100 == 0:
@@ -85,60 +79,52 @@ def sarsa_test(render = False):
       brain.write('Initial output weights: ' + str(brain_state[2]) + '\n')
       brain.write('Initial output bias: ' + str(brain_state[3]) + '\n')
       brain.close()
-    sarsa.random_chance *= 0.99
+      
+      
+      
+    sarsa.random_chance *= 0.999
     state = env.reset()
 
     tot_reward = 0
     tot_Q = 0
     action = sarsa.chooseAction(state)
-
-    done = env.step(action[0])
-    state = done[0]
-    reward = done[1]
-    finished = done[2]
-    #if(epoch % 100 == 0 and epoch > 100):
-    #    render = True
-    #else:
-    #    render = False
-    render = True
-    #ensure sarsa doesnt learn from killed epochs
-
     sarsa.resetBrainBuffers()
-    render = True
-
 
     for iteration in range(nGameIterations):
 
       #if(render and iteration % 5 == 0 and epoch > 100):
       #env.render()
       
-      old_state = state
-      old_action = action
-
-
-      action = sarsa.chooseAction(state)
-      tot_Q += action[1]
       done = env.step(action[0])
-      state = done[0]     
+      new_state = done[0]     
       reward = done[1]
       tot_reward += reward
       finished = done[2]
+
+      
+      new_action = sarsa.chooseAction(state)
+
+      
 
   
       if finished:
         if reward > 0:
           print "***********************SUCCESS************************"
-        sarsa.update(old_state, old_action[0], state, action[0], reward, True)
+        sarsa.update(state, action[0], new_state, new_action[0], reward, True)
         break
       else:
-        sarsa.update(old_state, old_action[0], state, action[0], reward)
+        sarsa.update(state, action[0], new_state, new_action[0], reward)
         
+        
+      state = new_state
+      action = new_action
+      #### end iter loop
     print "rewards @ epoch " + str(epoch ) + ": " + str(tot_reward)
     epochs.append(epoch)
     rewards.append(tot_reward)
-    #plt.scatter(epochs, rewards)
-    #plt.show()
-    #plt.pause(1)
+    plt.scatter(epochs, rewards)
+    plt.show()
+    plt.pause(1)
 
     # update rewards log
     rewardsf = open(rewards_file, 'a')

@@ -1,5 +1,7 @@
  
 \section{Experimental setup}
+TODO:::: CONSTRUCT::: (What do we measure) : How well the agent performs
+TODO:::: OPERATIONALISATION!!!! (How do we measure it?)!! : Average reward last 100 epochs
 
 We will briefly describe the experimental setup used to test the different algorithms. SARSA, CACLA and NFAC are compared in two continuous environments: MountainCar\cite{openaimountaincar} and LunarLander\cite{openailunarlander}. Both environments are OpenAI Gym environments\cite{openaigym}, which is a toolkit for comparing reinforcement learning algorithms. 
 
@@ -25,6 +27,7 @@ TODODODODO:: In NFAC wordt bij gaussian exploration de sigma alleen maar geupdat
 %action_hidden_layers=(20 50 100 200)
 
 \subsection{MountainCar}
+TODO:: Add image (or in intro)
 In the MountainCar environment a car is situated in between two mountains. Its goal is to reach the top of the rightmost mountain. In order to do this, it first has to drive up the left mountain in order to generate enough momentum to reach the top of the rightmost mountain. 
 
 The action space of the MountainCar environment is a float in the range [$-1$,$1$]. This float dictates the force applied to the car in either the left or right direction. The state space consists of two floats:
@@ -45,6 +48,7 @@ The reward function, where $r_t$ is the reward at time step $t$ and $v_t$ is the
 The total reward is defined as the sum of all rewards gained during an epoch. The MountainCar action space vector is in the $[-1,1]$ range. 
 
 \subsection{LunarLander}
+TODO:: Add image (or in intro)
 In the LunarLander environment, the lunar lander's goal is to safely land on the lunar surface. It can do this by firing its left or right engine and controlling its overall thrust power. The action space of the LunarLander environment consists of two floats in the range [$-1$,$1$]: one for controlling the left or right engine and one for controlling the main engine. In the first case, a value in between -1.0 and -0.5 means the left engine is firing, a value in between 0.5 and 1.0 means the right engine is firing, and any other value means neither engine is firing. For the main engine, a value in between -1.0 and 0 means that the main engine is not firing, while from 0 to 1.0 the engine is throttled from 50\% to 100\% power. The LunarLander state space consists of 6 floats, all in the range [$-1$,$1$] and two booleans: x\_position, y\_position, x\_velocity, y\_velocity, angle, rotation and the booleans left\_leg\_contact and right\_leg\_contact.  
 
 For the reward function, as given by the OpenAI Gym environment, we read the state at time t $state_t$. It is defined as such:
