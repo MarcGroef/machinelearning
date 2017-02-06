@@ -2,23 +2,27 @@
 
 \section{Introduction}
 
+Reanforcement learning is a machine learning technique which allows for agents to autonomously learn relatively complex behaviour
+in a variety of applications such as such as playing backgammon \cite{tesauro2002programming} or chess \cite{baxter1999knightcap},
+real life quadripedal walking \cite{kohl2004policy}, or autonomous simulated driving \cite{}. \\
+
 With reinforcement learning an agent is placed in an environment in a state where it can execute a number of actions. Each
 action the agent takes in a state entails a reward or a punishment for the agent as well as bringing it to a new state.
 By maximizing tt's reward the agent gradually learns the value of each state (either by keeping track of this value in a
 lookup table, or when the environment is to complex for this to be feasible, by approximating the value function for the
 environment with a function approximator such as a multi-layer perceptron - MLP), allowing it to autonomously learn the optimal policy
-for its environment. Reinforcement learning agents can learn complex behavior this way, such as solving a maze, or obeying
-traffic rules in a driving simulation. \\ %met gta5 toch? ik zal kijken of ik hier ook een referentie van kan vinden
+for its environment. \\
 When they were first developed reinforcement learning algorithms were designed to deal with discretized state and action
 spaces. In real life however state spaces aren't discritized and although action spaces can be, this is not ideal as different
 actions may require different levels of discritization to be accurate to get the desired reward. Furthermore the required level
-of discritization can not be known in all cases, and having to discover it is time intensive. %citatie naar de cacla paper
+of discritization can not be known in all 11cases, and having to discover it is time intensive \cite{van2007reinforcement}. %citatie naar de cacla paper
 This potential problem can be solved by keeping the state and action space continuous in the environment representation of the agent. \\
 Several new reinforcement learning algorithms and adaptations of existing reinforcement algorithms were developed to model continuous
-state and action spaces. In this paper we will benchamark one such algorithm, named Neural Fitted Actor Critic (NFAC), which was develeped in August 2016 %cite
-against two established (at the time of the writing of this paper) continuous reinforcement learning algorithms, named Continuous Actor Critic Learning Automaton (CACLA) %cite
-and SARSA (State Action Reward State Action) with gradient descent (referred to in this paper as GD-SARSA). \\
-First a more extensive background will be given on reinforcement learning in general including on model free reinforcement learning amd exploration,
-on function approximation with MLP's and on continuous state and action spaces, then the three algorithms that are compared
- in this paper are explained in detail, the implementation of these algorithms and the setup of the benchmarking experiment will be discussed,
- after that the benchmarking results will be presented and the contribution of NFAC as a reinforecemnt learning algorithm will be evaluated.
+state and action spaces. In this paper we will benchamark one such algorithm, named Neural Fitted Actor Critic (NFAC), which was develeped in August 2016 \cite{zimmer2016neural}
+against two established (at the time of the writing of this paper) continuous reinforcement learning algorithms, named Continuous Actor Critic Learning Automaton (CACLA)
+\cite{van2007reinforcement}
+and SARSA (State Action Reward State Action) adapted for continuous state- and action-spaces \cite{nichols2014application} with gradient descent (referred to in this paper as GD-SARSA). \\
+First a formal background will be given on connectionist reinforcement learning with the use of MLP's as function approximators,
+and on extending this to continuous state- and action-spaces. In the methods section the three algorithms that are compared
+ in this paper the implementation of these algorithms are explained in detail. After that setup of the benchmarking experiment will be discussed.
+Finally the benchmarking results will be presented and evaluated, and the final conclusions will be drawn regarding NFAC compared to CACLA and GD-SARSA.
