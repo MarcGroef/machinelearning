@@ -1,11 +1,11 @@
-This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/Debian) (format=pdflatex 2016.11.30)  6 FEB 2017 14:11
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/Debian) (format=pdflatex 2016.9.18)  6 FEB 2017 22:02
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
 **authorinstr.tex
 (./authorinstr.tex
 LaTeX2e <2011/06/27>
-Babel <3.9h> and hyphenation patterns for 35 languages loaded.
+Babel <3.9h> and hyphenation patterns for 2 languages loaded.
 (/usr/share/texlive/texmf-dist/tex/latex/base/article.cls
 Document Class: article 2007/10/19 v1.4h Standard LaTeX document class
 (/usr/share/texlive/texmf-dist/tex/latex/base/size10.clo
@@ -524,51 +524,112 @@ File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Liv
 e
 ))
 (./text/report.tex
+
+! LaTeX Error: Can be used only in preamble.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.2 \usepackage
+               {mathtools}
+? 
+[1
+
+{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}]
 LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <17.28> not available
-(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 3.
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 4.
 LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <20.74> not available
-(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 3.
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 4.
  (./text/abstract.tex
 LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <9> not available
 (Font)              Font shape `OT1/ptm/b/n' tried instead on input line 3.
-) (./text/introduction.tex
+)
+(./text/introduction.tex
 LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <14.4> not available
 (Font)              Font shape `OT1/ptm/b/n' tried instead on input line 3.
-)
-(./text/background.tex) (./text/cacla.tex [1
+LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <10> not available
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 8.
 
-{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}] <figs/actorcritic.png, id=
-14, 354.32375pt x 351.3125pt>
+
+LaTeX Warning: Citation `tesauro2002programming' on page 2 undefined on input l
+ine 8.
+
+
+LaTeX Warning: Citation `baxter1999knightcap' on page 2 undefined on input line
+ 8.
+
+
+LaTeX Warning: Citation `kohl2004policy' on page 2 undefined on input line 9.
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 7--10
+
+ []
+
+
+LaTeX Warning: Citation `zimmer2016neural' on page 2 undefined on input line 23
+.
+
+
+LaTeX Warning: Citation `nichols2014application' on page 2 undefined on input l
+ine 26.
+
+) (./text/background.tex [2]) (./text/cacla.tex
+<figs/actorcritic.png, id=17, 354.32375pt x 351.3125pt>
 File: figs/actorcritic.png Graphic file (type png)
 
 <use figs/actorcritic.png>
 Package pdftex.def Info: figs/actorcritic.png used on input line 18.
 (pdftex.def)             Requested size: 144.40025pt x 143.176pt.
-) (./text/experimentsetup.tex)
-(./text/conclusions.tex) (./text/contributions.tex) (./authorinstr.bbl [2 <./fi
-gs/actorcritic.png>])) [3] (./authorinstr.aux) ) 
+) (./text/sarsa.tex
+
+LaTeX Warning: Citation `https://www.elen.ucl.ac.be/Proceedings/esann/esannpdf/
+es2014-175.pdf' on page 3 undefined on input line 4.
+
+[3 <./figs/actorcritic.png>]) (./text/experimentsetup.tex
+
+LaTeX Warning: Citation `openaimountaincar' on page 4 undefined on input line 6
+.
+
+
+LaTeX Warning: Citation `openailunarlander' on page 4 undefined on input line 6
+.
+
+
+LaTeX Warning: Citation `openaigym' on page 4 undefined on input line 6.
+
+LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <12> not available
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 29.
+[4]) (./text/conclusions.tex) (./text/contributions.tex) (./authorinstr.bbl))
+[5] (./authorinstr.aux)
+
+LaTeX Warning: There were undefined references.
+
+ ) 
 Here is how much of TeX's memory you used:
- 11400 strings out of 493917
- 208705 string characters out of 6157787
- 261874 words of memory out of 5000000
- 14394 multiletter control sequences out of 15000+600000
- 25874 words of font info for 55 fonts, out of 8000000 for 9000
- 788 hyphenation exceptions out of 8191
- 56i,8n,55p,2021b,239s stack positions out of 5000i,500n,10000p,200000b,80000s
-{/usr/share/texlive/texmf-dist/
-fonts/enc/dvips/base/8r.enc}</usr/share/texlive/texmf-dist/fonts/type1/public/a
-msfonts/cm/cmmi10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfont
-s/cm/cmmi7.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cm
-r10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb>
-</usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/
-share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy6.pfb></usr/share/t
-exlive/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/share/texlive/texmf-di
-st/fonts/type1/urw/times/utmr8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/
-urw/times/utmri8a.pfb>
-Output written on authorinstr.pdf (3 pages, 107991 bytes).
+ 11421 strings out of 495028
+ 209078 string characters out of 6181497
+ 259635 words of memory out of 5000000
+ 14360 multiletter control sequences out of 15000+600000
+ 29126 words of font info for 59 fonts, out of 8000000 for 9000
+ 14 hyphenation exceptions out of 8191
+ 56i,8n,55p,2014b,239s stack positions out of 5000i,500n,10000p,200000b,80000s
+{/usr/share/texlive/texmf-dist/fonts/enc/dvips/base/8r.enc}</usr/share/texliv
+e/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/share/texlive/texm
+f-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/texlive/texmf-dist
+/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr/share/texlive/texmf-dist/fonts/
+type1/public/amsfonts/cm/cmr10.pfb></usr/share/texlive/texmf-dist/fonts/type1/p
+ublic/amsfonts/cm/cmr7.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/am
+sfonts/cm/cmsy10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts
+/cm/cmsy6.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cms
+y7.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/sh
+are/texlive/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></usr/share/texlive/tex
+mf-dist/fonts/type1/urw/times/utmri8a.pfb>
+Output written on authorinstr.pdf (5 pages, 140993 bytes).
 PDF statistics:
- 56 PDF objects out of 1000 (max. 8388607)
- 39 compressed objects within 1 object stream
+ 70 PDF objects out of 1000 (max. 8388607)
+ 49 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
  18 words of extra memory for PDF output out of 10000 (max. 10000000)
 
