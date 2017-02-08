@@ -105,23 +105,23 @@ def nfac_test():
 
 		while not finished:
 			old_state = state
-			if x > 200:
-				env.render()
+			#if x > 200:
+				#env.render()
 
-			bigstateinput1 = [0] * (10 * len(old_state))
-			for i in range(len(old_state)):
-				try: 
-					bigstateinput1[i * 10 + int((state[i] + 1) / 0.2)] = 1
+			#bigstateinput1 = [0] * (10 * len(old_state))
+			#for i in range(len(old_state)):
+				#try: 
+					#bigstateinput1[i * 10 + int((state[i] + 1) / 0.2)] = 1
 					#bigstateinput1[(i * 20 + int((state[i] + 1) / 0.1)) - 1] = 0.5
 					#bigstateinput1[(i * 20 + int((state[i] + 1) / 0.1)) + 1] = 0.5
-				except IndexError:
-					pass
+				#except IndexError:
+					#pass
 
-			gauss = signal.gaussian(5, 1)
-			bigstateinput1 = np.convolve(bigstateinput1, gauss, 'same')
-			print bigstateinput1
+			#gauss = signal.gaussian(5, 1)
+			#bigstateinput1 = np.convolve(bigstateinput1, gauss, 'same')
+			#print bigstateinput1
 
-			act2 = nfac.chooseAction(np.array(bigstateinput1))
+			act2 = nfac.chooseAction(state)
 
 			action = act2
 			#if (x < 2000):
@@ -136,44 +136,44 @@ def nfac_test():
 			tot_reward += reward
 			state = done[0]
 
-			bigstateinput2 = [0] * (10 * len(state))
+			#bigstateinput2 = [0] * (10 * len(state))
 
-			for j in range(len(old_state)):
-				try: 
-					bigstateinput2[j * 10 + int((state[j] + 1) / 0.2)] = 1
+			#for j in range(len(old_state)):
+				#try: 
+					#bigstateinput2[j * 10 + int((state[j] + 1) / 0.2)] = 1
 					#bigstateinput2[(j * 20 + int((state[j] + 1) / 0.1)) - 1] = 0.5
 					#bigstateinput2[(j * 20 + int((state[j] + 1) / 0.1)) + 1] = 0.5
-				except IndexError:
-					pass
+				#except IndexError:
+					#pass
 
-			gauss = signal.gaussian(5, 1)
+			#gauss = signal.gaussian(5, 1)
 
-			bigstateinput2 = np.convolve(bigstateinput2, gauss, 'same')
+			#bigstateinput2 = np.convolve(bigstateinput2, gauss, 'same')
 			#collect for offline learning
 			#if x < 2000: 
-			nfac.collect(np.array(bigstateinput1), action, reward, np.array(bigstateinput2), finished)
+			nfac.collect(old_state, action, reward, state, finished)
 			step = step + 1
-		if finished:
-			nfac.adjustSigma()
-			#if x < 2000:
-			nfac.update()
-			#periodically log mlp weights to file
-			if x % 100 == 0:
-				brain_file = os.path.join(dir_path, 'weights_mlps_epoch_' + str(x) + '.txt')
-				brain = open(brain_file, 'w')
-				action_brain = nfac.action_mlp.getBrain()
-				brain.write('Action MLP:')
-				brain.write('Hidden weights: ' + str(action_brain[0]))
-				brain.write('Hidden bias: ' + str(action_brain[1]))
-				brain.write('Output weights: ' + str(action_brain[2]))
-				brain.write('Output bias: ' + str(action_brain[3]))
-				brain.write('\nValue MLP:')
-				value_brain = nfac.value_mlp.getBrain()
-				brain.write('Hidden weights: ' + str(value_brain[0]))
-				brain.write('Hidden bias: ' + str(value_brain[1]))
-				brain.write('Output weights: ' + str(value_brain[2]))
-				brain.write('Output bias: ' + str(value_brain[3]))
-				brain.close()
+		#if finished:
+		nfac.adjustSigma()
+		#if x < 2000:
+		nfac.update()
+		#periodically log mlp weights to file
+		if x % 100 == 0:
+			brain_file = os.path.join(dir_path, 'weights_mlps_epoch_' + str(x) + '.txt')
+			brain = open(brain_file, 'w')
+			action_brain = nfac.action_mlp.getBrain()
+			brain.write('Action MLP:')
+			brain.write('Hidden weights: ' + str(action_brain[0]))
+			brain.write('Hidden bias: ' + str(action_brain[1]))
+			brain.write('Output weights: ' + str(action_brain[2]))
+			brain.write('Output bias: ' + str(action_brain[3]))
+			brain.write('\nValue MLP:')
+			value_brain = nfac.value_mlp.getBrain()
+			brain.write('Hidden weights: ' + str(value_brain[0]))
+			brain.write('Hidden bias: ' + str(value_brain[1]))
+			brain.write('Output weights: ' + str(value_brain[2]))
+			brain.write('Output bias: ' + str(value_brain[3]))
+			brain.close()
 
 		print str(x) + " " + str(tot_reward)
 

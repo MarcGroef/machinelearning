@@ -40,3 +40,4 @@ of states and actions) can be approximated with a Function Approximator. We used
 When $A$ is continuous as well, naively applying the argmax operator for action selection is no longer possible. One solution to this to use an MLP as a Function Approximator for action selection as well as
 for determining the value. Another solution is to use a discretized action space as a starting point to find a number of local maxima in the action space, for example by iteratively applying gradient descent on the
 starting discrete actions, and to finally take the argmax of the local maxima.
+
