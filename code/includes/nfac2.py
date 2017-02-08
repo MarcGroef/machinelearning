@@ -13,7 +13,7 @@ class NFAC2():
     self.a_max = a_max
     self.a_min = a_min
     self.action_size = a_dim
-    self.state_size = state_size * 10
+    self.state_size = state_size
     self.action_mlp = MLP(self.state_size, 1, [20], self.action_size)
     self.value_mlp = MLP(self.state_size, 1, [20], 1)
     self.discount = discount
