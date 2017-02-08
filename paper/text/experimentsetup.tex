@@ -2,7 +2,7 @@
 
 \section{Experimental setup}
 
-In this section, the experimental setup used to test the different algorithms will be described. SARSA, CACLA and NFAC are compared in two continuous environments: MountainCar\cite{openaimountaincar} and LunarLander\cite{openailunarlander}. Both environments are OpenAI Gym environments\cite{openaigym}, which is a toolkit for comparing reinforcement learning algorithms.  Agent performance is measured by looking at the average reward over the best 100 epochs. The reward function is given by the OpenAI environment and shown in more detail in their respective subsections. Each simulation run consisted of 2000 epochs, each of which had a maximum of 10000 time steps. Learning rates, discount factors and numbers of hidden nodes for the MountainCar and LunarLander environments can be found in table \ref{tab:mntparam} and table \ref{tab:lunarparam} respectively. 
+In this section, the experimental setup used to test the different algorithms will be described. GD-SARSA, CACLA and NFAC are compared in two continuous environments: MountainCar\cite{openaimountaincar} and LunarLander\cite{openailunarlander}. Both environments are OpenAI Gym environments\cite{openaigym}, which is a toolkit for comparing reinforcement learning algorithms.  Agent performance is measured by looking at the average reward over the best 100 epochs. The reward function is given by the OpenAI environment and shown in more detail in their respective subsections. Each simulation run consisted of 2000 epochs, each of which had a maximum of 10000 time steps. Learning rates, discount factors and numbers of hidden nodes for the MountainCar and LunarLander environments can be found in table \ref{tab:mntparam} and table \ref{tab:lunarparam} respectively. 
 
 \begin{table}
 \centering
@@ -30,7 +30,7 @@ NFAC    & X          & Y              & actor: H, critic: I
 
 
 
-(GD) SARSA used $\epsilon$-greedy exploration, which was first set to 0.1, meaning a $10\%$ chance to take a random action during a time step. This exploration rate decayed over epochs, and is equal to $0.1 * 0.99^{N-1}$, where N is the current epoch. Since the experiments run for 2000 epochs, this means that the final exploration rate is $1.86*10^{-10}$.   
+GD-SARSA used $\epsilon$-greedy exploration, which was first set to 0.1, meaning a $10\%$ chance to take a random action during a time step. This exploration rate decayed over epochs, and is equal to $0.1 * 0.99^{N-1}$, where N is the current epoch. Since the experiments run for 2000 epochs, this means that the final exploration rate is $1.86*10^{-10}$.   
 
 NFAC and CACLA both used gaussian exploration.  A random value sampled from a gaussian distribution($\mu=0$ $\sigma=1$) was multiplied by a value $\Sigma=10$. This value was added to the output of the MLP and finally clamped to be in the range [$-1$,$1$]. This $\Sigma$ decayed over epochs and is equal to  $10 * 0.99^{N-1}$, where N is the current epoch. Since the experiments run for 2000 epochs, this means that the final exploration rate is $1.86*10^{-8}$. Since initially the exploration rate is very high, this ensures that the agent will quickly reach its goal. [[The exploration rate is diminshed over time since then it can rely more on its learned behavior rather than the noise added by the gaussion value.]] 
 

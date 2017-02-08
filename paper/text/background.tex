@@ -33,7 +33,7 @@ Q_t+1(s_t,a_t) = Q_t(s_t,a_t) + \alpha_t*(r_t + \gamma Q_t(s_t+1,a_t+1) - Q_t(s_
 \subsection{Continuous State Space}
 
 When $S$ is continuous storing the values of states, or state action combinations is not possible. However the function $V(s_t)$ that maps states (or $Q(s_t,a_t)$ that maps combinations
-of states and actions) can be approximated with a Function Approximator. We used Multi-Layer Perceptrons as Function Approximators and updated the MLP weights using back-propagation.
+of states and actions) can be approximated with a Function Approximator. We used a Multi-Layer Perceptron as function approximator and updated the MLP weights using back-propagation.
 
 \subsection{Continuous Action Space}
 
