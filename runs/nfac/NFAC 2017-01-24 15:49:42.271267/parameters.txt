@@ -1,0 +1,15 @@
+NFAC parameters
+
+Action MLP:
+Number of hidden layers: 1
+Hidden layer sizes: [20]
+
+Value MLP:
+Number of hidden layers: 1
+Hidden layer sizes: [20]
+
+Discount: 0.2
+Random chance: 0.1
+SD: 1
+Sigma: 10
+Learning rate: 0.01

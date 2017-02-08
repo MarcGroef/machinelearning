@@ -1,0 +1,15 @@
+CACLA parameters
+
+Action MLP:
+Number of hidden layers: 1
+Hidden layer sizes: [10]
+
+Value MLP:
+Number of hidden layers: 1
+Hidden layer sizes: [10]
+
+Discount: 0.999
+Random chance: 0.1
+SD: 1
+Sigma: 10
+Learning rate: 0.001
