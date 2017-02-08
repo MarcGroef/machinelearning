@@ -6,7 +6,16 @@ In Reinforcement Learning problems are modeled as Markov Decision Processes (MDP
 is a four-valued tuple $(S,A,R,T)$, where $S$ is a set of states that together make up the environment that a RL agent is in,
  $A$ is a set of actions the agent can take, $R: S \times A \times S \rightarrow \mathbb{R}$, is a reward function mapping a state the agent is in $s_t$,
  an action by the agent $a_t$ and the resulting new state of the agent $s_{t+1}$ to a reward $R(s_t,a_t,s_{t+1})$
- and $T: S \times A \times S \rightarrow [0,1]$ is a series of transition probabilites of $T()
+ and $T: S \times A \times S \rightarrow [0,1]$ is a series of transition probabilites of $T(s_t,a_t,s_{t+1})$, the probability of the agent
+ ending up in a possible state s_{t+1}, when it executes action a_t in state s_t. The policy of an agent $\pi: S \times A \rightarrow [0,1]$ is the probability
+ the agent choosing action $a_t$ in state $s_t$. The agent learns by storing values for each
+ state $V(s)$ or for each combination of possible states and actions $Q(s,a)$, allowing it to optimize its policy by maximizing its expected total discouned reward
+ (see equation 1, also \cite{zimmer2016neural}).
+
+ $$\pi* = \underset{\pi}{\operatorname{argmax}} = \mathbb{E}\left [ \sum_{t = 0}^{\infty}\gamma^{t} \times R(s_t,\pi(s_t))\right ]$$
 
 
- For Reinforcement Learning purposes the discount factor $\gamma$ is seen as part of the algorithm and not
+The discount factor $\gamma$, which weights the current reward against future reward, is traditionally defined
+as being part of a Markov Decision process. However for Reinforcement Learning purposes the discount factor is seen as part
+of the algorithms and not as part of the MDP, because different algorithms require different discount factors to perform optimally when the model
+$(S,A,R,T)$ is kept exactly the same \cite{van2007reinforcement}.
