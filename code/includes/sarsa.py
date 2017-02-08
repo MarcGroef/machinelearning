@@ -47,7 +47,7 @@ class Sarsa():
         if tarIdx > 0:
           discr[self.nPositionBins * idx + tarIdx - 1] = 0.5
       except IndexError:
-        print "state idx out of bounds..."
+        print "state idx out of bounds... + STATE[IDX] = " + str(state[idx])
     #print discr
     return discr
   
@@ -141,9 +141,12 @@ class Sarsa():
             
             delta = self.mlp.d_network()[2] #third element is action dim of mlp
             a = a + delta
-
-            a = np.minimum(a, self.a_max) #keep in range
-            a = np.maximum(a, self.a_min)
+            if not self.discretizeState:
+               a = np.minimum(a, self.a_max) #keep in range
+               a = np.maximum(a, self.a_min)
+            else:
+               a = np.minimum(a, np.ones(a.size()))
+               a = np.maximum(a, np.ones(a.size()) * -1)
             
             Q = self.getQ(s, a)
 
