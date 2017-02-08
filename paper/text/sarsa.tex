@@ -1,0 +1,13 @@
+%!TEX root = ../authorinstr.tex
+
+\section{SARSA}
+TODO::: INTRODUCE SARSA
+We implemented SARSA for the described environments, using a modification of \cite{https://www.elen.ucl.ac.be/Proceedings/esann/esannpdf/es2014-175.pdf}. In their work Newtons Method (NM) is used to generate continues actions with a high expected Q-value.
+It our work we use a slight variation of this approach. Instead of using NM, which requires first and second order partial-differentials to the input of the MLP, we use gradient-descend to obtain an action with a high expected Q-value. This method only requires first order partial differentials towards the input of the MLP, as shown in equation \eqref{eq:sarsagd}.
+To generate a action, first multiple starting-points are chosen. For each action-dimension four evenly spread values are taken, resulting in $4 ^ D$ starting points, for $D$ dimensions of the actionspace. From these starting points $K$ iterations of gradient descend, as described, are used to obtain actions for our current state, with the highest Q-value, by taking the best action obtained from all starting points.
+
+
+\begin{equation}
+\label{eq:sarsagd}
+a = a + \lambda * \frac{\partial MLP}{\partial a}
+\end{equation}

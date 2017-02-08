@@ -12,7 +12,7 @@ class Sarsa():
 
 
 
-  def __init__(self, a_dim, a_min, a_max, a_delta, state_size, random_chance = 0.1, learningRate = 1, discount = 0.99, discretize_state = True):
+  def __init__(self, a_dim, a_min, a_max, a_delta, state_size, random_chance = 1, learningRate = 0.0005, discount = 0.999, discretize_state = True):
     self.a_max = np.asarray(a_max)
     self.a_min = np.asarray(a_min)
     self.a_delta = np.asarray(a_delta)
@@ -75,7 +75,7 @@ class Sarsa():
     #self.mlp2.fit(np.concatenate([state, action]), targetOut)
     if(self.discretize_state):
        state = self.discretizeState(state)
-    self.mlp.train(np.concatenate([state, action]), targetOut, 0.005, 0)
+    self.mlp.train(np.concatenate([state, action]), targetOut, self.learningRate, 0)
 
   def define_action_space(self, dim, min, max, delta):
     dim_lst = []
@@ -136,6 +136,7 @@ class Sarsa():
         if (Q > Q_best):
            a_best = a
            Q_best = Q 
+        continue
         for _ in range(self.max_iter):
             
             delta = self.mlp.d_network()[2] #third element is action dim of mlp
@@ -157,13 +158,13 @@ class Sarsa():
 
   def update(self, old_state, old_action, new_state, action_performed, 
 	reward, isFinalState = False):
-
+    learningRate = 1
     old_Q = self.getQ(old_state, old_action)
     new_Q = self.getQ(new_state, action_performed)
     if isFinalState:
-       diff = self.learningRate * (reward - old_Q)
+       diff = learningRate * (reward - old_Q)
     else:
-       diff = self.learningRate * (reward + self.discount * new_Q - old_Q)
+       diff = learningRate * (reward + self.discount * new_Q - old_Q)
     
     target = new_Q + diff
     self.updateQ(old_action, old_state, target)
