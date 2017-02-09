@@ -6,3 +6,5 @@
 *.backup
 *.aux
 *.pdf
+*.bbl
+*.blg
