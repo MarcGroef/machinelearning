@@ -1,11 +1,12 @@
 This is BibTeX, Version 0.99d (TeX Live 2013/Debian)
 Capacity: max_strings=35307, hash_size=35307, hash_prime=30011
 The top-level auxiliary file: authorinstr.aux
-The style file: plain.bst
+The style file: unsrt.bst
 Database file #1: mybibfile.bib.bib
 Warning--I didn't find a database entry for ""
 Warning--I didn't find a database entry for "REFERENCE"
 Warning--I didn't find a database entry for "TODO"
+<<<<<<< HEAD
 Name 2 in "J. Baxter and A. Tridgell, and L. Weaver" has a comma at the end for entry baxter1999knightcap
 while executing---line 1049 of file plain.bst
 Warning--to sort, need author or key in openaimountaincar
@@ -55,3 +56,49 @@ while$ -- 25
 width$ -- 12
 write$ -- 109
 (There were 2 error messages)
+=======
+Warning--I didn't find a database entry for "sarsaNMpapaer"
+Warning--I didn't find a database entry for "https://www.elen.ucl.ac.be/Proceedings/esann/esannpdf/es2014-175.pdf"
+You've used 9 entries,
+            1791 wiz_defined-function locations,
+            501 strings with 5107 characters,
+and the built_in function-call counts, 1903 in all, are:
+= -- 184
+> -- 53
+< -- 4
++ -- 22
+- -- 13
+* -- 86
+:= -- 262
+add.period$ -- 30
+call.type$ -- 9
+change.case$ -- 8
+chr.to.int$ -- 0
+cite$ -- 9
+duplicate$ -- 98
+empty$ -- 216
+format.name$ -- 13
+if$ -- 463
+int.to.chr$ -- 0
+int.to.str$ -- 9
+missing$ -- 7
+newline$ -- 48
+num.names$ -- 6
+pop$ -- 52
+preamble$ -- 1
+purify$ -- 0
+quote$ -- 0
+skip$ -- 54
+stack$ -- 0
+substring$ -- 97
+swap$ -- 34
+text.length$ -- 4
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 0
+warning$ -- 0
+while$ -- 14
+width$ -- 10
+write$ -- 97
+(There were 5 warnings)
+>>>>>>> 87830d6fcab0991a617ef18fce35526c4ed71553
