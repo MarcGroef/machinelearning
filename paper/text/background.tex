@@ -4,12 +4,16 @@
 
 \subsection{Reinforcement Learning}
 
+<<<<<<< HEAD
 In Reinforcement Learning problems are modeled as Markov Decision Processes (MDP's). An MDP in the context of Reinforcement Learning
+=======
+In Reinforcement Learning problems are modeled as Markov Decision Processes (MDPs). An MDP in the context of Reinforcement Learning
+>>>>>>> fdfa145d4c2742a66b1881040bf1e9d66b1f4e87
 is a four-valued tuple $(S,A,R,T)$, where $S$ is a set of states that together make up the environment that a RL agent is in,
  $A$ is a set of actions the agent can take, $R: S \times A \times S \rightarrow \mathbb{R}$, is a reward function mapping a state the agent is in $s_t$,
  an action by the agent $a_t$ and the resulting new state of the agent $s_{t+1}$ to a reward $R(s_t,a_t,s_{t+1})$
  and $T: S \times A \times S \rightarrow [0,1]$ is a series of transition probabilites of $T(s_t,a_t,s_{t+1})$, the probability of the agent
- ending up in a possible state $s_{t+1}$, when it executes action $a_t$ in state $s_t$. \\
+ ending up in a possible state $s_{t+1}$ when it executes action $a_t$ in state $s_t$. \\
  The policy of an agent $\pi: S \times A \rightarrow [0,1]$ is the probability the agent choosing action $a_t$ in state $s_t$. The agent learns by storing values for each
  state or for each combination of possible states and actions, allowing it to optimize its policy by maximizing its expected total discouned reward
  (see equation \ref{eq:opt_pol}, also \cite{zimmer2016neural}).
@@ -19,7 +23,7 @@ is a four-valued tuple $(S,A,R,T)$, where $S$ is a set of states that together m
 \pi^* = \operatorname{arg\,max}_{\pi} \mathbb{E}\left [ \sum_{t = 0}^{\infty}\gamma^{t} \times R(s_t,\pi_t(s_t))\right ]
 \end{equation}
 
-In equation \eqref{eq:optpol} $t$ is a time step and $\gamma$ is the discount factor, which weights the value the current reward against the value of potential future rewards.
+In equation \eqref{eq:optpol} $t$ is a time step and $\gamma$ is the discount factor, which weighs the value of the current reward against the value of potential future rewards.
 The discount factor is traditionally defined as being part of a Markov Decision process, but for Reinforcement Learning purposes the discount factor is seen as part
 of the algorithms and not as part of the MDP, because different algorithms require different discount factors to perform optimally when the model
 $(S,A,R,T)$ is kept the same \cite{van2007reinforcement}. In the RL setting of this paper the agent must learn the optimal policy model-free, meaning $R$ and $T$ are not known.
@@ -32,12 +36,9 @@ Q(s_t,a_t) = Q(s_t,a_t) + \alpha*(r_t + \gamma Q(s_{t+1},a_{t+1}) - Q(s_t, a_t))
 
 \subsection{Continuous State Space}
 
-When $S$ is continuous storing the values of states, or state action combinations is not possible. However the function $V(s_t)$ that maps states (or $Q(s_t,a_t)$ that maps combinations
-of states and actions) can be approximated with a Function Approximator. We used a Multi-Layer Perceptron as function approximator and updated the MLP weights using back-propagation.
+When the state space $S$ is continuous, storing the values of states or state action combinations is not possible. However the function $V(s_t)$ that maps states (or $Q(s_t,a_t)$ that maps combinations of states and actions) can be approximated with a Function Approximator. A Multi-Layer Perceptron was used as function approximator and updated the MLP weights using back-propagation.
 
 \subsection{Continuous Action Space}
 
-When $A$ is continuous as well, naively applying the argmax operator for action selection is no longer possible. One solution to this to use an MLP as a Function Approximator for action selection as well as
-for determining the value. Another solution is to use a discretized action space as a starting point to find a number of local maxima in the action space, for example by iteratively applying gradient descent on the
-starting discrete actions, and to finally take the argmax of the local maxima.
+When the action space $A$ is continuous as well, naively applying the argmax operator for action selection is no longer possible. One solution to this is to use an MLP as a Function Approximator for action selection as well as for determining the value. Another solution is to use a discretized action space as a starting point to find a number of local maxima in the action space, for example by iteratively applying gradient descent on the starting discrete actions, and to finally take the argmax of the local maxima.
 
