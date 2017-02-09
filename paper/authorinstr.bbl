@@ -1,17 +1,17 @@
 \begin{thebibliography}{10}
 
 \bibitem{openailunarlander}
-{OpenAI Gym} lunarlander environment.
+{OpenAI Gym} {LunarLander} environment.
 \newblock \url{https://gym.openai.com/envs/LunarLanderContinuous-v2}.
 \newblock Accessed: 02-06-2017.
 
 \bibitem{openaigym}
-{OpenAI Gym} main webpage.
+{OpenAI Gym} {Main Webpage}.
 \newblock \url{https://gym.openai.com/}.
 \newblock Accessed: 02-06-2017.
 
 \bibitem{openaimountaincar}
-{OpenAI Gym} mountaincar environment.
+{OpenAI Gym} {MountainCar} environment.
 \newblock \url{https://gym.openai.com/envs/MountainCarContinuous-v0}.
 \newblock Accessed: 02-06-2017.
 
@@ -35,13 +35,12 @@ N.~Kohl and P.~Stone.
 \newblock In {\em Robotics and Automation, 2004. Proceedings. ICRA'04. 2004
   IEEE International Conference on}, volume~3, pages 2619--2624. IEEE, 2004.
 
-\bibitem{nichols2014application}
-B.D. Nichols and D.C. Dracopoulos.
-\newblock Application of newton's method to action selection in continuous
-  state-and action-space reinforcement learning.
-\newblock In {\em Proceedings of the European Symposium on Artificial Neural
-  Networks, Computational Intelligence and Machine Learning (ESANN 2014)}.
-  ESANN, 2014.
+\bibitem{nichols2015continuous}
+Barry~D Nichols.
+\newblock Continuous action-space reinforcement learning methods applied to the
+  minimum-time swing-up of the acrobot.
+\newblock In {\em Systems, Man, and Cybernetics (SMC), 2015 IEEE International
+  Conference on}, pages 2084--2089. IEEE, 2015.
 
 \bibitem{sutton1998reinforcement}
 R.~Sutton and A.G. Barto.

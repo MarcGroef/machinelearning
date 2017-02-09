@@ -19,7 +19,7 @@ is a four-valued tuple $(S,A,R,T)$, where $S$ is a set of states that together m
 \pi^* = \operatorname{arg\,max}_{\pi} \mathbb{E}\left [ \sum_{t = 0}^{\infty}\gamma^{t} \times R(s_t,\pi_t(s_t))\right ]
 \end{equation}
 
-In equation \ref{eq:opt_pol} $t$ is a time step and $\gamma$ is the discount factor, which weights the value the current reward against the value of potential future rewards.
+In equation \eqref{eq:optpol} $t$ is a time step and $\gamma$ is the discount factor, which weights the value the current reward against the value of potential future rewards.
 The discount factor is traditionally defined as being part of a Markov Decision process, but for Reinforcement Learning purposes the discount factor is seen as part
 of the algorithms and not as part of the MDP, because different algorithms require different discount factors to perform optimally when the model
 $(S,A,R,T)$ is kept the same \cite{van2007reinforcement}. In the RL setting of this paper the agent must learn the optimal policy model-free, meaning $R$ and $T$ are not known.
@@ -27,7 +27,7 @@ State values or Q-values (values of a certain action in a certain state) are upd
 
 \begin{equation}
 \label{eq:upd_q}
-Q_t+1(s_t,a_t) = Q_t(s_t,a_t) + \alpha_t*(r_t + \gamma Q_t(s_t+1,a_t+1) - Q_t(s_t, a_t))
+Q(s_t,a_t) = Q(s_t,a_t) + \alpha*(r_t + \gamma Q(s_{t+1},a_{t+1}) - Q(s_t, a_t))
 \end{equation}
 
 \subsection{Continuous State Space}

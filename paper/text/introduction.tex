@@ -6,14 +6,14 @@ Designing an optimal controller for a given environment and goal can be a comple
 real life quadripedal walking \cite{kohl2004policy}, or autonomous simulated driving \cite{}. \\  %%ADD ALPHAGO
 
 
-In initial stages the agent performs random action, while learning to approximate received reward after the chosen actions. This should enable the agent to learn an optimal policy for the defined reward function. For this learning process multiple techniques exist. In our work we will compare the performance of a recently published techniques, Neural Fitted Actor Critic (NFAC), with two older techniques, in two environments.
+In initial stages the agent performs random action, while learning to approximate received reward after the chosen actions. This should enable the agent to learn an optimal policy for the defined reward function. For this learning process multiple techniques exist. In our work we will compare the performance of a recently published techniques, Neural Fitted Actor Critic (NFAC), with two older techniques, SARSA and CACLA, in two environments.
 
 Recently new environment have arisen for agents to engage in, such as OpenAI \cite{REFERENCE}. Here multiple environments are presented, such as playing Atari games and more classic problems as MountainCar and CartPole. In our work we chose to use continueos variants of MountainCar and LunarLander, see figure \ref{fig:mountainlunar}, where both the action and state spaces are continues. 
 Discrete state spaces are known to work well with RL-techniques, although continueus state-spaces present themselves often more of a challenge \cite{TODO}. \\
 
 %\subsection*{SARSA}
-In \cite{sarsaNMpapaer}, AUTHORS describe an approach of using SARSA, together with a technique based on Newtons Method (NM) to obtain continueos action selection. 
-In our work we will use SARSA in a similar way. Instead of using NM for continuous action selection, we well use Gradient Descend (GD) to obtain action resulting in a higher expected Q-value.
+In \cite{nichols2015continuous}, Nichols e.a. describe an approach of using SARSA, together with a technique based on Newtons Method (NM) to obtain continueos action selection. 
+In our work we will use SARSA in a similar way. Instead of using NM for continuous action selection, we will use Gradient Descend (GD) to obtain actions resulting in a higher expected Q-value.
 
 %\subsection*{CALCA}
 %%TODO shortly describe prev work CACLA
