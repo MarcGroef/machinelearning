@@ -8,48 +8,45 @@ Warning--I didn't find a database entry for "REFERENCE"
 Warning--I didn't find a database entry for "TODO"
 Warning--I didn't find a database entry for "sarsaNMpapaer"
 Warning--I didn't find a database entry for "https://www.elen.ucl.ac.be/Proceedings/esann/esannpdf/es2014-175.pdf"
-Warning--I didn't find a database entry for "openaimountaincar"
-Warning--I didn't find a database entry for "openailunarlander"
-Warning--I didn't find a database entry for "openaigym"
-You've used 6 entries,
+You've used 9 entries,
             1791 wiz_defined-function locations,
-            494 strings with 4839 characters,
-and the built_in function-call counts, 1576 in all, are:
-= -- 154
-> -- 50
+            501 strings with 5107 characters,
+and the built_in function-call counts, 1903 in all, are:
+= -- 184
+> -- 53
 < -- 4
-+ -- 19
++ -- 22
 - -- 13
 * -- 86
-:= -- 229
-add.period$ -- 21
-call.type$ -- 6
-change.case$ -- 5
+:= -- 262
+add.period$ -- 30
+call.type$ -- 9
+change.case$ -- 8
 chr.to.int$ -- 0
-cite$ -- 6
-duplicate$ -- 83
-empty$ -- 162
+cite$ -- 9
+duplicate$ -- 98
+empty$ -- 216
 format.name$ -- 13
-if$ -- 376
+if$ -- 463
 int.to.chr$ -- 0
-int.to.str$ -- 6
+int.to.str$ -- 9
 missing$ -- 7
-newline$ -- 33
+newline$ -- 48
 num.names$ -- 6
-pop$ -- 28
+pop$ -- 52
 preamble$ -- 1
 purify$ -- 0
 quote$ -- 0
-skip$ -- 45
+skip$ -- 54
 stack$ -- 0
 substring$ -- 97
-swap$ -- 31
+swap$ -- 34
 text.length$ -- 4
 text.prefix$ -- 0
 top$ -- 0
 type$ -- 0
 warning$ -- 0
 while$ -- 14
-width$ -- 7
-write$ -- 70
-(There were 8 warnings)
+width$ -- 10
+write$ -- 97
+(There were 5 warnings)
