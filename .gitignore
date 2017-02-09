@@ -3,3 +3,6 @@
 *.log
 *.pkl
 *.png
+*.backup
+*.aux
+*.pdf
