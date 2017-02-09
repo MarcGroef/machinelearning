@@ -4,7 +4,7 @@
 
 \subsection{Reinforcement Learning}
 
-In Reinforcement Learning problems are modeled as Markov Decision Processes (MDP). An MDP in the context of RL
+In RL problems are modeled as Markov Decision Processes (MDP). An MDP in the context of RL
 is a four-valued tuple $(S,A,R,T)$, where $S$ is a set of states that together make up the environment that a RL agent can be in,
  $A$ is a set of actions the agent can take, $R: S \times A \times S \rightarrow \mathbb{R}$, is a reward function mapping a state the agent is in $s_t$,
  an action by the agent $a_t$ and the resulting new state of the agent $s_{t+1}$ to a reward $R(s_t,a_t,s_{t+1})$
@@ -23,7 +23,7 @@ In equation \eqref{eq:opt_pol} $t$ is a time step and $\gamma$ is the discount f
 The discount factor is traditionally defined as being part of a Markov Decision process, but for RL purposes the discount factor is seen as part
 of the algorithms and not as part of the MDP, because different algorithms require different discount factors to perform optimally when the model
 $(S,A,R,T)$ is kept the same \cite{van2007reinforcement}. In the RL setting of this paper the agent must learn the optimal policy model-free, meaning $R$ and $T$ are not known.
-State values or Q-values (values of a certain action in a certain state) are updated, for example on each time step, see the function in equation \ref{eq:upd_q}, where $\alpha$ is the learning rate.
+State values or Q-values are updated, for example on each time step. Q-values give an indication how good a certain action in an arbitrary state, where State values indicate how good it is to be in that state. The Q-update rule is listed in equation \ref{eq:upd_q}, where $\alpha$ is the learning rate.
 
 \begin{equation}
 \label{eq:upd_q}
