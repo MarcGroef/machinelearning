@@ -6,14 +6,12 @@ Designing an optimal controller for a given environment and goal can be a comple
 real life quadripedal walking \cite{kohl2004policy}, or autonomous simulated driving \cite{}. \\  %%ADD ALPHAGO
 
 
-In initial stages the agent performs random action, while learning to approximate received reward after the chosen actions. This should enable the agent to learn an optimal policy for the defined reward function. For this learning process multiple techniques exist. In our work we will compare the performance of a recently published techniques, Neural Fitted Actor Critic (NFAC), with two older techniques, SARSA and CACLA, in two environments.
+In initial stages the agent performs random actions while learning to approximate received reward after the chosen actions. This should enable the agent to learn an optimal policy for the defined reward function. For this learning process multiple techniques exist. In this paper, the performance of a recently published technique, Neural Fitted Actor Critic (NFAC), will be compared to two well-established RL techniques: SARSA and CACLA.   
 
-Recently new environment have arisen for agents to engage in, such as OpenAI \cite{REFERENCE}. Here multiple environments are presented, such as playing Atari games and more classic problems as MountainCar and CartPole. In our work we chose to use continueos variants of MountainCar and LunarLander, see figure \ref{fig:mountainlunar}, where both the action and state spaces are continues. 
-Discrete state spaces are known to work well with RL-techniques, although continueus state-spaces present themselves often more of a challenge \cite{TODO}. \\
+Recently new environments have arisen for agents to engage in, such as OpenAI \cite{openaigym}. Here multiple environments are presented, such as playing Atari games and more classic problems such as MountainCar and CartPole. For this paper, the continuous variants of the LunarLander and MountainCar environments, where both the action space and state space are continuous, were chosen(see figure \ref{fig:mountainlunar}). Discrete state spaces are known to work well with RL techniques, although continuous state spaces often present more of a challenge \cite{TODO}. \\
 
 %\subsection*{SARSA}
-In \cite{nichols2015continuous}, Nichols e.a. describe an approach of using SARSA, together with a technique based on Newtons Method (NM) to obtain continueos action selection. 
-In our work we will use SARSA in a similar way. Instead of using NM for continuous action selection, we will use Gradient Descend (GD) to obtain actions resulting in a higher expected Q-value.
+In \cite{nichols2015continuous}, Nichols et al. describe an approach of using SARSA together with a technique based on Newtons Method (NM) to obtain continuous action selection. For our benchmarking task, SARSA will be used in a similar way. Instead of using NM for continuous action selection, we will use Gradient Descent (GD) to obtain actions resulting in a higher expected Q-value.
 
 %\subsection*{CALCA}
 %%TODO shortly describe prev work CACLA
@@ -32,10 +30,7 @@ In our work we will use SARSA in a similar way. Instead of using NM for continuo
 %against two established (at the time of the writing of this paper) continuous reinforcement learning algorithms, named CACLA (Continuous Actor Critic Learning Automaton)
 %\cite{van2007reinforcement}
 %and SARSA (State Action Reward State Action) adapted for continuous state- and action-spaces \cite{nichols2014application} with gradient descent (referred to in this paper as GD-SARSA). \\
-First a formal background will be given on connectionist reinforcement learning with the use of MLP's as function approximators,
-and on extending this to continuous state- and action-spaces. In the methods section the three algorithms that are compared
- in this paper the implementation of these algorithms are explained in detail. After that setup of the experiments will be discussed.
-Finally the results will be presented and evaluated, and the final conclusions will be drawn regarding NFAC compared to CACLA and GD-SARSA.
+First a formal background will be given on connectionist Reinforcement Learning with the use of Multi-Layer Perceptrons (MLP) as function approximators, and on extending this to continuous state and action spaces. In the methods section the implementation of the three algorithms that are compared in this paper are explained in detail. After that, setup of the experiments will be discussed. Finally the results will be presented and evaluated, and the final conclusions will be drawn regarding NFAC performance compared to CACLA and GD-SARSA.
 
 \begin{figure}[t]
  \centering 
