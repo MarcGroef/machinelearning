@@ -18,7 +18,7 @@ class MLP():
      self.updateBiasHidden = []
      self.hiddenInput = []
      self.outputSize = outputSize 
-     self.weightSize =  0.2
+     self.weightSize =  1
      for layer in range(nLayers):
          if layer == 0:
            self.hiddenWeights.append((np.random.rand(nInputNodes, hiddenSizes[layer]) - 0.5) * self.weightSize)

@@ -12,8 +12,8 @@ dir_name = 'SARSA ' + ('%s' % datetime.now())
 dir_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), '../runs/sarsa/' + dir_name)
 os.makedirs(dir_path)
 
-#env = gym.make('MountainCarContinuous-v0')
-env = gym.make('LunarLanderContinuous-v2')
+env = gym.make('MountainCarContinuous-v0')
+#env = gym.make('LunarLanderContinuous-v2')
 stateSize = env.reset().size
 actionSize = env.action_space.sample().size
 
@@ -67,6 +67,9 @@ def sarsa_test(render = False):
   nGameIterations = 10000
   nEpochs = 2000
   epochFailed = True
+  final100Correct = 0
+  final100Total = 0
+  
   for epoch in range(nEpochs):
 
     # periodically log mlp weights to file
@@ -109,7 +112,9 @@ def sarsa_test(render = False):
   
       if finished:
         if reward > 0:
-          print "***********************SUCCESS************************"
+          pass#print "***********************SUCCESS************************"
+          if(epoch >= nEpochs - 100):
+            final100Correct += 1
         sarsa.update(state, action[0], new_state, new_action[0], reward, True)
         break
       else:
@@ -119,16 +124,19 @@ def sarsa_test(render = False):
       state = new_state
       action = new_action
       #### end iter loop
-    print "rewards @ epoch " + str(epoch ) + ": " + str(tot_reward)
+    #print "rewards @ epoch " + str(epoch ) + ": " + str(tot_reward)
+    if(epoch >= nEpochs - 100):
+      final100Total += tot_reward
     epochs.append(epoch)
     rewards.append(tot_reward)
-    plt.scatter(epochs, rewards)
-    plt.show()
-    plt.pause(1)
+    #plt.scatter(epochs, rewards)
+    #plt.show()
+    #plt.pause(1)
 
     # update rewards log
     rewardsf = open(rewards_file, 'a')
     rewardsf.write(str(epoch) + ' ' + str(tot_reward) + '\n')
+    
     rewardsf.close()
 
     # update rewards lists
@@ -136,8 +144,15 @@ def sarsa_test(render = False):
     yl.append(tot_reward)
 
   # make and store total rewards plot
+  rewardsf = open(rewards_file, 'a')
+  rewardsf.write("nFinishedLast100Epochs:" + ' ' + str(final100Correct) + '\n')
+  print "nFinishedLast100Epochs:" + ' ' + str(final100Correct) + '\n'
+  print "AverageLast100Epochs:" + ' ' + str(final100Total / 100) + '\n'
+  rewardsf.close()
+  
   plt.plot(xl, yl)
   plt.savefig(os.path.join(dir_path, 'total_reward.png'))
 
 if __name__ == "__main__":
-  sarsa_test()
+  for idx in range(2):
+    sarsa_test()
