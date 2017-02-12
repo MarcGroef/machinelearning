@@ -1,6 +1,11 @@
 %!TEX root = ../authorinstr.tex
 
 \section{Application}
+
+In this section, the domains used to test the different algorithms will be described. GD-SARSA, CACLA and NFAC are compared in two continuous environments: MountainCar\cite{openaimountaincar} and LunarLander\cite{openailunarlander}. Both environments are OpenAI Gym environments\cite{openaigym}, which is a toolkit for comparing reinforcement learning algorithms.  Agent performance is measured by looking at the average reward over the best 100 epochs and the amount of epchos where the agent reached its goal, within the last 100 epochs. The reward function is given by the OpenAI environment and shown in more detail in their respective subsections. Each simulation run consisted of 2000 epochs, each of which had a maximum of 10000 time steps.
+
+
+
 \subsection{MountainCar}
 In the MountainCar environment a car is situated in between two mountains. Its goal is to reach the top of the rightmost mountain. In order to do this, it first has to drive up the left mountain in order to generate enough momentum to reach the top of the rightmost mountain. 
 
