@@ -2,22 +2,13 @@
 
 \section{Experimental setup}
 
-In this section, the experimental setup used to test the different algorithms will be described. GD-SARSA, CACLA and NFAC are compared in two continuous environments: MountainCar\cite{openaimountaincar} and LunarLander\cite{openailunarlander}. Both environments are OpenAI Gym environments\cite{openaigym}, which is a toolkit for comparing reinforcement learning algorithms.  Agent performance is measured by looking at the average reward over the best 100 epochs and the amount of epchos where the agent reached its goal, within the last 100 epochs. The reward function is given by the OpenAI environment and shown in more detail in their respective subsections. Each simulation run consisted of 2000 epochs, each of which had a maximum of 10000 time steps.
 
-
-
-
-
-
-
-
-\subsection{Parameters}
-In the following sections, the used parameters are described as used in the experiments. We ran each setting twice. The settings where the gaol was reached at least 1 time withing the last 100 epochs where run 5 times for significance. For each algorithm in each environment the best setting was chosen and is shown in table \ref{tab:mntparam} and table \ref{tab:lunarparam} for MountainCar and LunarLander respectively. The scores obtained with these settings were used for comparrison of the algorithms. 
-\subsubsection{GD-SARSA}
+In this section, the used parameters are described as used in the experiments. We ran each setting twice. The settings where the gaol was reached at least 1 time withing the last 100 epochs where run 5 times for significance. For each algorithm in each environment the best setting was chosen and is shown in table \ref{tab:mntparam} and table \ref{tab:lunarparam} for MountainCar and LunarLander respectively. The scores obtained with these settings were used for comparrison of the algorithms. 
+\subsection{GD-SARSA}
 GD-SARSA used $\epsilon$-greedy exploration, which was first set to 1.0, resulting initially in a fully pseudo-random behaviour. This exploration rate decayed over epochs, and is equal to $0.99^{N-1}$, where N is the current epoch. Since the experiments run for 2000 epochs, this means that the final exploration rate is $1.86*10^{-9}$. For each action selection, 10 iterations of gradient descend are used to obtain a better action. The explored learningrates are 0.05, 0.01, 0.001. For the discount parameter, the following values were used: 0.999, 0.99, 0.9, 0.8. These parameters where tested with an MLP with 20 and 50 hidden units.
-\subsubsection{CACLA}
+\subsection{CACLA}
 %TODO: note constant parameters, and params swept over
-\subsubsection{NFAC}
+\subsection{NFAC}
 %TODO: note constant parameters, and params swept over
 
 %Should be divided to CACLA and NFAC.
