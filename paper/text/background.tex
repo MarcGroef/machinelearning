@@ -11,7 +11,7 @@ is a four-valued tuple $(S,A,R,T)$, where $S$ is a set of states that together m
  and $T: S \times A \times S \rightarrow [0,1]$ is a series of transition probabilites of $T(s_t,a_t,s_{t+1})$, the probability of the agent
  ending up in a possible state $s_{t+1}$ when it executes action $a_t$ in state $s_t$. \\
  The policy of an agent $\pi: S \times A \rightarrow [0,1]$ is the probability the agent choosing action $a_t$ in state $s_t$. The agent learns by storing values for each
- state or for each combination of possible states and actions, allowing it to optimize its policy by maximizing its expected total discouned reward
+ state or for each combination of possible states and actions, allowing it to optimize its policy by maximizing its expected total discounted reward
  (see equation \ref{eq:opt_pol}, also \cite{zimmer2016neural}).
 
 \begin{equation}
