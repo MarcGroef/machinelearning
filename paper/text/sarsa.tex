@@ -1,8 +1,8 @@
 %!TEX root = ../authorinstr.tex
 
 \subsection{GD-SARSA}
-SARSA is a variant of Q-learning where the approximation function is updated online. In this work an MLP is used to approximate the Q-function. Each iteration the MLP is updated with the difference obtained in equation \eqref{eq:upd_q} using Gradient Descend. The learning rate here is set to one. The MLP update has its own learning rate within the gradient descend updates. Only this learning rate is varied during the experiments. \\
-\newline
+SARSA is a variant of Q-learning where the approximation function is updated online. In this work an MLP is used to approximate the Q-function. Each iteration the MLP is updated with the difference obtained in equation \eqref{eq:upd_q} using Gradient Descend. The learning rate here is set to one. The MLP update has its own learning rate within the gradient descend updates. Only this learning rate is varied during the experiments. 
+
 In this work SARSA is implemented using a modification of \cite{nichols2015continuous}. In their work Newtons Method (NM) is used to generate continues actions with a high expected Q-value.
 It this work a slight variation of this approach is used. Instead of using NM, which requires first and second order partial-differentials to the input of the MLP, Gradient Descend is implemented to obtain an action with a high expected Q-value. This method only requires first order partial differentials towards the input of the MLP, as shown in equation \eqref{eq:sarsagd}.
 To generate an action, first multiple starting-points are chosen. For each action-dimension four evenly spread values are taken, resulting in $4 ^ D$ starting points for $D$ dimensions of the action space. From these starting points $K$ iterations of Gradient Descend, as described, are used to obtain actions for our current state, with the highest Q-value, by taking the best action obtained from all starting points.

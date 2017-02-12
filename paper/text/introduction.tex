@@ -3,7 +3,7 @@
 \section{Introduction}
 
 Designing an optimal controller for a given environment and goal can be a complex task. Reinforcement Learning (RL) techniques exist to address these tasks by learning a policy that results in choosing optimal actions in a given state. This way agents are able to learn complex behaviour, such as playing backgammon \cite{tesauro2002programming} or chess \cite{baxter1999knightcap},
-real life quadripedal walking \cite{kohl2004policy}, or playing the ancient game Go \cite{alphago}. \\  
+real life quadripedal walking \cite{kohl2004policy}, or playing the ancient game Go \cite{alphago}.   
 
 In initial stages the agent performs random actions while learning to approximate received reward after the chosen actions. This should enable the agent to learn an optimal policy for the defined reward function. For this learning process multiple techniques exist. The performance of a recently published technique, Neural Fitted Actor Critic (NFAC), will be compared to two well-established RL techniques: State Action Reward State Action (SARSA) and Continuous Actor Critic Learning Automaton (CACLA). All these techniques will be using a Multilayer Perceptron (MLP) as a function approximator. Previous research \cite{zimmer2016neural} indicates that for two different continuous state space environments NFAC learns a better quality policy than CACLA, which is state-of-the-art at the time of writing. Previous research \cite{nichols2015continuous} has also shown that that SARSA for continuous state spaces has achieved comparable performance to CACLA. Therefore we expect NFAC to outperform both CACLA and SARSA in terms of policy quality in continuous environments.
 

@@ -3,12 +3,17 @@
 \section{Experimental setup}
 
 
-In this section, the used parameters are described as used in the experiments. We ran each setting twice. The settings where the gaol was reached at least 1 time withing the last 100 epochs where run 5 times for significance. For each algorithm in each environment the best setting was chosen and is shown in table \ref{tab:mntparam} and table \ref{tab:lunarparam} for MountainCar and LunarLander respectively. The scores obtained with these settings were used for comparrison of the algorithms. 
+In this section, the used parameters are described as used in the experiments. We ran each setting twice. The settings where the goal was reached at least 1 time withing the last 100 epochs where run 5 times for significance. For each algorithm in each environment the best setting was chosen and is shown in table \ref{tab:mntparam} and table \ref{tab:lunarparam} for MountainCar and LunarLander respectively. The scores obtained with these settings were used for comparrison of the algorithms. 
+
+For all three algorithms, the explored learningrates were 0.05, 0.01, 0.001. For the discount parameter, the following values were used: 0.999, 0.99, 0.9, 0.8 0.6 0.4 0.2. The number of nodes used in the MLP(s) used were 20, 50.
+
 \subsection{GD-SARSA}
-GD-SARSA used $\epsilon$-greedy exploration, which was first set to 1.0, resulting initially in a fully pseudo-random behaviour. This exploration rate decayed over epochs, and is equal to $0.99^{N-1}$, where N is the current epoch. Since the experiments run for 2000 epochs, this means that the final exploration rate is $1.86*10^{-9}$. For each action selection, 10 iterations of gradient descend are used to obtain a better action. The explored learningrates are 0.05, 0.01, 0.001. For the discount parameter, the following values were used: 0.999, 0.99, 0.9, 0.8. These parameters where tested with an MLP with 20 and 50 hidden units.
+GD-SARSA used $\epsilon$-greedy exploration, which was first set to 1.0, resulting initially in a fully pseudo-random behaviour. This exploration rate decayed over epochs, and is equal to $0.99^{N-1}$, where N is the current epoch. Since the experiments run for 2000 epochs, this means that the final exploration rate is $1.86*10^{-9}$. For each action selection, 10 iterations of gradient descend are used to obtain a better action. 
 \subsection{CACLA}
+CACLA used Gaussian exploration, where a random value sampled from a gaussian distribution($\mu=0$ $\sigma=1$) was multiplied by a value $\Sigma=10$. This value was added to the output of the MLP and finally clamped to be in the range [$-1$,$1$]. This $\Sigma$ decayed over epochs and is equal to  $10 * 0.99^{N-1}$, where N is the current epoch. Since the experiments run for 2000 epochs, this means that the final exploration rate is $1.86*10^{-8}$. Since initially the exploration rate is very high, this ensures that the agent will quickly reach its goal. 
 %TODO: note constant parameters, and params swept over
 \subsection{NFAC}
+NFAC used an identical exploration method to CACLA.
 %TODO: note constant parameters, and params swept over
 
 %Should be divided to CACLA and NFAC.
