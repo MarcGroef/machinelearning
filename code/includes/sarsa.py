@@ -12,7 +12,7 @@ class Sarsa():
 
 
 
-  def __init__(self, a_dim, a_min, a_max, a_delta, state_size, random_chance = 1, learningRate = 0.01, discount = 0.99, discretize_state = False):
+  def __init__(self, a_dim, a_min, a_max, a_delta, state_size, random_chance = 1, learningRate = 0.01, discount = 0.8, discretize_state = False):
     self.a_max = np.asarray(a_max)
     self.a_min = np.asarray(a_min)
     self.a_delta = np.asarray(a_delta)
@@ -25,7 +25,7 @@ class Sarsa():
     if(discretize_state):
       self.mlp = MLP(self.nPositionBins * self.state_size + self.action_size,1, [200, 20, 20,20,20], 1)
     else:
-      self.mlp = MLP(self.action_size + self.state_size,1, [20, 10, 100,100,20], 1)
+      self.mlp = MLP(self.action_size + self.state_size,1, [50, 10, 100,100,20], 1)
     self.max_iter = 10
     self.learningRate = learningRate
     self.discount = discount

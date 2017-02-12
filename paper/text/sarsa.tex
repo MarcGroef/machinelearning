@@ -1,6 +1,6 @@
 %!TEX root = ../authorinstr.tex
 
-\section{GD-SARSA}
+\subsection{GD-SARSA}
 SARSA is a variant of Q-learning where the approximation function is updated online. In this work a Multilayer Perceptron (MLP) to approximate the Q-function is used. Each iteration the MLP is updated with the difference obtained in equation \eqref{eq:upd_q} using gradient descend. The learning rate here is set to one. The MLP update has its own learning rate within the gradient descend updates. Only this learning rate is varied during the experiments. \\
 \newline
 In this work SARSA is implemented using a modification of \cite{nichols2015continuous}. In their work Newtons Method (NM) is used to generate continues actions with a high expected Q-value.
