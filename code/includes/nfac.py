@@ -22,7 +22,7 @@ class NFAC():
     #choose a high sigma to be able to reach goal, 
     #due to mlp initialization it can be impossible otherwise
     self.sigma = 10
-    self.learning_rate = 0.01
+    self.learning_rate = 0.05
 
   #Draw a value from a univariate normal dist
   def getExplorationAction(self, state):

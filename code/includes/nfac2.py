@@ -14,15 +14,15 @@ class NFAC2():
     self.a_min = a_min
     self.action_size = a_dim
     self.state_size = state_size
-    self.action_mlp = MLP(self.state_size, 1, [20], self.action_size)
+    self.action_mlp = MLP(self.state_size, 1, [40], self.action_size)
     self.value_mlp = MLP(self.state_size, 1, [20], 1)
     self.discount = discount
     self.random_chance = random_chance
     self.sd = 1
     #choose a high sigma to be able to reach goal, 
     #due to mlp initialization it can be impossible otherwise
-    self.sigma = 10
-    self.learning_rate = 0.05
+    self.sigma = 100
+    self.learning_rate = 0.01
 
   #Draw a value from a univariate normal dist
   def getExplorationAction(self, state):
