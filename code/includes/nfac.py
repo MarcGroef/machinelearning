@@ -9,20 +9,22 @@ class NFAC():
 
   D = []
 
-  def __init__(self, a_dim, a_min, a_max, state_size, random_chance = 0.1, discount = 0.99):
+  def __init__(self, a_dim, a_min, a_max, state_size, a_hu, v_hu, lr, sig, sig_k = 0.99, sig_min = 0, random_chance = 0.1, discount = 0.99):
     self.a_max = a_max
     self.a_min = a_min
     self.action_size = a_dim
     self.state_size = state_size
-    self.action_mlp = MLP(self.state_size, 1, [100], self.action_size)
-    self.value_mlp = MLP(self.state_size, 1, [50], 1)
+    self.action_mlp = MLP(self.state_size, 1, [a_hu], self.action_size)
+    self.value_mlp = MLP(self.state_size, 1, [v_hu], 1)
     self.discount = discount
     self.random_chance = random_chance
     self.sd = 1
     #choose a high sigma to be able to reach goal, 
     #due to mlp initialization it can be impossible otherwise
-    self.sigma = 10
-    self.learning_rate = 0.05
+    self.sigma = sig
+    self.learning_rate = lr
+    self.sig_k = sig_k
+    self.sig_min = sig_min
 
   #Draw a value from a univariate normal dist
   def getExplorationAction(self, state):
@@ -86,7 +88,7 @@ class NFAC():
     return action
 
   def adjustSigma(self):
-    self.sigma = self.sigma * 0.99
+    self.sigma = max(self.sigma * self.sig_k, self.sig_min)
 
   def epsilonStrategy(self, s):
     if (random.random() < self.random_chance):
