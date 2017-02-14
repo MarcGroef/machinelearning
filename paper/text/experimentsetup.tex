@@ -5,7 +5,7 @@
 
 In this section, the used parameters are described as used in the experiments. We ran each setting twice. The settings where the goal was reached at least 1 time withing the last 100 epochs where run 5 times for significance. For each algorithm in each environment the best setting was chosen and is shown in table \ref{tab:mntparam} and table \ref{tab:lunarparam} for MountainCar and LunarLander respectively. The scores obtained with these settings were used for comparison of the algorithms. 
 
-For all three algorithms, the explored learningrates were 0.05, 0.01, 0.001. For the discount parameter, the following values were used: 0.999, 0.99, 0.9, 0.8 0.6 0.4 0.2. The number of nodes used in the MLP(s) used were 20, 50.
+For all three algorithms, the explored learningrates were 0.05, 0.01, 0.001. For the discount parameter, the following values were used: 0.999, 0.99, 0.9, 0.8, 0.4, 0.2. The number of nodes used in the MLP(s) used were 20, 50, 200.
 
 \subsection{GD-SARSA}
 GD-SARSA used $\epsilon$-greedy exploration, which was first set to 1.0, resulting initially in a fully pseudo-random behaviour. This exploration rate decayed over epochs, and is equal to $0.99^{N-1}$, where N is the current epoch. Since the experiments run for 2000 epochs, this means that the final exploration rate is $1.86*10^{-9}$. For each action selection, 10 iterations of gradient descend are used to obtain a better action. 
@@ -25,7 +25,7 @@ NFAC used an identical exploration method to CACLA.
 \begin{tabular}{r|llll}
                      & learning rate & discount factor & number of hidden nodes \\\hline
 GD-SARSA & 0.001          & 0.999               & 50         \\
-CACLA & A          & B               & actor: F, critic: G         \\
+CACLA & 0.01          & 0.999               & actor: 200, critic: 200         \\
 NFAC    & X          & Y              & actor: H, critic: I        
 \end{tabular}
 \caption{MountainCar network parameters per algorithm}
@@ -37,7 +37,7 @@ NFAC    & X          & Y              & actor: H, critic: I
 \begin{tabular}{r|llll}
                      & learning rate & discount factor & number of hidden nodes \\\hline
 GD-SARSA & 0.001          & 0.999               & 50         \\
-CACLA & A          & B               & actor: F, critic: G         \\
+CACLA & 0.01          & 0.8               & actor: 50, critic: 50         \\
 NFAC    & X          & Y              & actor: H, critic: I        
 \end{tabular}
 \caption{LunarLander network parameters per algorithm}
