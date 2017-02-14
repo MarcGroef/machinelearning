@@ -12,7 +12,7 @@ class Sarsa():
 
 
 
-  def __init__(self, a_dim, a_min, a_max, a_delta, state_size, random_chance = 1, learningRate = 0.01, discount = 0.8, discretize_state = False):
+  def __init__(self, a_dim, a_min, a_max, a_delta, state_size, random_chance = 1, learningRate = 0.001, discount = 0.999, discretize_state = False):
     self.a_max = np.asarray(a_max)
     self.a_min = np.asarray(a_min)
     self.a_delta = np.asarray(a_delta)
