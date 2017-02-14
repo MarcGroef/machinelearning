@@ -1,5 +1,5 @@
 import numpy as np
-from MLP2 import MLP
+from MLP3 import MLP
 import random
 
 class Cacla():
@@ -7,20 +7,21 @@ class Cacla():
   a_min = None
   a_delta = None
 
-  def __init__(self, a_dim, a_min, a_max, state_size, random_chance = 0.1, discount = 0.99):
+  def __init__(self, a_dim, a_min, a_max, state_size, random_chance, discount, learningRate, sigma, sd, action_hidden_layers, value_hidden_layers):
+    print random_chance, discount, learningRate, sigma, sd, action_hidden_layers, value_hidden_layers
     self.a_max = a_max
     self.a_min = a_min
     self.action_size = a_dim
     self.state_size = state_size
     print self.state_size
     print self.action_size
-    self.action_mlp = MLP(self.state_size, 1, [200], self.action_size)
-    self.value_mlp = MLP(self.state_size, 1, [200], 1)
+    self.action_mlp = MLP(self.state_size, 1, [action_hidden_layers], self.action_size)
+    self.value_mlp = MLP(self.state_size, 1, [value_hidden_layers], 1)
     self.discount = discount
     self.random_chance = random_chance
-    self.sd = 1
-    self.sigma = 10
-    self.learning_rate = 0.01
+    self.sd = sd
+    self.sigma = sigma
+    self.learningRate = learningRate
 
   #Draw a value from a univariate normal dist
   def getExplorationAction(self, state):
@@ -39,20 +40,20 @@ class Cacla():
 
   def setCriticBrain(self, brain):
     self.value_mlp.setBrain(brain)
-
+ 
   def getAction(self, state):
     action = self.action_mlp.process(state)
     return action
-
+ 
   def getQ(self, state):
     q = self.value_mlp.process(state)
     return q
 
   def updateQ(self, inp, target):
-    self.value_mlp.train(inp, target, self.learning_rate)
+    self.value_mlp.train(inp, target, self.learningRate)
 
   def updateActor(self, inp, target):
-    self.action_mlp.train(inp, target, self.learning_rate)
+    self.action_mlp.train(inp, target, self.learningRate)
 
   def epsilonGreedy(self):
     action = []
@@ -90,8 +91,6 @@ class Cacla():
  
   def chooseAction(self, s):
     # generate action = best action + random sample of normal distribution
-
-    #action = self.epsilonStrategy(s)
     action = self.getClampedGaussianAction(s)
 
     return action
@@ -109,6 +108,3 @@ class Cacla():
 
     if value > old_Q:
         self.updateActor(old_state, old_action)
-    
-
-

@@ -1,0 +1,14 @@
+ 
+To run CACLA, you will need to have OpenAI Gym installed. Instructions for this can be found in the e-mail. 
+
+You can run CACLA by running the following code in /code/
+
+"python run_cacla.py 1" 
+
+for the MountainCar environment and 
+
+"python run_cacla.py 0" 
+
+for the LunarLander environment. 
+
+After the run, results can be found in the runs/cacla folder.
